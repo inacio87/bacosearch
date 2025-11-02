@@ -26,7 +26,7 @@ $page_name = 'search_page';
 
 // Preparação de dados
 $language_code = $_SESSION['language'] ?? (defined('LANGUAGE_CONFIG') ? LANGUAGE_CONFIG['default'] : 'pt-br');
-$page_specific_styles = [SITE_URL . '/assets/css/pages.css', SITE_URL . '/assets/css/search.css'];
+$page_specific_styles = [SITE_URL . '/assets/css/pages.css'];
 
 $translations_map = [
     'search_title'           => 'search_page',
