@@ -34,7 +34,12 @@ function load_env(string $path): void {
     }
 }
 
+// Try project .env then account-level ~/.env (HostGator typical location)
 load_env($ROOT_PATH . DIRECTORY_SEPARATOR . '.env');
+$homeEnv = rtrim(getenv('HOME') ?: getenv('USERPROFILE') ?: '', DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '.env';
+if ($homeEnv && file_exists($homeEnv)) {
+    load_env($homeEnv);
+}
 
 function env(string $key, $default = null) {
     if (array_key_exists($key, $_ENV)) return $_ENV[$key];
@@ -47,6 +52,9 @@ function env(string $key, $default = null) {
 define('ROOT_PATH', rtrim($ROOT_PATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
 define('TEMPLATE_PATH', ROOT_PATH . 'templates' . DIRECTORY_SEPARATOR);
 define('SITE_URL', rtrim((string)env('APP_URL', ''), '/'));
+if (!defined('APP_NAME')) {
+    define('APP_NAME', (string)env('APP_NAME', 'BacoSearch'));
+}
 
 // SEO and language configs used by pages
 if (!defined('SEO_CONFIG')) {
