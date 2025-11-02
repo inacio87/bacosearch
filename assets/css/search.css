@@ -1,405 +1,807 @@
-/**
+/* /assets/css/search.css - Busca Estilo Google *//**
+
  * /assets/css/search.css
- *
- * VERSÃO OTIMIZADA FINAL: EXCLUSIVA PARA A PÁGINA DE RESULTADOS DE BUSCA (search.php).
- * - Remove quaisquer estilos que poderiam conflitar com a página index.php.
- * - Garante compatibilidade com o header, city bar e footer fixos.
- * - Utiliza exclusivamente as variáveis globais do variables.css (com prefixo --bs-).
- * - Foco na clareza, espaçamento e hierarquia visual para resultados de busca.
+
+/* Barra de Busca Google Style */ *
+
+.search-bar-google { * VERSÃO OTIMIZADA FINAL: EXCLUSIVA PARA A PÁGINA DE RESULTADOS DE BUSCA (search.php).
+
+  max-width: 720px; * - Remove quaisquer estilos que poderiam conflitar com a página index.php.
+
+  margin: 0 auto; * - Garante compatibilidade com o header, city bar e footer fixos.
+
+  padding: 20px 15px; * - Utiliza exclusivamente as variáveis globais do variables.css (com prefixo --bs-).
+
+} * - Foco na clareza, espaçamento e hierarquia visual para resultados de busca.
+
  * - Correções FINAIS de layout na barra de busca (input e botão) e em responsividade.
- */
 
-/* ============================================= */
+.google-search-form { */
+
+  width: 100%;
+
+}/* ============================================= */
+
 /* 1. Layout Principal da Página de Busca (search.php)
-/* Aplica-se ao <main class="main-content"> na página search.php
-/* Assumimos que o HTML de search.php tem um <div class="page-content-wrapper">
-/* dentro do <main class="main-content"> para centralização.
-/* ============================================= */
 
-.main-content {
-    /* Mantenha APENAS os paddings top/bottom para acomodar header/city bar e footer fixos. */
-    padding-top: calc(var(--bs-header-height) + var(--bs-city-bar-height) + var(--bs-spacing-lg));
-    padding-bottom: calc(var(--bs-footer-height) + var(--bs-spacing-lg));
-    
+.search-input-wrapper {/* Aplica-se ao <main class="main-content"> na página search.php
+
+  display: flex;/* Assumimos que o HTML de search.php tem um <div class="page-content-wrapper">
+
+  align-items: center;/* dentro do <main class="main-content"> para centralização.
+
+  background: #fff;/* ============================================= */
+
+  border: 1px solid #dfe1e5;
+
+  border-radius: 24px;.main-content {
+
+  padding: 8px 16px;    /* Mantenha APENAS os paddings top/bottom para acomodar header/city bar e footer fixos. */
+
+  transition: all 0.2s;    padding-top: calc(var(--bs-header-height) + var(--bs-city-bar-height) + var(--bs-spacing-lg));
+
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);    padding-bottom: calc(var(--bs-footer-height) + var(--bs-spacing-lg));
+
+}    
+
     /* Garante que o main-content ocupe a largura total para que o container interno centralize */
-    width: 100%;
-    box-sizing: border-box;
 
-    /* Alinhe o conteúdo do main ao centro, para que o .page-content-wrapper fique centralizado */
-    display: flex;
+.search-input-wrapper:hover,    width: 100%;
+
+.search-input-wrapper:focus-within {    box-sizing: border-box;
+
+  box-shadow: 0 2px 8px rgba(32, 33, 36, 0.4);
+
+  border-color: rgba(223, 225, 229, 0);    /* Alinhe o conteúdo do main ao centro, para que o .page-content-wrapper fique centralizado */
+
+}    display: flex;
+
     flex-direction: column; 
-    align-items: center; 
-    justify-content: flex-start;
-}
 
-/* IMPORTANTE: Este div DEVE envolver todo o conteúdo dentro do <main> em search.php */
+.search-icon {    align-items: center; 
+
+  color: #9aa0a6;    justify-content: flex-start;
+
+  font-size: 18px;}
+
+  margin-right: 12px;
+
+}/* IMPORTANTE: Este div DEVE envolver todo o conteúdo dentro do <main> em search.php */
+
 /* Ex: <main class="main-content"><div class="page-content-wrapper"> ... todo o conteúdo ... </div></main> */
-.page-content-wrapper {
-    max-width: var(--bs-container-max-width); /* Centraliza o conteúdo principal (desktop) */
-    margin: 0 auto;
-    width: 100%; /* Ocupa 100% da largura do main-content (até o max-width) */
-    box-sizing: border-box;
-    /* Adicione um padding lateral global aqui para desktop, dando espaço nas laterais */
-    padding-left: var(--bs-spacing-md);
-    padding-right: var(--bs-spacing-md);
-}
+
+.google-search-input {.page-content-wrapper {
+
+  flex: 1;    max-width: var(--bs-container-max-width); /* Centraliza o conteúdo principal (desktop) */
+
+  border: none;    margin: 0 auto;
+
+  outline: none;    width: 100%; /* Ocupa 100% da largura do main-content (até o max-width) */
+
+  font-size: 16px;    box-sizing: border-box;
+
+  padding: 4px 0;    /* Adicione um padding lateral global aqui para desktop, dando espaço nas laterais */
+
+  font-family: arial, sans-serif;    padding-left: var(--bs-spacing-md);
+
+  background: transparent;    padding-right: var(--bs-spacing-md);
+
+}}
 
 
-/* ============================================= */
-/* 2. Cabeçalho e Formulário de Busca na Página de RESULTADOS
-/* Contém o título <h1> e o formulário de busca COMPACTO
-/* ============================================= */
 
-.search-header-container {
-    width: 100%;
-    margin-bottom: var(--bs-spacing-xl);
+.search-submit-btn {
+
+  background: none;/* ============================================= */
+
+  border: none;/* 2. Cabeçalho e Formulário de Busca na Página de RESULTADOS
+
+  padding: 8px;/* Contém o título <h1> e o formulário de busca COMPACTO
+
+  cursor: pointer;/* ============================================= */
+
+  color: #70757a;
+
+  font-size: 18px;.search-header-container {
+
+  transition: color 0.2s;    width: 100%;
+
+}    margin-bottom: var(--bs-spacing-xl);
+
     text-align: center;
-    padding: 0;
+
+.search-submit-btn:hover {    padding: 0;
+
+  color: #202124;}
+
 }
 
 .search-page-title {
-    font-size: var(--bs-font-size-xxl);
-    color: var(--bs-text-primary);
-    margin-bottom: var(--bs-spacing-md);
-    font-weight: var(--bs-font-weight-bold);
-}
 
-/* Formulário de busca COMPACTO na página de resultados (barra de busca do topo) */
-.search-form-inline {
-    position: relative;
-    display: flex;
-    max-width: 600px;
+/* Abas de Categoria */    font-size: var(--bs-font-size-xxl);
+
+.search-tabs {    color: var(--bs-text-primary);
+
+  max-width: 1200px;    margin-bottom: var(--bs-spacing-md);
+
+  margin: 0 auto;    font-weight: var(--bs-font-weight-bold);
+
+  display: flex;}
+
+  gap: 8px;
+
+  padding: 0 15px;/* Formulário de busca COMPACTO na página de resultados (barra de busca do topo) */
+
+  border-bottom: 1px solid #dadce0;.search-form-inline {
+
+  overflow-x: auto;    position: relative;
+
+  -webkit-overflow-scrolling: touch;    display: flex;
+
+}    max-width: 600px;
+
     margin: 0 auto;
-    background-color: var(--bs-bg-white);
-    border: 1px solid var(--bs-border-color);
-    border-radius: var(--bs-border-radius-md);
-    box-shadow: var(--bs-shadow-sm);
-    overflow: hidden;
-    height: var(--bs-input-height-md);
-}
 
-.search-input-inline {
-    flex-grow: 1; /* Permite que o input ocupe o máximo de espaço disponível */
-    flex-shrink: 1; /* Permite que o input encolha se necessário, mas flex-grow deve prevalecer */
-    flex-basis: 0; /* IMPORTE: Garante que o item não tenha tamanho inicial, deixando flex-grow ditar */
-    
+.search-tabs .tab {    background-color: var(--bs-bg-white);
+
+  display: flex;    border: 1px solid var(--bs-border-color);
+
+  align-items: center;    border-radius: var(--bs-border-radius-md);
+
+  gap: 8px;    box-shadow: var(--bs-shadow-sm);
+
+  padding: 12px 16px;    overflow: hidden;
+
+  text-decoration: none;    height: var(--bs-input-height-md);
+
+  color: #5f6368;}
+
+  font-size: 14px;
+
+  font-weight: 500;.search-input-inline {
+
+  border-bottom: 3px solid transparent;    flex-grow: 1; /* Permite que o input ocupe o máximo de espaço disponível */
+
+  white-space: nowrap;    flex-shrink: 1; /* Permite que o input encolha se necessário, mas flex-grow deve prevalecer */
+
+  transition: all 0.2s;    flex-basis: 0; /* IMPORTE: Garante que o item não tenha tamanho inicial, deixando flex-grow ditar */
+
+}    
+
     border: none;
-    padding: 0 var(--bs-spacing-md);
-    font-size: var(--bs-font-size-md);
-    color: var(--bs-text-primary);
+
+.search-tabs .tab:hover {    padding: 0 var(--bs-spacing-md);
+
+  color: #202124;    font-size: var(--bs-font-size-md);
+
+}    color: var(--bs-text-primary);
+
     background-color: transparent;
-    transition: all var(--bs-transition-normal);
-    padding-right: 40px; /* Espaço para o spinner/loading inline */
+
+.search-tabs .tab.active {    transition: all var(--bs-transition-normal);
+
+  color: #1a73e8;    padding-right: 40px; /* Espaço para o spinner/loading inline */
+
+  border-bottom-color: #1a73e8;}
+
 }
 
 .search-input-inline::placeholder {
-    color: var(--bs-text-light);
-    opacity: 0.8;
-}
 
-.search-form-inline:focus-within {
-    border-color: var(--bs-primary);
-    box-shadow: 0 0 0 2px rgba(142, 33, 87, 0.2);
-}
-.search-input-inline:focus {
+.search-tabs .tab i {    color: var(--bs-text-light);
+
+  font-size: 16px;    opacity: 0.8;
+
+}}
+
+
+
+.search-tabs .tab-count {.search-form-inline:focus-within {
+
+  color: #70757a;    border-color: var(--bs-primary);
+
+  font-size: 13px;    box-shadow: 0 0 0 2px rgba(142, 33, 87, 0.2);
+
+  font-weight: 400;}
+
+}.search-input-inline:focus {
+
     outline: none;
-}
 
-.search-button-inline {
-    flex-shrink: 0; /* IMPEDIR que o botão encolha */
-    border: none;
-    background-color: var(--bs-primary);
-    color: var(--bs-text-on-primary);
-    padding: 0 var(--bs-spacing-md);
+/* Estatísticas de Resultados */}
+
+.results-stats {
+
+  max-width: 1200px;.search-button-inline {
+
+  margin: 0 auto;    flex-shrink: 0; /* IMPEDIR que o botão encolha */
+
+  padding: 12px 15px;    border: none;
+
+  color: #70757a;    background-color: var(--bs-primary);
+
+  font-size: 14px;    color: var(--bs-text-on-primary);
+
+}    padding: 0 var(--bs-spacing-md);
+
     cursor: pointer;
-    font-size: var(--bs-font-size-lg);
-    border-radius: 0 var(--bs-border-radius-md) var(--bs-border-radius-md) 0;
-    transition: background-color var(--bs-transition-normal);
+
+.results-stats strong {    font-size: var(--bs-font-size-lg);
+
+  color: #202124;    border-radius: 0 var(--bs-border-radius-md) var(--bs-border-radius-md) 0;
+
+}    transition: background-color var(--bs-transition-normal);
+
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--bs-spacing-xs);
-    /* Removido height daqui, o container pai já define */
+
+/* Seções de Resultados */    align-items: center;
+
+.results-section {    justify-content: center;
+
+  max-width: 720px;    gap: var(--bs-spacing-xs);
+
+  margin: 0 auto 40px;    /* Removido height daqui, o container pai já define */
+
+  padding: 0 15px;}
+
 }
 
 .search-button-inline:hover {
-    background-color: var(--bs-primary-hover);
+
+.section-title {    background-color: var(--bs-primary-hover);
+
+  display: flex;}
+
+  align-items: center;
+
+  justify-content: space-between;/* ============================================= */
+
+  margin-bottom: 20px;/* 3. Lista de Resultados
+
+  padding-bottom: 12px;/* ... (Mantenha inalterado) ...
+
+  border-bottom: 2px solid #e8eaed;/* ============================================= */
+
+  color: #202124;
+
+  font-size: 20px;/* ============================================= */
+
+  font-weight: 400;/* 4. Mensagens de Sem Resultados / Prompt
+
+}/* ... (Mantenha inalterado) ...
+
+/* ============================================= */
+
+.section-title i {
+
+  margin-right: 10px;/* ============================================= */
+
+  color: #1a73e8;/* 5. Paginação
+
+}/* ... (Mantenha inalterado) ...
+
+/* ============================================= */
+
+.section-title .see-all {
+
+  font-size: 14px;/* ============================================= */
+
+  color: #1a73e8;/* 6. Estilos do Contêiner de Sugestões de Busca
+
+  text-decoration: none;/* ... (Mantenha inalterado, pois o problema não era aqui) ...
+
+  font-weight: 500;/* ============================================= */
+
 }
-
-/* ============================================= */
-/* 3. Lista de Resultados
-/* ... (Mantenha inalterado) ...
-/* ============================================= */
-
-/* ============================================= */
-/* 4. Mensagens de Sem Resultados / Prompt
-/* ... (Mantenha inalterado) ...
-/* ============================================= */
-
-/* ============================================= */
-/* 5. Paginação
-/* ... (Mantenha inalterado) ...
-/* ============================================= */
-
-/* ============================================= */
-/* 6. Estilos do Contêiner de Sugestões de Busca
-/* ... (Mantenha inalterado, pois o problema não era aqui) ...
-/* ============================================= */
 
 /* Estilos para o contêiner de sugestões principal */
-/* Este é o div#search-suggestions criado pelo JS */
-.search-form-inline > .search-suggestions {
-    position: absolute;
+
+.section-title .see-all:hover {/* Este é o div#search-suggestions criado pelo JS */
+
+  text-decoration: underline;.search-form-inline > .search-suggestions {
+
+}    position: absolute;
+
     width: calc(100% + 2px);
-    top: calc(100% + var(--bs-spacing-sm));
-    left: -1px;
-    background-color: var(--bs-bg-white);
-    border: 1px solid var(--bs-border-color);
-    border-radius: var(--bs-border-radius-md);
+
+/* Resultado Individual (estilo Google) */    top: calc(100% + var(--bs-spacing-sm));
+
+.google-result-item {    left: -1px;
+
+  margin-bottom: 32px;    background-color: var(--bs-bg-white);
+
+  max-width: 600px;    border: 1px solid var(--bs-border-color);
+
+}    border-radius: var(--bs-border-radius-md);
+
     box-shadow: var(--bs-shadow-md);
-    z-index: var(--bs-z-index-dropdown);
-    max-height: 300px;
-    overflow-y: auto;
+
+.result-header {    z-index: var(--bs-z-index-dropdown);
+
+  margin-bottom: 4px;    max-height: 300px;
+
+}    overflow-y: auto;
+
     box-sizing: border-box;
-    padding: var(--bs-spacing-sm) 0;
-}
 
-/* Estilos para o loading/spinner DENTRO DO INPUT na página search.php */
-.search-form-inline > .search-suggestions.is-inline-loading {
-    top: 50%;
-    right: var(--bs-spacing-md);
-    left: auto;
+.result-url {    padding: var(--bs-spacing-sm) 0;
+
+  display: inline-flex;}
+
+  align-items: center;
+
+  font-size: 14px;/* Estilos para o loading/spinner DENTRO DO INPUT na página search.php */
+
+  line-height: 20px;.search-form-inline > .search-suggestions.is-inline-loading {
+
+  color: #202124;    top: 50%;
+
+  text-decoration: none;    right: var(--bs-spacing-md);
+
+}    left: auto;
+
     transform: translateY(-50%);
-    width: auto;
-    max-width: calc(100% - 60px);
-    padding: 0;
+
+.result-url:hover {    width: auto;
+
+  text-decoration: underline;    max-width: calc(100% - 60px);
+
+}    padding: 0;
+
     background: transparent;
-    border: none;
-    box-shadow: none;
-    pointer-events: none;
-    z-index: var(--bs-z-index-tooltip);
-    
-    display: flex;
+
+.result-title {    border: none;
+
+  margin: 0 0 4px;    box-shadow: none;
+
+  font-size: 20px;    pointer-events: none;
+
+  line-height: 26px;    z-index: var(--bs-z-index-tooltip);
+
+  font-weight: 400;    
+
+}    display: flex;
+
     align-items: center;
-    justify-content: flex-end;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+.result-title a {    justify-content: flex-end;
+
+  color: #1a0dab;    white-space: nowrap;
+
+  text-decoration: none;    overflow: hidden;
+
+}    text-overflow: ellipsis;
+
 }
 
-.search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading {
-    padding: 0;
+.result-title a:visited {
+
+  color: #681da8;.search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading {
+
+}    padding: 0;
+
     justify-content: flex-end;
-    color: var(--bs-text-light);
-}
-.search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading i {
+
+.result-title a:hover {    color: var(--bs-text-light);
+
+  text-decoration: underline;}
+
+}.search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading i {
+
     font-size: var(--bs-font-size-md);
-    color: var(--bs-secondary);
-}
-.search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading span {
-    display: none;
-}
 
-.suggestion-item {
+.result-description {    color: var(--bs-secondary);
+
+  margin: 0 0 4px;}
+
+  font-size: 14px;.search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading span {
+
+  line-height: 22px;    display: none;
+
+  color: #4d5156;}
+
+  word-wrap: break-word;
+
+}.suggestion-item {
+
     display: flex;
-    align-items: center;
-    padding: var(--bs-spacing-sm) var(--bs-spacing-md);
-    gap: var(--bs-spacing-sm);
-    cursor: pointer;
-    color: var(--bs-text-primary);
-    transition: background-color var(--bs-transition-normal);
+
+.result-meta {    align-items: center;
+
+  display: flex;    padding: var(--bs-spacing-sm) var(--bs-spacing-md);
+
+  align-items: center;    gap: var(--bs-spacing-sm);
+
+  gap: 8px;    cursor: pointer;
+
+  font-size: 13px;    color: var(--bs-text-primary);
+
+  color: #70757a;    transition: background-color var(--bs-transition-normal);
+
+  margin-top: 4px;}
+
 }
 
 .suggestion-item:hover,
-.suggestion-item.highlighted {
-    background-color: var(--bs-primary-light);
-}
 
-.suggestion-item i {
-    color: var(--bs-primary);
-    font-size: var(--bs-font-size-md);
-}
+.result-meta i {.suggestion-item.highlighted {
 
-.suggestion-text {
-    flex-grow: 1;
-    font-size: var(--bs-font-size-md);
+  font-size: 12px;    background-color: var(--bs-primary-light);
+
+}}
+
+
+
+/* Paginação estilo Google */.suggestion-item i {
+
+.google-pagination {    color: var(--bs-primary);
+
+  max-width: 720px;    font-size: var(--bs-font-size-md);
+
+  margin: 40px auto;}
+
+  padding: 0 15px;
+
+  display: flex;.suggestion-text {
+
+  align-items: center;    flex-grow: 1;
+
+  justify-content: center;    font-size: var(--bs-font-size-md);
+
+  gap: 12px;}
+
 }
 
 .suggestion-text strong {
-    font-weight: var(--bs-font-weight-bold);
-    color: var(--bs-primary);
-}
 
-.suggestion-type {
-    font-size: var(--bs-font-size-sm);
-    color: var(--bs-text-light);
-    background-color: var(--bs-bg-light);
-    padding: 2px 6px;
-    border-radius: var(--bs-border-radius-sm);
-    white-space: nowrap;
+.pagination-prev,    font-weight: var(--bs-font-weight-bold);
+
+.pagination-next {    color: var(--bs-primary);
+
+  display: inline-flex;}
+
+  align-items: center;
+
+  gap: 8px;.suggestion-type {
+
+  padding: 8px 16px;    font-size: var(--bs-font-size-sm);
+
+  color: #1a73e8;    color: var(--bs-text-light);
+
+  text-decoration: none;    background-color: var(--bs-bg-light);
+
+  font-size: 14px;    padding: 2px 6px;
+
+  font-weight: 500;    border-radius: var(--bs-border-radius-sm);
+
+  border-radius: 4px;    white-space: nowrap;
+
+  transition: background 0.2s;}
+
 }
 
 .suggestion-frequency {
-    font-size: var(--bs-font-size-sm);
-    color: var(--bs-text-light);
-    margin-left: var(--bs-spacing-xs);
-}
 
-.suggestion-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.pagination-prev:hover,    font-size: var(--bs-font-size-sm);
+
+.pagination-next:hover {    color: var(--bs-text-light);
+
+  background: #f1f3f4;    margin-left: var(--bs-spacing-xs);
+
+}}
+
+
+
+.pagination-numbers {.suggestion-loading {
+
+  display: flex;    display: flex;
+
+  gap: 4px;    align-items: center;
+
+}    justify-content: center;
+
     padding: var(--bs-spacing-md);
-    color: var(--bs-text-secondary);
-    font-size: var(--bs-font-size-md);
-    gap: var(--bs-spacing-sm);
-}
 
-.suggestion-loading i {
-    color: var(--bs-primary);
-    font-size: var(--bs-font-size-lg);
-}
+.page-number {    color: var(--bs-text-secondary);
 
-.fa-spin {
-    animation: spin 1s linear infinite;
-}
+  display: inline-flex;    font-size: var(--bs-font-size-md);
+
+  align-items: center;    gap: var(--bs-spacing-sm);
+
+  justify-content: center;}
+
+  min-width: 40px;
+
+  height: 40px;.suggestion-loading i {
+
+  padding: 0 8px;    color: var(--bs-primary);
+
+  color: #1a73e8;    font-size: var(--bs-font-size-lg);
+
+  text-decoration: none;}
+
+  font-size: 14px;
+
+  border-radius: 4px;.fa-spin {
+
+  transition: background 0.2s;    animation: spin 1s linear infinite;
+
+}}
+
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
 
-/* ============================================= */
-/* 7. Responsividade
-/* ============================================= */
+.page-number:hover {    0% { transform: rotate(0deg); }
 
-@media (max-width: 768px) {
+  background: #f1f3f4;    100% { transform: rotate(360deg); }
+
+}}
+
+
+
+.page-number.active {/* ============================================= */
+
+  background: #1a73e8;/* 7. Responsividade
+
+  color: #fff;/* ============================================= */
+
+  font-weight: 500;
+
+}@media (max-width: 768px) {
+
     .main-content {
-        padding-top: calc(var(--bs-header-height) + var(--bs-city-bar-height) + var(--bs-spacing-md));
-        padding-bottom: calc(var(--bs-footer-height) + var(--bs-spacing-md));
-        padding-left: 0;
-        padding-right: 0;
-    }
 
-    .page-content-wrapper {
+/* Sem Resultados */        padding-top: calc(var(--bs-header-height) + var(--bs-city-bar-height) + var(--bs-spacing-md));
+
+.no-results-google {        padding-bottom: calc(var(--bs-footer-height) + var(--bs-spacing-md));
+
+  max-width: 720px;        padding-left: 0;
+
+  margin: 60px auto;        padding-right: 0;
+
+  padding: 0 15px;    }
+
+  text-align: center;
+
+}    .page-content-wrapper {
+
         padding-left: var(--bs-spacing-sm);
-        padding-right: var(--bs-spacing-sm);
+
+.no-results-icon {        padding-right: var(--bs-spacing-sm);
+
+  font-size: 64px;    }
+
+  color: #dadce0;
+
+  margin-bottom: 24px;    .search-header-container {
+
+}        padding: 0;
+
     }
 
-    .search-header-container {
-        padding: 0;
-    }
+.no-results-title {
 
-    /* Correção da barra de busca em mobile (search-form-inline) */
-    .search-form-inline {
-        flex-direction: column;
-        height: auto;
-        border: 1px solid var(--bs-border-color);
+  font-size: 20px;    /* Correção da barra de busca em mobile (search-form-inline) */
+
+  color: #202124;    .search-form-inline {
+
+  margin-bottom: 12px;        flex-direction: column;
+
+  font-weight: 400;        height: auto;
+
+}        border: 1px solid var(--bs-border-color);
+
         box-shadow: var(--bs-shadow-sm);
-        border-radius: var(--bs-border-radius-md);
-    }
 
-    .search-input-inline {
-        border-bottom: 1px solid var(--bs-border-color);
+.no-results-suggestion {        border-radius: var(--bs-border-radius-md);
+
+  font-size: 16px;    }
+
+  color: #70757a;
+
+  margin-bottom: 32px;    .search-input-inline {
+
+}        border-bottom: 1px solid var(--bs-border-color);
+
         border-radius: var(--bs-border-radius-md) var(--bs-border-radius-md) 0 0;
-        padding: var(--bs-spacing-sm) var(--bs-spacing-md);
-        width: 100%;
-        padding-right: 40px; /* Manter padding-right para o spinner em mobile também */
-    }
-    
-    .search-input-inline:focus {
-        border-color: var(--bs-primary);
-        box-shadow: none;
+
+.search-tips {        padding: var(--bs-spacing-sm) var(--bs-spacing-md);
+
+  text-align: left;        width: 100%;
+
+  max-width: 400px;        padding-right: 40px; /* Manter padding-right para o spinner em mobile também */
+
+  margin: 0 auto;    }
+
+  padding: 24px;    
+
+  background: #f8f9fa;    .search-input-inline:focus {
+
+  border-radius: 8px;        border-color: var(--bs-primary);
+
+}        box-shadow: none;
+
     }
 
-    .search-form-inline:focus-within {
-        border-color: var(--bs-primary);
-        box-shadow: 0 0 0 2px rgba(142, 33, 87, 0.2);
-    }
+.search-tips h3 {
+
+  font-size: 16px;    .search-form-inline:focus-within {
+
+  color: #202124;        border-color: var(--bs-primary);
+
+  margin-bottom: 12px;        box-shadow: 0 0 0 2px rgba(142, 33, 87, 0.2);
+
+  font-weight: 500;    }
+
+}
 
     .search-button-inline {
-        border-radius: 0 0 var(--bs-border-radius-md) var(--bs-border-radius-md);
-        width: 100%;
-        height: var(--bs-input-height-md);
-    }
 
-    .results-section {
-        padding: 0;
-    }
-    .results-header {
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
-    }
-    .results-count {
-        width: 100%;
-        margin-bottom: var(--bs-spacing-sm);
-        padding-bottom: var(--bs-spacing-sm);
-    }
-    .results-grid {
-        grid-template-columns: 1fr;
-        gap: var(--bs-spacing-md);
-    }
-    .result-card.enhanced {
-        padding: var(--bs-spacing-md);
-    }
-    .result-title {
-        font-size: var(--bs-font-size-lg);
-    }
-    .result-description {
-        font-size: var(--bs-font-size-md);
-    }
-    .pagination {
-        flex-wrap: wrap;
-        gap: var(--bs-spacing-xs);
-        padding: var(--bs-spacing-sm);
-    }
-    .pagination-btn {
-        min-width: 32px;
-        height: var(--bs-input-height-sm);
-        font-size: var(--bs-font-size-sm);
-        padding: var(--bs-spacing-xs) var(--bs-spacing-sm);
-    }
-    .pagination-info {
-        font-size: var(--bs-font-size-sm);
-    }
+.search-tips ul {        border-radius: 0 0 var(--bs-border-radius-md) var(--bs-border-radius-md);
 
-    /* Em mobile, o loading de sugestões volta a ser abaixo do campo, não inline */
-    .search-form-inline > .search-suggestions.is-inline-loading {
-        position: absolute;
-        top: calc(100% + var(--bs-spacing-sm));
-        right: auto;
-        left: 0;
-        transform: none;
-        width: 100%;
-        max-width: none;
-        padding: var(--bs-spacing-sm) 0;
-        background: var(--bs-bg-white);
-        border: 1px solid var(--bs-border-color);
-        box-shadow: var(--bs-shadow-md);
-        pointer-events: auto;
-        z-index: var(--bs-z-index-dropdown);
-    }
-    .search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading {
-        padding: var(--bs-spacing-md);
-        justify-content: center;
-        color: var(--bs-text-secondary);
-    }
-    .search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading i {
-        font-size: var(--bs-font-size-lg);
-        color: var(--bs-primary);
-    }
-    .search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading span {
-        display: inline; /* Mostra o texto em mobile */
-    }
+  list-style: none;        width: 100%;
+
+  padding: 0;        height: var(--bs-input-height-md);
+
+  margin: 0;    }
+
 }
 
-@media (max-width: 480px) {
-    .search-page-title {
-        font-size: var(--bs-font-size-xl);
+    .results-section {
+
+.search-tips li {        padding: 0;
+
+  padding: 8px 0;    }
+
+  color: #5f6368;    .results-header {
+
+  font-size: 14px;        flex-direction: column;
+
+  line-height: 20px;        align-items: flex-start;
+
+}        text-align: left;
+
     }
-    .search-form-inline > .search-suggestions { /* Sugestões para mobile */
-        width: 100%;
-        left: 0;
+
+.search-tips li:before {    .results-count {
+
+  content: "•";        width: 100%;
+
+  color: #1a73e8;        margin-bottom: var(--bs-spacing-sm);
+
+  font-weight: bold;        padding-bottom: var(--bs-spacing-sm);
+
+  display: inline-block;    }
+
+  width: 1em;    .results-grid {
+
+  margin-left: -1em;        grid-template-columns: 1fr;
+
+  padding-right: 0.5em;        gap: var(--bs-spacing-md);
+
+}    }
+
+    .result-card.enhanced {
+
+/* Responsivo */        padding: var(--bs-spacing-md);
+
+@media (max-width: 768px) {    }
+
+  .search-bar-google {    .result-title {
+
+    padding: 15px 10px;        font-size: var(--bs-font-size-lg);
+
+  }    }
+
+      .result-description {
+
+  .search-tabs {        font-size: var(--bs-font-size-md);
+
+    padding: 0 10px;    }
+
+  }    .pagination {
+
+          flex-wrap: wrap;
+
+  .search-tabs .tab {        gap: var(--bs-spacing-xs);
+
+    padding: 10px 12px;        padding: var(--bs-spacing-sm);
+
+    font-size: 13px;    }
+
+  }    .pagination-btn {
+
+          min-width: 32px;
+
+  .results-section {        height: var(--bs-input-height-sm);
+
+    padding: 0 10px;        font-size: var(--bs-font-size-sm);
+
+  }        padding: var(--bs-spacing-xs) var(--bs-spacing-sm);
+
+      }
+
+  .result-title {    .pagination-info {
+
+    font-size: 18px;        font-size: var(--bs-font-size-sm);
+
+    line-height: 24px;    }
+
+  }
+
+      /* Em mobile, o loading de sugestões volta a ser abaixo do campo, não inline */
+
+  .result-description {    .search-form-inline > .search-suggestions.is-inline-loading {
+
+    font-size: 13px;        position: absolute;
+
+    line-height: 20px;        top: calc(100% + var(--bs-spacing-sm));
+
+  }        right: auto;
+
+          left: 0;
+
+  .google-pagination {        transform: none;
+
+    flex-wrap: wrap;        width: 100%;
+
+    gap: 8px;        max-width: none;
+
+  }        padding: var(--bs-spacing-sm) 0;
+
+          background: var(--bs-bg-white);
+
+  .pagination-numbers {        border: 1px solid var(--bs-border-color);
+
+    order: -1;        box-shadow: var(--bs-shadow-md);
+
+    width: 100%;        pointer-events: auto;
+
+    justify-content: center;        z-index: var(--bs-z-index-dropdown);
+
+    margin-bottom: 8px;    }
+
+  }    .search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading {
+
+}        padding: var(--bs-spacing-md);
+
+        justify-content: center;
+
+@media (max-width: 480px) {        color: var(--bs-text-secondary);
+
+  .section-title {    }
+
+    font-size: 18px;    .search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading i {
+
+    flex-direction: column;        font-size: var(--bs-font-size-lg);
+
+    align-items: flex-start;        color: var(--bs-primary);
+
+    gap: 8px;    }
+
+  }    .search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading span {
+
+          display: inline; /* Mostra o texto em mobile */
+
+  .result-title {    }
+
+    font-size: 16px;}
+
+  }
+
+  @media (max-width: 480px) {
+
+  .page-number {    .search-page-title {
+
+    min-width: 36px;        font-size: var(--bs-font-size-xl);
+
+    height: 36px;    }
+
+    font-size: 13px;    .search-form-inline > .search-suggestions { /* Sugestões para mobile */
+
+  }        width: 100%;
+
+}        left: 0;
+
         border-radius: var(--bs-border-radius-md);
     }
 }

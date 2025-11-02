@@ -1,47 +1,30 @@
 <?php
 /**
- * /search.php - Ponto de Entrada para Busca (VERS√O REESTRUTURADA E FINAL)
- *
- * RESPONSABILIDADES:
- * 1. Segue o padr„o arquitetural das outras p·ginas (about_us, register, etc.).
- * 2. Carrega bootstrap, prepara traduÁıes e dados para o template.
- * 3. Executa uma busca hÌbrida e inteligente (FULLTEXT + LIKE + Intents).
- * 4. Renderiza a p·gina de resultados chamando os templates head, header e footer.
+ * /search.php - Busca Unificada Estilo Google
+ * Busca em: Providers, Companies, Clubs, Services
  */
 
-// PASSO 1: INICIALIZA«√O E DEFINI«√O DA P¡GINA
 define('IN_BACOSEARCH', true);
 require_once __DIR__ . '/core/bootstrap.php';
 
-$page_name = 'search_page'; // Define o nome da p·gina para o head.php
+$page_name = 'search_page';
 
-// PASSO 2: PREPARA«√O DE DADOS E TRADU«’ES
+// Prepara√ß√£o de dados
 $language_code = $_SESSION['language'] ?? (defined('LANGUAGE_CONFIG') ? LANGUAGE_CONFIG['default'] : 'pt-br');
+$page_specific_styles = [SITE_URL . '/assets/css/pages.css', SITE_URL . '/assets/css/search.css'];
 
-// CSS especÌfico desta p·gina (n„o È traduÁ„o)
-$page_specific_styles = [
-    SITE_URL . '/assets/css/pages.css'
-];
-
-// Mapa centralizado de traduÁıes (padr„o index)
-// Padronizamos 'detecting_location' em 'ui_messages'
 $translations_map = [
-    // P·gina de busca
     'search_title'           => 'search_page',
     'search_meta_description'=> 'search_page',
     'results_for'            => 'search_page',
     'no_results'             => 'search_page',
     'explore_suggestion'     => 'search_page',
-
-    // Busca/header/footer
     'search_placeholder'     => 'search',
     'header_ads'             => 'header',
     'header_login'           => 'header',
     'logo_alt'               => 'header',
     'header_menu'            => 'header',
-
     'detecting_location'     => 'ui_messages',
-
     'footer_providers'       => 'footer',
     'footer_companies'       => 'footer',
     'footer_streets'         => 'footer',
@@ -54,90 +37,219 @@ foreach ($translations_map as $key => $context) {
     $translations[$key] = getTranslation($key, $language_code, $context);
 }
 
-// Dados para header/template
 $city = $_SESSION['city'] ?? ($translations['detecting_location'] ?? 'detecting_location');
 $translations['languageOptionsForDisplay']     = LANGUAGE_CONFIG['name_map'] ?? [];
 $translations['current_language_display_name'] = $translations['languageOptionsForDisplay'][$language_code] ?? $language_code;
 
 $term = isset($_GET['term']) ? trim($_GET['term']) : '';
-
-// Meta tags do <head> ó sem literais (fallback para o nome da chave)
 $page_title       = $translations['search_title'] ?? 'search_title';
 $meta_description = $translations['search_meta_description'] ?? 'search_meta_description';
 
-// PASSO 3: L”GICA PRINCIPAL DA BUSCA
+// BUSCA UNIFICADA
 $pdo = getDBConnection();
-$results = [];
+$providersResults = [];
+$companiesResults = [];
+$clubsResults = [];
+$servicesResults = [];
+
+$totalProviders = 0;
+$totalCompanies = 0;
+$totalClubs = 0;
+$totalServices = 0;
 $totalResults = 0;
-$totalPages = 0;
+
 $itemsPerPage = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $itemsPerPage;
+$activeTab = isset($_GET['tab']) ? trim($_GET['tab']) : 'all';
 
 try {
     if (!empty($term)) {
-        // Prepara o termo para FULLTEXT (ex.: +morena*)
-        $search_terms = '+' . str_replace(' ', '* +', $term) . '*';
-
-        // Contagem
-        $countSql = "
-            SELECT COUNT(DISTINCT p.id)
-            FROM providers p
-            WHERE
-                (MATCH(p.display_name, p.ad_title, p.description, p.keywords) AGAINST (:search_terms IN BOOLEAN MODE)
-                 OR p.keywords LIKE :like_term
-                 OR p.display_name LIKE :like_term)
-            AND p.is_active = 1 AND p.status = 'active'
-        ";
-        $stmtCount = $pdo->prepare($countSql);
-        $stmtCount->execute([
-            ':search_terms' => $search_terms,
-            ':like_term'    => '%' . $term . '%'
-        ]);
-        $totalResults = (int)$stmtCount->fetchColumn();
-        $totalPages   = (int)ceil($totalResults / $itemsPerPage);
-
-        if ($totalResults > 0) {
-            // Principal com ranking
-            $sql = "
-                SELECT
-                    p.id, p.display_name, p.ad_title, p.description,
-                    pl.ad_city AS city, c.name AS country,
-                    MATCH(p.display_name, p.ad_title, p.description, p.keywords) AGAINST (:search_terms IN BOOLEAN MODE) AS relevance
+        $like_term = '%' . $term . '%';
+        
+        // 1. PROVIDERS
+        try {
+            $countProvidersStmt = $pdo->prepare("
+                SELECT COUNT(DISTINCT p.id)
                 FROM providers p
-                LEFT JOIN provider_logistics pl ON p.id = pl.provider_id
-                LEFT JOIN countries c ON p.nationality_id = c.id
-                WHERE
-                    (MATCH(p.display_name, p.ad_title, p.description, p.keywords) AGAINST (:search_terms IN BOOLEAN MODE)
-                     OR p.keywords LIKE :like_term
-                     OR p.display_name LIKE :like_term)
+                WHERE (p.display_name LIKE :term 
+                   OR p.ad_title LIKE :term 
+                   OR p.description LIKE :term 
+                   OR p.keywords LIKE :term)
                 AND p.is_active = 1 AND p.status = 'active'
-                GROUP BY p.id
-                ORDER BY relevance DESC
-                LIMIT :offset, :itemsPerPage
-            ";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(':search_terms', $search_terms, PDO::PARAM_STR);
-            $stmt->bindValue(':like_term', '%' . $term . '%', PDO::PARAM_STR);
-            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-            $stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
-            $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            ");
+            $countProvidersStmt->execute([':term' => $like_term]);
+            $totalProviders = (int)$countProvidersStmt->fetchColumn();
+
+            if ($totalProviders > 0 && ($activeTab === 'all' || $activeTab === 'providers')) {
+                $limit = ($activeTab === 'providers') ? $itemsPerPage : 5;
+                $offsetVal = ($activeTab === 'providers') ? $offset : 0;
+                
+                $providersStmt = $pdo->prepare("
+                    SELECT p.id, p.display_name, p.ad_title, p.description, p.keywords,
+                           pl.ad_city AS city, c.name AS country, 'provider' AS result_type
+                    FROM providers p
+                    LEFT JOIN provider_logistics pl ON p.id = pl.provider_id
+                    LEFT JOIN countries c ON p.nationality_id = c.id
+                    WHERE (p.display_name LIKE :term 
+                       OR p.ad_title LIKE :term 
+                       OR p.description LIKE :term 
+                       OR p.keywords LIKE :term)
+                    AND p.is_active = 1 AND p.status = 'active'
+                    GROUP BY p.id
+                    ORDER BY 
+                        CASE WHEN p.display_name LIKE :term THEN 1 
+                             WHEN p.ad_title LIKE :term THEN 2 
+                             ELSE 3 END,
+                        p.updated_at DESC
+                    LIMIT :limit OFFSET :offset
+                ");
+                $providersStmt->bindValue(':term', $like_term, PDO::PARAM_STR);
+                $providersStmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+                $providersStmt->bindValue(':offset', $offsetVal, PDO::PARAM_INT);
+                $providersStmt->execute();
+                $providersResults = $providersStmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (Exception $e) {
+            log_system_error("Providers search error: " . $e->getMessage(), 'ERROR', 'search_providers');
         }
 
+        // 2. COMPANIES
+        try {
+            $countCompaniesStmt = $pdo->prepare("
+                SELECT COUNT(DISTINCT id)
+                FROM companies
+                WHERE (company_name LIKE :term 
+                   OR description LIKE :term 
+                   OR keywords LIKE :term)
+                AND is_active = 1 AND status = 'active'
+            ");
+            $countCompaniesStmt->execute([':term' => $like_term]);
+            $totalCompanies = (int)$countCompaniesStmt->fetchColumn();
+
+            if ($totalCompanies > 0 && ($activeTab === 'all' || $activeTab === 'companies')) {
+                $limit = ($activeTab === 'companies') ? $itemsPerPage : 5;
+                $offsetVal = ($activeTab === 'companies') ? $offset : 0;
+                
+                $companiesStmt = $pdo->prepare("
+                    SELECT id, company_name AS display_name, description, 
+                           city, country, 'company' AS result_type
+                    FROM companies
+                    WHERE (company_name LIKE :term 
+                       OR description LIKE :term 
+                       OR keywords LIKE :term)
+                    AND is_active = 1 AND status = 'active'
+                    ORDER BY 
+                        CASE WHEN company_name LIKE :term THEN 1 ELSE 2 END,
+                        updated_at DESC
+                    LIMIT :limit OFFSET :offset
+                ");
+                $companiesStmt->bindValue(':term', $like_term, PDO::PARAM_STR);
+                $companiesStmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+                $companiesStmt->bindValue(':offset', $offsetVal, PDO::PARAM_INT);
+                $companiesStmt->execute();
+                $companiesResults = $companiesStmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (Exception $e) {
+            log_system_error("Companies search error: " . $e->getMessage(), 'ERROR', 'search_companies');
+        }
+
+        // 3. CLUBS
+        try {
+            $countClubsStmt = $pdo->prepare("
+                SELECT COUNT(DISTINCT id)
+                FROM clubs
+                WHERE (club_name LIKE :term 
+                   OR description LIKE :term 
+                   OR keywords LIKE :term)
+                AND is_active = 1 AND status = 'active'
+            ");
+            $countClubsStmt->execute([':term' => $like_term]);
+            $totalClubs = (int)$countClubsStmt->fetchColumn();
+
+            if ($totalClubs > 0 && ($activeTab === 'all' || $activeTab === 'clubs')) {
+                $limit = ($activeTab === 'clubs') ? $itemsPerPage : 5;
+                $offsetVal = ($activeTab === 'clubs') ? $offset : 0;
+                
+                $clubsStmt = $pdo->prepare("
+                    SELECT id, club_name AS display_name, description, 
+                           city, country, 'club' AS result_type
+                    FROM clubs
+                    WHERE (club_name LIKE :term 
+                       OR description LIKE :term 
+                       OR keywords LIKE :term)
+                    AND is_active = 1 AND status = 'active'
+                    ORDER BY 
+                        CASE WHEN club_name LIKE :term THEN 1 ELSE 2 END,
+                        updated_at DESC
+                    LIMIT :limit OFFSET :offset
+                ");
+                $clubsStmt->bindValue(':term', $like_term, PDO::PARAM_STR);
+                $clubsStmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+                $clubsStmt->bindValue(':offset', $offsetVal, PDO::PARAM_INT);
+                $clubsStmt->execute();
+                $clubsResults = $clubsStmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (Exception $e) {
+            log_system_error("Clubs search error: " . $e->getMessage(), 'ERROR', 'search_clubs');
+        }
+
+        // 4. SERVICES
+        try {
+            $countServicesStmt = $pdo->prepare("
+                SELECT COUNT(DISTINCT id)
+                FROM providers_services_list
+                WHERE term LIKE :term OR service_key LIKE :term
+            ");
+            $countServicesStmt->execute([':term' => $like_term]);
+            $totalServices = (int)$countServicesStmt->fetchColumn();
+
+            if ($totalServices > 0 && ($activeTab === 'all' || $activeTab === 'services')) {
+                $limit = ($activeTab === 'services') ? $itemsPerPage : 5;
+                $offsetVal = ($activeTab === 'services') ? $offset : 0;
+                
+                $servicesStmt = $pdo->prepare("
+                    SELECT id, term AS display_name, service_key AS description,
+                           'service' AS result_type
+                    FROM providers_services_list
+                    WHERE term LIKE :term OR service_key LIKE :term
+                    ORDER BY 
+                        CASE WHEN term LIKE :term THEN 1 ELSE 2 END,
+                        term ASC
+                    LIMIT :limit OFFSET :offset
+                ");
+                $servicesStmt->bindValue(':term', $like_term, PDO::PARAM_STR);
+                $servicesStmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+                $servicesStmt->bindValue(':offset', $offsetVal, PDO::PARAM_INT);
+                $servicesStmt->execute();
+                $servicesResults = $servicesStmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (Exception $e) {
+            log_system_error("Services search error: " . $e->getMessage(), 'ERROR', 'search_services');
+        }
+
+        $totalResults = $totalProviders + $totalCompanies + $totalClubs + $totalServices;
         logGlobalSearch($pdo, $term);
     }
 } catch (Exception $e) {
-    // Logs n„o s„o exibidos ao utilizador; mantidos fora do sistema de traduÁıes
     log_system_error("search.php error: " . $e->getMessage(), 'ERROR', 'search_failure');
-    $results = [];
-    $totalResults = 0;
-    $totalPages = 0;
 }
 
-// PASSO 4: RENDERIZA«√O DA P¡GINA
+// Pagina√ß√£o
+$totalPages = 0;
 $currentPage = $page;
+if ($activeTab === 'providers' && $totalProviders > 0) {
+    $totalPages = (int)ceil($totalProviders / $itemsPerPage);
+} elseif ($activeTab === 'companies' && $totalCompanies > 0) {
+    $totalPages = (int)ceil($totalCompanies / $itemsPerPage);
+} elseif ($activeTab === 'clubs' && $totalClubs > 0) {
+    $totalPages = (int)ceil($totalClubs / $itemsPerPage);
+} elseif ($activeTab === 'services' && $totalServices > 0) {
+    $totalPages = (int)ceil($totalServices / $itemsPerPage);
+}
+
+// Renderiza√ß√£o
 require_once TEMPLATE_PATH . 'head.php';
 require_once TEMPLATE_PATH . 'header.php';
-require_once TEMPLATE_PATH . 'search-results.php';
+require_once TEMPLATE_PATH . 'search-results-unified.php';
 require_once TEMPLATE_PATH . 'footer.php';
