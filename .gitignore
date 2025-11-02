@@ -4,6 +4,7 @@
 
 # local restore workspace
 restore_tmp/
+*.zip
 
 # Environment
 .env
