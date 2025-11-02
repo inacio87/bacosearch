@@ -387,6 +387,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const modal             = document.getElementById('registrationMessageModal');
   const modalCloseButton  = document.getElementById('modalCloseButton');
 
+  // Função para adicionar bandeira DENTRO das opções (como prefixo de texto)
+  function addFlagToOptions(selectElement) {
+    if (!selectElement) return;
+    
+    const options = selectElement.querySelectorAll('option');
+    options.forEach(option => {
+      if (option.value && option.dataset.flag) {
+        const flagImg = '🏴'; // Placeholder - será substituído por background
+        const currentText = option.textContent;
+        // Adiciona classe para estilo
+        option.style.backgroundImage = 'url(' + option.dataset.flag + ')';
+        option.style.backgroundRepeat = 'no-repeat';
+        option.style.backgroundSize = '20px auto';
+        option.style.backgroundPosition = '8px center';
+        option.style.paddingLeft = '36px';
+      }
+    });
+  }
+
   function updateFlag(selectElement) {
     if (!selectElement) return;
     const opt = selectElement.options[selectElement.selectedIndex];
@@ -396,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
       selectElement.style.backgroundRepeat   = 'no-repeat';
       selectElement.style.backgroundSize     = '24px auto';
       selectElement.style.backgroundPosition = '10px center';
-      selectElement.style.paddingLeft        = '40px';
+      selectElement.style.paddingLeft        = '44px';
     } else {
       selectElement.style.backgroundImage = 'none';
       selectElement.style.paddingLeft     = '14px';
@@ -404,10 +423,12 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   if (phoneCodeSelect) {
+    addFlagToOptions(phoneCodeSelect);
     updateFlag(phoneCodeSelect);
     phoneCodeSelect.addEventListener('change', function(){ updateFlag(phoneCodeSelect); });
   }
   if (nationalitySelect) {
+    addFlagToOptions(nationalitySelect);
     updateFlag(nationalitySelect);
     nationalitySelect.addEventListener('change', function(){ updateFlag(nationalitySelect); });
   }

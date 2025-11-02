@@ -645,3 +645,9 @@
 body, html {
     overflow: visible !important;
 }
+/* ===== BANDEIRAS NOS SELECTS ===== */
+select#phone_code, select#nationality_id { background-repeat: no-repeat; background-position: 10px center; background-size: 24px auto; padding-left: 44px !important; }
+select#phone_code option, select#nationality_id option { padding-left: 36px; background-repeat: no-repeat; background-position: 8px center; background-size: 20px auto; }
+.phone-input-group { display: flex; gap: 8px; align-items: stretch; }
+.phone-input-group .phone-code { flex: 0 0 120px; min-width: 120px; }
+.phone-input-group .phone-number { flex: 1; }
