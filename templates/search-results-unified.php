@@ -1,7 +1,7 @@
 <?php
 /**
  * /templates/search-results-unified.php
- * Template de Busca Unificada Estilo Google
+ * Template de Busca com Layout 2 Colunas (Resultados + Sidebar)
  */
 
 if (!defined('TEMPLATE_PATH')) { exit; }
@@ -25,10 +25,8 @@ $companiesResults = (isset($companiesResults) && is_array($companiesResults)) ? 
 $clubsResults = (isset($clubsResults) && is_array($clubsResults)) ? $clubsResults : [];
 $servicesResults = (isset($servicesResults) && is_array($servicesResults)) ? $servicesResults : [];
 
-$t_placeholder     = $translations['search_placeholder'] ?? 'Pesquisar...';
-$t_results_for     = $translations['results_for'] ?? 'Resultados para';
-$t_no_results      = $translations['no_results'] ?? 'Nenhum resultado encontrado.';
-$t_suggestion      = $translations['explore_suggestion'] ?? 'Tente refinar sua busca.';
+$t_placeholder = $translations['search_placeholder'] ?? 'Pesquisar...';
+$t_no_results  = $translations['no_results'] ?? 'Nenhum resultado encontrado.';
 
 $searchAction = rtrim(SITE_URL ?? '', '/') . '/search.php';
 
@@ -40,315 +38,267 @@ $snippet = static function (?string $text, int $max = 150): string {
   }
   return (strlen($text) > $max) ? substr($text, 0, $max) . '…' : $text;
 };
-
-$paginationUrl = static function (string $term, int $page, string $tab) use ($searchAction): string {
-  return $searchAction . '?' . http_build_query(['term' => $term, 'page' => $page, 'tab' => $tab]);
-};
-
-$window = 2;
-$start  = max(1, $currentPage - $window);
-$end    = min($totalPages, $currentPage + $window);
 ?>
 
-<main class="main-content search-results-unified">
-  <!-- Barra de Busca Estilo Google -->
-  <div class="search-bar-google">
-    <form method="GET" action="<?php echo $e($searchAction); ?>" class="google-search-form">
-      <div class="search-input-wrapper">
-        <i class="fas fa-search search-icon"></i>
-        <input
-          type="text"
-          name="term"
-          value="<?php echo $e($term); ?>"
-          placeholder="<?php echo $e($t_placeholder); ?>"
-          class="google-search-input"
-          autocomplete="on"
-        >
-        <button type="submit" class="search-submit-btn">
-          <i class="fas fa-search"></i>
-        </button>
-      </div>
-    </form>
+<main class="main-content search-page-layout">
+  
+  <!-- Barra de Busca -->
+  <div class="search-bar-section">
+    <div class="container">
+      <form method="GET" action="<?php echo $e($searchAction); ?>" class="search-form">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search search-icon-left"></i>
+          <input type="text" name="term" value="<?php echo $e($term); ?>" 
+                 placeholder="<?php echo $e($t_placeholder); ?>" class="search-input" autocomplete="on">
+          <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <?php if (!empty($term)): ?>
-    <!-- Abas de Categoria -->
-    <nav class="search-tabs">
-      <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=all'); ?>" 
-         class="tab <?php echo $activeTab === 'all' ? 'active' : ''; ?>">
-        <i class="fas fa-th"></i> Todos 
-        <?php if ($totalResults > 0): ?>
-          <span class="tab-count">(<?php echo number_format($totalResults, 0, ',', '.'); ?>)</span>
-        <?php endif; ?>
-      </a>
-      
-      <?php if ($totalProviders > 0): ?>
-        <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=providers'); ?>" 
-           class="tab <?php echo $activeTab === 'providers' ? 'active' : ''; ?>">
-          <i class="fas fa-user"></i> Acompanhantes 
-          <span class="tab-count">(<?php echo number_format($totalProviders, 0, ',', '.'); ?>)</span>
-        </a>
-      <?php endif; ?>
-      
-      <?php if ($totalCompanies > 0): ?>
-        <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=companies'); ?>" 
-           class="tab <?php echo $activeTab === 'companies' ? 'active' : ''; ?>">
-          <i class="fas fa-building"></i> Empresas 
-          <span class="tab-count">(<?php echo number_format($totalCompanies, 0, ',', '.'); ?>)</span>
-        </a>
-      <?php endif; ?>
-      
-      <?php if ($totalClubs > 0): ?>
-        <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=clubs'); ?>" 
-           class="tab <?php echo $activeTab === 'clubs' ? 'active' : ''; ?>">
-          <i class="fas fa-glass-cheers"></i> Clubes 
-          <span class="tab-count">(<?php echo number_format($totalClubs, 0, ',', '.'); ?>)</span>
-        </a>
-      <?php endif; ?>
-      
-      <?php if ($totalServices > 0): ?>
-        <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=services'); ?>" 
-           class="tab <?php echo $activeTab === 'services' ? 'active' : ''; ?>">
-          <i class="fas fa-concierge-bell"></i> Serviços 
-          <span class="tab-count">(<?php echo number_format($totalServices, 0, ',', '.'); ?>)</span>
-        </a>
-      <?php endif; ?>
-    </nav>
-
-    <!-- Contador de Resultados -->
-    <div class="results-stats">
-      <?php 
-        $displayCount = $totalResults;
-        if ($activeTab === 'providers') $displayCount = $totalProviders;
-        elseif ($activeTab === 'companies') $displayCount = $totalCompanies;
-        elseif ($activeTab === 'clubs') $displayCount = $totalClubs;
-        elseif ($activeTab === 'services') $displayCount = $totalServices;
-      ?>
-      Cerca de <strong><?php echo number_format($displayCount, 0, ',', '.'); ?></strong> resultados
+    
+    <!-- Abas de Navegação -->
+    <div class="search-tabs-section">
+      <div class="container">
+        <nav class="category-tabs">
+          <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=all'); ?>" 
+             class="tab <?php echo $activeTab === 'all' ? 'active' : ''; ?>">
+            <i class="fas fa-th"></i> Todos <span class="count">(<?php echo $totalResults; ?>)</span>
+          </a>
+          <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=providers'); ?>" 
+             class="tab <?php echo $activeTab === 'providers' ? 'active' : ''; ?>">
+            <i class="fas fa-user"></i> Acompanhantes <span class="count">(<?php echo $totalProviders; ?>)</span>
+          </a>
+          <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=clubs'); ?>" 
+             class="tab <?php echo $activeTab === 'clubs' ? 'active' : ''; ?>">
+            <i class="fas fa-glass-cheers"></i> Clubes <span class="count">(<?php echo $totalClubs; ?>)</span>
+          </a>
+          <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=companies'); ?>" 
+             class="tab <?php echo $activeTab === 'companies' ? 'active' : ''; ?>">
+            <i class="fas fa-building"></i> Empresas <span class="count">(<?php echo $totalCompanies; ?>)</span>
+          </a>
+          <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=services'); ?>" 
+             class="tab <?php echo $activeTab === 'services' ? 'active' : ''; ?>">
+            <i class="fas fa-concierge-bell"></i> Serviços <span class="count">(<?php echo $totalServices; ?>)</span>
+          </a>
+        </nav>
+      </div>
     </div>
 
-    <?php if ($totalResults > 0): ?>
-      
-      <!-- RESULTADOS PROVIDERS -->
-      <?php if (!empty($providersResults)): ?>
-        <section class="results-section">
-          <?php if ($activeTab === 'all'): ?>
-            <h2 class="section-title">
-              <i class="fas fa-user"></i> Acompanhantes
-              <?php if ($totalProviders > count($providersResults)): ?>
-                <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=providers'); ?>" class="see-all">
-                  Ver todos (<?php echo $totalProviders; ?>)
-                </a>
-              <?php endif; ?>
-            </h2>
-          <?php endif; ?>
+    <!-- Layout Principal: 2 Colunas -->
+    <div class="search-content-section">
+      <div class="container">
+        <div class="search-grid-layout">
           
-          <?php foreach ($providersResults as $provider): 
-            $id     = $provider['id'] ?? '';
-            $name   = $provider['display_name'] ?? '';
-            $desc   = (string)($provider['description'] ?? '');
-            $ad     = (string)($provider['ad_title'] ?? '');
-            $text   = $desc !== '' ? $desc : $ad;
-            $snip   = $snippet($text, 160);
-            $city   = trim((string)($provider['city'] ?? ''));
-            $country= trim((string)($provider['country'] ?? ''));
-            $loc    = trim($city . ($city && $country ? ', ' : '') . $country);
-            $url    = rtrim(SITE_URL, '/') . '/provider_profile.php?id=' . $id;
-          ?>
-            <article class="google-result-item">
-              <div class="result-header">
-                <a href="<?php echo $e($url); ?>" class="result-url">
-                  <?php echo $e(parse_url(SITE_URL, PHP_URL_HOST)); ?> › Acompanhantes › <?php echo $e($name); ?>
-                </a>
-              </div>
-              <h3 class="result-title">
-                <a href="<?php echo $e($url); ?>"><?php echo $e($name); ?></a>
-              </h3>
-              <?php if ($snip !== ''): ?>
-                <p class="result-description"><?php echo $e($snip); ?></p>
-              <?php endif; ?>
-              <?php if ($loc !== ''): ?>
-                <div class="result-meta">
-                  <i class="fas fa-map-marker-alt"></i> <?php echo $e($loc); ?>
+          <!-- COLUNA ESQUERDA: Lista de Resultados -->
+          <div class="results-column">
+            
+            <?php if ($totalResults > 0): ?>
+              
+              <!-- Resultados PROVIDERS -->
+              <?php if (!empty($providersResults)): ?>
+                <div class="results-group">
+                  <?php if ($activeTab === 'all'): ?>
+                    <h2 class="group-title">
+                      <i class="fas fa-user"></i> Acompanhantes
+                      <?php if ($totalProviders > count($providersResults)): ?>
+                        <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=providers'); ?>" class="view-all">
+                          Ver todos (<?php echo $totalProviders; ?>)
+                        </a>
+                      <?php endif; ?>
+                    </h2>
+                  <?php endif; ?>
+                  
+                  <?php foreach ($providersResults as $provider): 
+                    $id = $provider['id'] ?? '';
+                    $name = $provider['display_name'] ?? '';
+                    $gender = $provider['gender'] ?? '';
+                    $country = $provider['country'] ?? '';
+                    $url = rtrim(SITE_URL, '/') . '/provider_profile.php?id=' . $id;
+                  ?>
+                    <div class="result-item">
+                      <div class="result-icon">
+                        <i class="fas fa-user-circle"></i>
+                      </div>
+                      <div class="result-content">
+                        <h3 class="result-title">
+                          <a href="<?php echo $e($url); ?>"><?php echo $e($name); ?></a>
+                        </h3>
+                        <div class="result-meta">
+                          <?php if ($gender): ?>
+                            <span class="meta-item"><i class="fas fa-venus-mars"></i> <?php echo $e(ucfirst($gender)); ?></span>
+                          <?php endif; ?>
+                          <?php if ($country): ?>
+                            <span class="meta-item"><i class="fas fa-flag"></i> <?php echo $e($country); ?></span>
+                          <?php endif; ?>
+                        </div>
+                      </div>
+                      <div class="result-action">
+                        <a href="<?php echo $e($url); ?>" class="btn-view">Ver Perfil</a>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
                 </div>
               <?php endif; ?>
-            </article>
-          <?php endforeach; ?>
-        </section>
-      <?php endif; ?>
 
-      <!-- RESULTADOS COMPANIES -->
-      <?php if (!empty($companiesResults)): ?>
-        <section class="results-section">
-          <?php if ($activeTab === 'all'): ?>
-            <h2 class="section-title">
-              <i class="fas fa-building"></i> Empresas
-              <?php if ($totalCompanies > count($companiesResults)): ?>
-                <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=companies'); ?>" class="see-all">
-                  Ver todos (<?php echo $totalCompanies; ?>)
-                </a>
-              <?php endif; ?>
-            </h2>
-          <?php endif; ?>
-          
-          <?php foreach ($companiesResults as $company): 
-            $id     = $company['id'] ?? '';
-            $name   = $company['display_name'] ?? '';
-            $desc   = (string)($company['description'] ?? '');
-            $snip   = $snippet($desc, 160);
-            $city   = trim((string)($company['city'] ?? ''));
-            $country= trim((string)($company['country'] ?? ''));
-            $loc    = trim($city . ($city && $country ? ', ' : '') . $country);
-            $url    = rtrim(SITE_URL, '/') . '/company_profile.php?id=' . $id;
-          ?>
-            <article class="google-result-item">
-              <div class="result-header">
-                <a href="<?php echo $e($url); ?>" class="result-url">
-                  <?php echo $e(parse_url(SITE_URL, PHP_URL_HOST)); ?> › Empresas › <?php echo $e($name); ?>
-                </a>
-              </div>
-              <h3 class="result-title">
-                <a href="<?php echo $e($url); ?>"><?php echo $e($name); ?></a>
-              </h3>
-              <?php if ($snip !== ''): ?>
-                <p class="result-description"><?php echo $e($snip); ?></p>
-              <?php endif; ?>
-              <?php if ($loc !== ''): ?>
-                <div class="result-meta">
-                  <i class="fas fa-map-marker-alt"></i> <?php echo $e($loc); ?>
+              <!-- Resultados CLUBS -->
+              <?php if (!empty($clubsResults)): ?>
+                <div class="results-group">
+                  <?php if ($activeTab === 'all'): ?>
+                    <h2 class="group-title">
+                      <i class="fas fa-glass-cheers"></i> Clubes
+                      <?php if ($totalClubs > count($clubsResults)): ?>
+                        <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=clubs'); ?>" class="view-all">
+                          Ver todos (<?php echo $totalClubs; ?>)
+                        </a>
+                      <?php endif; ?>
+                    </h2>
+                  <?php endif; ?>
+                  
+                  <?php foreach ($clubsResults as $club): 
+                    $id = $club['id'] ?? '';
+                    $name = $club['display_name'] ?? '';
+                    $desc = $snippet($club['description'] ?? '', 100);
+                    $url = rtrim(SITE_URL, '/') . '/club_profile.php?id=' . $id;
+                  ?>
+                    <div class="result-item">
+                      <div class="result-icon">
+                        <i class="fas fa-glass-cheers"></i>
+                      </div>
+                      <div class="result-content">
+                        <h3 class="result-title">
+                          <a href="<?php echo $e($url); ?>"><?php echo $e($name); ?></a>
+                        </h3>
+                        <?php if ($desc): ?>
+                          <p class="result-description"><?php echo $e($desc); ?></p>
+                        <?php endif; ?>
+                      </div>
+                      <div class="result-action">
+                        <a href="<?php echo $e($url); ?>" class="btn-view">Ver Detalhes</a>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
                 </div>
               <?php endif; ?>
-            </article>
-          <?php endforeach; ?>
-        </section>
-      <?php endif; ?>
 
-      <!-- RESULTADOS CLUBS -->
-      <?php if (!empty($clubsResults)): ?>
-        <section class="results-section">
-          <?php if ($activeTab === 'all'): ?>
-            <h2 class="section-title">
-              <i class="fas fa-glass-cheers"></i> Clubes
-              <?php if ($totalClubs > count($clubsResults)): ?>
-                <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=clubs'); ?>" class="see-all">
-                  Ver todos (<?php echo $totalClubs; ?>)
-                </a>
-              <?php endif; ?>
-            </h2>
-          <?php endif; ?>
-          
-          <?php foreach ($clubsResults as $club): 
-            $id     = $club['id'] ?? '';
-            $name   = $club['display_name'] ?? '';
-            $desc   = (string)($club['description'] ?? '');
-            $snip   = $snippet($desc, 160);
-            $city   = trim((string)($club['city'] ?? ''));
-            $country= trim((string)($club['country'] ?? ''));
-            $loc    = trim($city . ($city && $country ? ', ' : '') . $country);
-            $url    = rtrim(SITE_URL, '/') . '/club_profile.php?id=' . $id;
-          ?>
-            <article class="google-result-item">
-              <div class="result-header">
-                <a href="<?php echo $e($url); ?>" class="result-url">
-                  <?php echo $e(parse_url(SITE_URL, PHP_URL_HOST)); ?> › Clubes › <?php echo $e($name); ?>
-                </a>
-              </div>
-              <h3 class="result-title">
-                <a href="<?php echo $e($url); ?>"><?php echo $e($name); ?></a>
-              </h3>
-              <?php if ($snip !== ''): ?>
-                <p class="result-description"><?php echo $e($snip); ?></p>
-              <?php endif; ?>
-              <?php if ($loc !== ''): ?>
-                <div class="result-meta">
-                  <i class="fas fa-map-marker-alt"></i> <?php echo $e($loc); ?>
+              <!-- Resultados COMPANIES -->
+              <?php if (!empty($companiesResults)): ?>
+                <div class="results-group">
+                  <?php if ($activeTab === 'all'): ?>
+                    <h2 class="group-title">
+                      <i class="fas fa-building"></i> Empresas
+                      <?php if ($totalCompanies > count($companiesResults)): ?>
+                        <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=companies'); ?>" class="view-all">
+                          Ver todos (<?php echo $totalCompanies; ?>)
+                        </a>
+                      <?php endif; ?>
+                    </h2>
+                  <?php endif; ?>
+                  
+                  <?php foreach ($companiesResults as $company): 
+                    $id = $company['id'] ?? '';
+                    $name = $company['display_name'] ?? '';
+                    $desc = $snippet($company['description'] ?? '', 100);
+                    $url = rtrim(SITE_URL, '/') . '/company_profile.php?id=' . $id;
+                  ?>
+                    <div class="result-item">
+                      <div class="result-icon">
+                        <i class="fas fa-building"></i>
+                      </div>
+                      <div class="result-content">
+                        <h3 class="result-title">
+                          <a href="<?php echo $e($url); ?>"><?php echo $e($name); ?></a>
+                        </h3>
+                        <?php if ($desc): ?>
+                          <p class="result-description"><?php echo $e($desc); ?></p>
+                        <?php endif; ?>
+                      </div>
+                      <div class="result-action">
+                        <a href="<?php echo $e($url); ?>" class="btn-view">Ver Empresa</a>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
                 </div>
               <?php endif; ?>
-            </article>
-          <?php endforeach; ?>
-        </section>
-      <?php endif; ?>
 
-      <!-- RESULTADOS SERVICES -->
-      <?php if (!empty($servicesResults)): ?>
-        <section class="results-section">
-          <?php if ($activeTab === 'all'): ?>
-            <h2 class="section-title">
-              <i class="fas fa-concierge-bell"></i> Serviços
-              <?php if ($totalServices > count($servicesResults)): ?>
-                <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=services'); ?>" class="see-all">
-                  Ver todos (<?php echo $totalServices; ?>)
-                </a>
-              <?php endif; ?>
-            </h2>
-          <?php endif; ?>
-          
-          <?php foreach ($servicesResults as $service): 
-            $id     = $service['id'] ?? '';
-            $name   = $service['display_name'] ?? '';
-            $desc   = (string)($service['description'] ?? '');
-            $url    = rtrim(SITE_URL, '/') . '/search.php?term=' . urlencode($name) . '&tab=providers';
-          ?>
-            <article class="google-result-item">
-              <div class="result-header">
-                <a href="<?php echo $e($url); ?>" class="result-url">
-                  <?php echo $e(parse_url(SITE_URL, PHP_URL_HOST)); ?> › Serviços › <?php echo $e($name); ?>
-                </a>
+            <?php else: ?>
+              
+              <!-- Sem Resultados -->
+              <div class="no-results">
+                <i class="fas fa-search"></i>
+                <h3><?php echo $e($t_no_results); ?></h3>
+                <p>Tente usar palavras-chave diferentes ou mais genéricas</p>
               </div>
-              <h3 class="result-title">
-                <a href="<?php echo $e($url); ?>"><?php echo $e($name); ?></a>
-              </h3>
-              <p class="result-description">Buscar acompanhantes que oferecem este serviço</p>
-            </article>
-          <?php endforeach; ?>
-        </section>
-      <?php endif; ?>
-
-      <!-- Paginação -->
-      <?php if ($totalPages > 1 && $activeTab !== 'all'): ?>
-        <nav class="google-pagination">
-          <?php if ($currentPage > 1): ?>
-            <a href="<?php echo $e($paginationUrl($term, $currentPage - 1, $activeTab)); ?>" class="pagination-prev">
-              <i class="fas fa-chevron-left"></i> Anterior
-            </a>
-          <?php endif; ?>
-          
-          <div class="pagination-numbers">
-            <?php for ($i = $start; $i <= $end; $i++): ?>
-              <?php if ($i === $currentPage): ?>
-                <span class="page-number active"><?php echo $i; ?></span>
-              <?php else: ?>
-                <a href="<?php echo $e($paginationUrl($term, $i, $activeTab)); ?>" class="page-number"><?php echo $i; ?></a>
-              <?php endif; ?>
-            <?php endfor; ?>
+              
+            <?php endif; ?>
+            
           </div>
-          
-          <?php if ($currentPage < $totalPages): ?>
-            <a href="<?php echo $e($paginationUrl($term, $currentPage + 1, $activeTab)); ?>" class="pagination-next">
-              Próxima <i class="fas fa-chevron-right"></i>
-            </a>
-          <?php endif; ?>
-        </nav>
-      <?php endif; ?>
 
-    <?php else: ?>
-      <!-- Sem Resultados -->
-      <div class="no-results-google">
-        <i class="fas fa-search no-results-icon"></i>
-        <p class="no-results-title"><?php echo $e($t_no_results); ?></p>
-        <p class="no-results-suggestion"><?php echo $e($t_suggestion); ?></p>
-        
-        <div class="search-tips">
-          <h3>Sugestões:</h3>
-          <ul>
-            <li>Verifique a ortografia das palavras</li>
-            <li>Tente palavras-chave diferentes</li>
-            <li>Tente palavras-chave mais genéricas</li>
-            <li>Use menos palavras-chave</li>
-          </ul>
+          <!-- COLUNA DIREITA: Sidebar -->
+          <aside class="sidebar-column">
+            
+            <!-- Filtros -->
+            <div class="sidebar-widget">
+              <h3 class="widget-title">
+                <i class="fas fa-filter"></i> Filtros
+              </h3>
+              <div class="widget-content">
+                <p class="text-muted">Em breve: filtros avançados</p>
+              </div>
+            </div>
+
+            <!-- Clubes Destacados -->
+            <div class="sidebar-widget">
+              <h3 class="widget-title">
+                <i class="fas fa-glass-cheers"></i> Clubes
+              </h3>
+              <div class="widget-content">
+                <div class="sidebar-card">
+                  <div class="card-placeholder">
+                    <i class="fas fa-image"></i>
+                  </div>
+                  <p class="card-text">Anúncios em breve</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Anúncios -->
+            <div class="sidebar-widget">
+              <h3 class="widget-title">
+                <i class="fas fa-ad"></i> Anúncios
+              </h3>
+              <div class="widget-content">
+                <div class="sidebar-card">
+                  <div class="card-placeholder">
+                    <i class="fas fa-image"></i>
+                  </div>
+                  <p class="card-text">Espaço publicitário</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empresas Destacadas -->
+            <div class="sidebar-widget">
+              <h3 class="widget-title">
+                <i class="fas fa-building"></i> Empresas
+              </h3>
+              <div class="widget-content">
+                <div class="sidebar-card">
+                  <div class="card-placeholder">
+                    <i class="fas fa-image"></i>
+                  </div>
+                  <p class="card-text">Empresas em destaque</p>
+                </div>
+              </div>
+            </div>
+            
+          </aside>
+          
         </div>
       </div>
-    <?php endif; ?>
+    </div>
 
   <?php endif; ?>
+  
 </main>
