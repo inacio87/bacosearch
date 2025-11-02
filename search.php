@@ -69,14 +69,11 @@ try {
         
         // 1. PROVIDERS
         try {
-            // Primeiro tenta sem filtros de status para ver se há dados
+            // Busca apenas em display_name que é a única coluna de texto
             $countProvidersStmt = $pdo->prepare("
                 SELECT COUNT(DISTINCT p.id)
                 FROM providers p
-                WHERE (p.display_name LIKE :term 
-                   OR p.ad_title LIKE :term 
-                   OR p.description LIKE :term 
-                   OR p.keywords LIKE :term)
+                WHERE p.display_name LIKE :term
             ");
             $countProvidersStmt->execute([':term' => $like_term]);
             $totalProviders = (int)$countProvidersStmt->fetchColumn();
@@ -86,21 +83,13 @@ try {
                 $offsetVal = ($activeTab === 'providers') ? $offset : 0;
                 
                 $providersStmt = $pdo->prepare("
-                    SELECT p.id, p.display_name, p.ad_title, p.description, p.keywords,
-                           pl.ad_city AS city, c.name AS country, 'provider' AS result_type
+                    SELECT p.id, p.display_name, p.gender,
+                           c.name AS country, 'provider' AS result_type
                     FROM providers p
-                    LEFT JOIN provider_logistics pl ON p.id = pl.provider_id
                     LEFT JOIN countries c ON p.nationality_id = c.id
-                    WHERE (p.display_name LIKE :term 
-                       OR p.ad_title LIKE :term 
-                       OR p.description LIKE :term 
-                       OR p.keywords LIKE :term)
+                    WHERE p.display_name LIKE :term
                     GROUP BY p.id
-                    ORDER BY 
-                        CASE WHEN p.display_name LIKE :term THEN 1 
-                             WHEN p.ad_title LIKE :term THEN 2 
-                             ELSE 3 END,
-                        p.updated_at DESC
+                    ORDER BY p.updated_at DESC
                     LIMIT :limit OFFSET :offset
                 ");
                 $providersStmt->bindValue(':term', $like_term, PDO::PARAM_STR);

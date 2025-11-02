@@ -30,15 +30,12 @@ try {
         $count = $pdo->query("SELECT COUNT(*) FROM providers")->fetchColumn();
         echo "3. Total de registros em providers: $count\n\n";
         
-        // 4. Busca por 'morena'
+        // 4. Busca por 'morena' (só com colunas que existem)
         echo "4. Buscando por 'morena':\n";
         $stmt = $pdo->prepare("
-            SELECT id, display_name, ad_title, description, keywords, status, is_active
+            SELECT id, display_name, gender, status
             FROM providers 
-            WHERE display_name LIKE :term 
-               OR ad_title LIKE :term 
-               OR description LIKE :term 
-               OR keywords LIKE :term
+            WHERE display_name LIKE :term
             LIMIT 5
         ");
         $stmt->execute([':term' => '%morena%']);
@@ -48,8 +45,7 @@ try {
             foreach ($results as $r) {
                 echo "  ID: {$r['id']}\n";
                 echo "  Nome: {$r['display_name']}\n";
-                echo "  Título: {$r['ad_title']}\n";
-                echo "  Status: {$r['status']} | Ativo: {$r['is_active']}\n";
+                echo "  Status: {$r['status']}\n";
                 echo "  ---\n";
             }
         } else {
@@ -59,19 +55,55 @@ try {
         
         // 5. Mostra primeiros 5 registros
         echo "5. Primeiros 5 registros (qualquer um):\n";
-        $stmt = $pdo->query("SELECT id, display_name, ad_title, status, is_active FROM providers LIMIT 5");
+        $stmt = $pdo->query("SELECT id, display_name, gender, status FROM providers LIMIT 5");
         $any = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         if (count($any) > 0) {
             foreach ($any as $r) {
-                echo "  ID: {$r['id']} | Nome: {$r['display_name']} | Status: {$r['status']} | Ativo: {$r['is_active']}\n";
+                echo "  ID: {$r['id']} | Nome: {$r['display_name']} | Status: {$r['status']}\n";
             }
         } else {
             echo "  TABELA VAZIA - sem nenhum registro\n";
         }
+        
+        // 6. INSERIR DADOS DE TESTE
+        echo "\n6. Inserindo dados de teste:\n";
+        
+        // Primeiro, vamos criar uma conta (account)
+        $pdo->exec("
+            INSERT IGNORE INTO accounts (id, email, password_hash, role, is_verified, created_at, updated_at)
+            VALUES (999, 'test@bacosearch.com', 'dummy_hash', 'provider', 1, NOW(), NOW())
+        ");
+        
+        // Agora inserir providers de teste
+        $testData = [
+            ['Morena Linda', 'female', 1],
+            ['Julia Morena', 'female', 1],
+            ['Camila Morena Gostosa', 'female', 1],
+            ['Loira Safada', 'female', 1],
+            ['Ruiva Tesuda', 'female', 1],
+        ];
+        
+        foreach ($testData as $data) {
+            try {
+                $stmt = $pdo->prepare("
+                    INSERT INTO providers (account_id, display_name, gender, nationality_id, status, created_at, updated_at)
+                    VALUES (999, ?, ?, ?, 'active', NOW(), NOW())
+                ");
+                $stmt->execute($data);
+                echo "  ✓ Inserido: {$data[0]}\n";
+            } catch (Exception $e) {
+                echo "  ✗ Erro ao inserir {$data[0]}: " . $e->getMessage() . "\n";
+            }
+        }
+        
+        // Verifica total após inserção
+        $newCount = $pdo->query("SELECT COUNT(*) FROM providers")->fetchColumn();
+        echo "\n  Total após inserção: $newCount registros\n";
     }
     
     echo "\n=== FIM DEBUG ===\n";
+    echo "\nAgora teste: https://bacosearch.com/search.php?term=morena\n";
     
 } catch (Exception $e) {
     echo "ERRO: " . $e->getMessage() . "\n";
