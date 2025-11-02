@@ -1,0 +1,1532 @@
+/**
+ * /assets/css/dashboard.css - CSS para o Painel Administrativo
+ *
+ * Versão simplificada e focada na estrutura interativa do dashboard de estatísticas.
+ * Utiliza as variáveis globais de `variables.css` para consistência visual.
+ *
+ * Última Atualização: 2025-07-11 - Adicionados estilos para o formulário de criação de admin e colunas de anúncios.
+ */
+
+/* ==========================================================================
+   Variáveis Globais (se não estiverem em 'variables.css', mova para lá)
+   ========================================================================== */
+:root {
+    --bs-primary: #8e2157; /* Cor principal, um tom de vinho/magenta */
+    --bs-primary-hover: #6a1a40; /* Um pouco mais escuro para hover */
+    --bs-primary-light: #fdeaf4; /* Um tom mais claro da cor primária */
+    --bs-secondary: #6c757d;
+    --bs-text-primary: #212529;
+    --bs-text-secondary: #6c757d;
+    --bs-text-light: #888;
+    --bs-text-on-primary: #ffffff; /* Texto sobre a cor primária */
+    --bs-bg-white: #ffffff;
+    --bs-bg-light: #f8f9fa; /* Fundo mais claro */
+    --bs-border-color: #e0e0e0;
+    --bs-border-radius-xs: 4px;
+    --bs-border-radius-sm: 6px; /* Adicionado para botões pequenos */
+    --bs-border-radius-md: 8px;
+    --bs-border-radius-lg: 12px;
+    --bs-border-radius-pill: 50px; /* Para pílulas/badges */
+    --bs-shadow-sm: 0 2px 4px rgba(0,0,0,0.07);
+    --bs-shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    --bs-font-size-sm: 0.875rem;
+    --bs-font-size-md: 1rem;
+    --bs-font-size-lg: 1.125rem; /* Novo para títulos de módulo */
+
+    --bs-font-weight-regular: 400;
+    --bs-font-weight-medium: 500;
+    --bs-font-weight-semibold: 600;
+    --bs-font-weight-bold: 700;
+
+    --bs-transition-normal: 0.2s ease-in-out;
+
+    /* Novas variáveis para cores de status/botões */
+    --bs-success: #28a745;
+    --bs-success-hover: #218838;
+    --bs-danger: #dc3545;
+    --bs-danger-hover: #c82333;
+    --bs-warning: #ffc107;
+    --bs-warning-hover: #e0a800;
+    --bs-info: #17a2b8;
+    --bs-info-hover: #138496;
+}
+
+/* ==========================================================================
+   1. Estrutura Principal do Layout
+   ========================================================================== */
+
+.dashboard-page-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-lg);
+    align-items: flex-start;
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    width: 100%;
+    min-height: 100%;
+}
+
+.dashboard-sidebar {
+    width: var(--bs-sidebar-width, 240px);
+    background-color: var(--bs-bg-white, #fff);
+    border-right: 1px solid var(--bs-border-color, #e0e0e0);
+    padding: var(--spacing-lg, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+}
+
+.dashboard-sidebar .sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm, 0.5rem);
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    margin-bottom: var(--spacing-sm, 0.5rem);
+    border-radius: var(--bs-border-radius-md, 6px);
+    color: var(--bs-text-secondary, #6c757d);
+    font-weight: var(--bs-font-weight-medium);
+    text-decoration: none;
+    transition: background-color var(--bs-transition-normal), color var(--bs-transition-normal);
+}
+
+.dashboard-sidebar .sidebar-nav a:hover {
+    background-color: var(--bs-primary-light, #fdeaf4);
+    color: var(--bs-primary, #7c154f);
+}
+
+.dashboard-sidebar .sidebar-nav a.active {
+    background-color: var(--bs-primary, #7c154f);
+    color: var(--bs-text-on-primary, #fff);
+    box-shadow: var(--bs-shadow-sm, 0 2px 4px rgba(0,0,0,0.07));
+}
+
+.dashboard-main-content {
+    flex-grow: 1;
+    padding: var(--spacing-lg);
+    min-width: 50vw;
+}
+
+/* Header dentro do módulo (ex: "Estatísticas Gerais") */
+.module-header {
+    display: flex; /* Adicionado para alinhar título e botões */
+    justify-content: space-between; /* Espaço entre título e botões */
+    align-items: center; /* Alinha verticalmente */
+    margin-bottom: var(--spacing-lg, 1.5rem);
+    padding-bottom: var(--spacing-md, 1rem);
+    border-bottom: 1px solid var(--bs-border-color, #e0e0e0);
+}
+
+.module-header h1 {
+    font-size: 1.8rem;
+    font-weight: var(--bs-font-weight-bold);
+    color: var(--bs-text-primary, #212529);
+    margin: 0; /* Remove margem padrão do h1 */
+}
+
+/* ==========================================================================
+   2. Componentes do Módulo de Estatísticas
+   ========================================================================== */
+
+/* --- Filtros de Tempo --- */
+.time-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm, 0.5rem);
+    margin-bottom: var(--spacing-xl, 2rem);
+}
+
+.time-filter-btn {
+    /* Herda o estilo da classe .btn, mas pode ter ajustes */
+    background-color: var(--bs-bg-light, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    color: var(--bs-text-secondary, #6c757d);
+}
+
+.time-filter-btn.active {
+    background-color: var(--bs-primary, #7c154f);
+    color: var(--bs-text-on-primary, #fff);
+    border-color: var(--bs-primary, #7c154f);
+    font-weight: var(--bs-font-weight-semibold);
+}
+
+/* --- Gráfico --- */
+.chart-container {
+    background-color: var(--bs-bg-white, #fff);
+    padding: var(--spacing-lg, 1.5rem);
+    border-radius: var(--bs-border-radius-lg, 12px);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    box-shadow: var(--bs-shadow-sm, 0 2px 4px rgba(0,0,0,0.07));
+    margin-bottom: var(--spacing-xl, 2rem);
+    height: 350px; /* Altura fixa para o contêiner do gráfico */
+}
+
+.chart-container h3 {
+    font-size: 1.2rem;
+    margin-bottom: var(--spacing-lg, 1.5rem);
+    font-weight: var(--bs-font-weight-semibold);
+}
+
+/* --- Cards de Estatísticas --- */
+.stats-cards-grid {
+    display: grid;
+    /* Layout responsivo: cria colunas de no mínimo 200px de largura */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg, 1.5rem);
+}
+
+.stat-card {
+    background-color: var(--bs-bg-white, #fff);
+    padding: var(--spacing-md, 1rem);
+    border-radius: var(--bs-border-radius-lg, 12px);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    box-shadow: var(--bs-shadow-sm, 0 2px 4px rgba(0,0,0,0.07));
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md, 1rem);
+    transition: transform var(--bs-transition-normal), box-shadow var(--bs-transition-normal);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--bs-shadow-md, 0 4px 8px rgba(0,0,0,0.1));
+}
+
+.stat-card .card-icon {
+    font-size: 24px;
+    color: var(--bs-primary, #7c154f);
+    background-color: var(--bs-primary-light, #fdeaf4);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* Impede que o ícone encolha */
+}
+
+.stat-card .card-content {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.stat-card .card-value {
+    font-size: 1.75rem;
+    font-weight: var(--bs-font-weight-bold);
+    color: var(--bs-text-primary, #212529);
+    line-height: 1.2;
+}
+
+.stat-card .card-title {
+    font-size: 0.9rem;
+    color: var(--bs-text-secondary, #6c757d);
+}
+
+/* ==========================================================================
+   3. Componentes Gerais e Utilitários
+   ========================================================================== */
+
+.btn {
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    border-radius: var(--bs-border-radius-md, 6px);
+    cursor: pointer;
+    font-weight: var(--bs-font-weight-medium);
+    transition: all var(--bs-transition-normal);
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid transparent; /* Adicionado para consistência */
+}
+
+.btn-primary {
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    border-color: var(--bs-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--bs-primary-hover);
+    border-color: var(--bs-primary-hover);
+}
+
+.btn-secondary {
+    background-color: var(--bs-bg-light);
+    color: var(--bs-text-secondary);
+    border-color: var(--bs-border-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bs-border-color);
+    color: var(--bs-text-primary);
+}
+
+.btn-success {
+    background-color: var(--bs-success);
+    color: var(--bs-text-on-primary);
+    border-color: var(--bs-success);
+}
+.btn-success:hover {
+    background-color: var(--bs-success-hover);
+    border-color: var(--bs-success-hover);
+}
+
+.btn-danger {
+    background-color: var(--bs-danger);
+    color: var(--bs-text-on-primary);
+    border-color: var(--bs-danger);
+}
+.btn-danger:hover {
+    background-color: var(--bs-danger-hover);
+    border-color: var(--bs-danger-hover);
+}
+
+.btn-warning {
+    background-color: var(--bs-warning);
+    color: var(--bs-text-primary); /* Texto escuro no amarelo */
+    border-color: var(--bs-warning);
+}
+.btn-warning:hover {
+    background-color: var(--bs-warning-hover);
+    border-color: var(--bs-warning-hover);
+}
+
+.btn-info {
+    background-color: var(--bs-info);
+    color: var(--bs-text-on-primary);
+    border-color: var(--bs-info);
+}
+.btn-info:hover {
+    background-color: var(--bs-info-hover);
+    border-color: var(--bs-info-hover);
+}
+
+
+.alert {
+    padding: var(--spacing-md, 1rem);
+    margin-bottom: var(--spacing-lg, 1.5rem);
+    border: 1px solid transparent;
+    border-radius: var(--bs-border-radius-md, 6px);
+    font-size: 0.9rem;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeeba;
+}
+
+/* ==========================================================================
+   4. Responsividade
+   ========================================================================== */
+@media (max-width: 768px) {
+    .dashboard-page-wrapper {
+        flex-direction: column;
+    }
+
+    .dashboard-sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+    }
+
+    .dashboard-sidebar .sidebar-nav {
+        display: flex;
+        gap: var(--spacing-xs, 0.25rem);
+    }
+
+    .dashboard-sidebar .sidebar-nav a {
+        padding: var(--spacing-sm, 0.75rem);
+    }
+
+    .dashboard-sidebar .sidebar-nav .nav-text {
+        display: none; /* Esconde o texto dos links da sidebar em mobile */
+    }
+
+    .module-header {
+        flex-direction: column; /* Empilha o título e o botão em telas pequenas */
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    .module-header h1 {
+        font-size: 1.5rem;
+    }
+
+    /* A grid de cards já é responsiva graças ao auto-fit,
+       mas podemos garantir que em telas muito pequenas cada card ocupe
+       mais espaço se necessário. A configuração atual já é muito boa. */
+    .stats-cards-grid {
+       gap: var(--spacing-md, 1rem);
+    }
+}
+/* ==========================================================================
+   Módulo Top 10
+   ========================================================================== */
+.top-lists-grid {
+    display: grid;
+    /* Define 3 colunas de tamanho igual em telas grandes */
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-xl, 2rem);
+}
+
+/* --- Media Queries para Responsividade --- */
+
+/* Para tablets e telas menores, muda para 2 colunas */
+@media (max-width: 992px) {
+    .top-lists-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Para telemóveis, muda para 1 coluna */
+@media (max-width: 576px) {
+    .top-lists-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Estilo dos Componentes Internos --- */
+
+.top-list-container {
+    background-color: var(--bs-bg-white, #fff);
+    padding: var(--spacing-lg, 1.5rem);
+    border-radius: var(--bs-border-radius-lg, 12px);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+}
+
+.top-list-container h4 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-md, 1rem);
+    padding-bottom: var(--spacing-md, 1rem);
+    border-bottom: 1px solid var(--bs-border-color, #e0e0e0);
+    font-size: 1.1rem;
+    font-weight: var(--bs-font-weight-semibold);
+}
+
+.top-list-container ol {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.top-list-container ol li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs, 0.4rem) 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--bs-bg-light, #f8f9fa); /* Usar light para ser mais suave */
+}
+
+.top-list-container ol li:last-child {
+    border-bottom: none;
+}
+
+.top-list-container .item-name {
+    font-weight: var(--bs-font-weight-medium);
+    color: var(--bs-text-secondary, #6c757d);
+}
+
+.top-list-container .item-count {
+    font-weight: var(--bs-font-weight-bold);
+    color: var(--bs-primary, #7c154f);
+    background-color: var(--bs-primary-light, #fdeaf4);
+    padding: 2px 8px;
+    border-radius: var(--bs-border-radius-pill, 50px);
+    font-size: 0.8rem;
+}
+/* ==========================================================================
+   6. Estilos para Formulários no Dashboard (ads_management.php, create_admin.php)
+   ========================================================================== */
+
+/* Variáveis de Cores e Espaçamento (EXEMPLO - DEVE SER ALINHADO AO SEU DESIGN SYSTEM) */
+/* Já movidas para :root */
+
+
+/* Container principal do módulo */
+.dashboard-module-wrapper {
+    padding: var(--spacing-lg); /* Espaçamento interno padrão */
+}
+
+/* Cabeçalho do Módulo (título e botões de ação) - JÁ DEFINIDO ACIMA */
+
+/* Estilo geral para botões (se não houver um global) - JÁ DEFINIDO ACIMA */
+
+
+/* Estilos de Alerta (mensagens de status) - JÁ DEFINIDO ACIMA */
+
+/* =========================================================
+   Formulário Comum do Dashboard (dashboard-form & admin-form)
+   ========================================================= */
+.dashboard-form, .admin-form { /* Adicionado .admin-form aqui */
+    background-color: var(--bs-bg-white);
+    padding: var(--spacing-lg);
+    border-radius: var(--bs-border-radius-lg);
+    border: 1px solid var(--bs-border-color);
+    box-shadow: var(--bs-shadow-md); /* Sombra um pouco mais pronunciada */
+    margin-top: var(--spacing-lg);
+}
+
+.dashboard-form .form-group, .admin-form .form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.dashboard-form .form-group label, .admin-form .form-group label {
+    display: block;
+    font-size: var(--bs-font-size-sm);
+    font-weight: var(--bs-font-weight-medium);
+    color: var(--bs-text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.dashboard-form .form-group input[type="text"],
+.dashboard-form .form-group input[type="url"],
+.dashboard-form .form-group input[type="date"],
+.dashboard-form .form-group input[type="email"], /* Adicionado email */
+.dashboard-form .form-group input[type="password"], /* Adicionado password */
+.dashboard-form .form-group select,
+.admin-form .form-group input[type="text"], /* Adicionado para admin-form */
+.admin-form .form-group input[type="url"],
+.admin-form .form-group input[type="date"],
+.admin-form .form-group input[type="email"],
+.admin-form .form-group input[type="password"],
+.admin-form .form-group select {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    font-size: var(--bs-font-size-md);
+    color: var(--bs-text-primary);
+    background-color: var(--bs-bg-white);
+    transition: border-color var(--bs-transition-normal), box-shadow var(--bs-transition-normal);
+    height: 44px; /* Aumentei um pouco a altura para melhor toque e visual */
+    box-sizing: border-box; /* Garante que padding e borda não aumentem o width */
+}
+
+.dashboard-form .form-group input[type="text"]:focus,
+.dashboard-form .form-group input[type="url"]:focus,
+.dashboard-form .form-group input[type="date"]:focus,
+.dashboard-form .form-group input[type="email"]:focus, /* Adicionado email */
+.dashboard-form .form-group input[type="password"]:focus, /* Adicionado password */
+.dashboard-form .form-group select:focus,
+.admin-form .form-group input[type="text"]:focus, /* Adicionado para admin-form */
+.admin-form .form-group input[type="url"]:focus,
+.admin-form .form-group input[type="date"]:focus,
+.admin-form .form-group input[type="email"]:focus,
+.admin-form .form-group input[type="password"]:focus,
+.admin-form .form-group select:focus {
+    outline: none;
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 3px rgba(142, 33, 87, 0.2); /* Sombra mais visível no foco */
+}
+
+.dashboard-form .form-group input[type="file"], .admin-form .form-group input[type="file"] {
+    padding: var(--spacing-sm);
+    height: auto;
+    background-color: var(--bs-bg-light);
+    border: 1px dashed var(--bs-border-color);
+}
+
+.dashboard-form .form-group input[type="file"]::-webkit-file-upload-button, .admin-form .form-group input[type="file"]::-webkit-file-upload-button {
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    border: none;
+    padding: 8px 15px;
+    border-radius: var(--bs-border-radius-md);
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color var(--bs-transition-normal);
+}
+
+.dashboard-form .form-group input[type="file"]::-webkit-file-upload-button:hover, .admin-form .form-group input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: var(--bs-primary-hover);
+}
+
+.current-image-info {
+    font-size: var(--bs-font-size-sm);
+    color: var(--bs-text-secondary);
+    margin-top: var(--spacing-xs);
+}
+.current-image-info a {
+    color: var(--bs-primary);
+    text-decoration: none;
+}
+.current-image-info a:hover {
+    text-decoration: underline;
+}
+
+.dashboard-form .checkbox-label, .admin-form .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--bs-font-size-md);
+    color: var(--bs-text-primary);
+    cursor: pointer;
+    user-select: none;
+    padding: var(--spacing-xs) 0;
+}
+
+.dashboard-form .checkbox-label input[type="checkbox"], .admin-form .checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    flex-shrink: 0;
+    border: 2px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-xs);
+    background-color: var(--bs-bg-white);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    position: relative;
+    transition: background-color var(--bs-transition-normal), border-color var(--bs-transition-normal);
+}
+
+.dashboard-form .checkbox-label input[type="checkbox"]:checked, .admin-form .checkbox-label input[type="checkbox"]:checked {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.dashboard-form .checkbox-label input[type="checkbox"]:checked::before, .admin-form .checkbox-label input[type="checkbox"]:checked::before {
+    content: '\2713';
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--bs-text-on-primary);
+    font-size: 16px;
+}
+
+.dashboard-form .form-row, .admin-form .form-row {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.dashboard-form .form-row .form-group, .admin-form .form-row .form-group {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 0;
+}
+
+.dashboard-form .form-actions, .admin-form .form-actions {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--bs-border-color);
+    text-align: right;
+}
+
+.dashboard-form .form-actions .btn, .admin-form .form-actions .btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--bs-font-size-md);
+    font-weight: var(--bs-font-weight-semibold);
+    min-width: 120px;
+}
+
+/* =========================================================
+   Listagem de Anúncios (ads_list_container)
+   ========================================================= */
+.ads-list-container, .users-list-container { /* Adicionado .users-list-container aqui */
+    margin-top: var(--spacing-lg);
+    overflow-x: auto;
+    background-color: var(--bs-bg-white);
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--bs-shadow-md);
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dashboard-table thead th {
+    background-color: var(--bs-bg-light);
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: var(--bs-font-weight-semibold);
+    color: var(--bs-text-primary);
+    border-bottom: 2px solid var(--bs-border-color);
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-size: var(--bs-font-size-sm);
+}
+
+.dashboard-table tbody tr {
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.dashboard-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.dashboard-table tbody td {
+    padding: 12px 15px;
+    color: var(--bs-text-primary);
+    vertical-align: middle;
+}
+
+/* Ajustes de largura para colunas específicas (apenas para desktop) */
+/* Total de 16 colunas: ID, Título, Slot, Target_level, Global, País, Estado, Cidade, Ativo, Período, Vistos Únicos, Views, Cliques, Home Mobile, Home Desktop, Ações */
+.dashboard-table th:nth-child(1), .dashboard-table td:nth-child(1) { width: 3%; } /* ID */
+.dashboard-table th:nth-child(2), .dashboard-table td:nth-child(2) { width: 12%; } /* Título */
+.dashboard-table th:nth-child(3), .dashboard-table td:nth-child(3) { width: 8%; } /* Slot */
+.dashboard-table th:nth-child(4), .dashboard-table td:nth-child(4) { width: 8%; } /* Target Level (Global/National/Regional) */
+.dashboard-table th:nth-child(5), .dashboard-table td:nth-child(5) { width: 5%; text-align: center;} /* Global */
+.dashboard-table th:nth-child(6), .dashboard-table td:nth-child(6) { width: 7%; } /* País */
+.dashboard-table th:nth-child(7), .dashboard-table td:nth-child(7) { width: 7%; } /* Estado */
+.dashboard-table th:nth-child(8), .dashboard-table td:nth-child(8) { width: 7%; } /* Cidade */
+.dashboard-table th:nth-child(9), .dashboard-table td:nth-child(9) { width: 5%; text-align: center;} /* Ativo */
+.dashboard-table th:nth-child(10), .dashboard-table td:nth-child(10) { width: 10%; } /* Período */
+.dashboard-table th:nth-child(11), .dashboard-table td:nth-child(11) { width: 6%; text-align: center;} /* Vistos (Únicos) */
+.dashboard-table th:nth-child(12), .dashboard-table td:nth-child(12) { width: 6%; text-align: center;} /* Visualizações */
+.dashboard-table th:nth-child(13), .dashboard-table td:nth-child(13) { width: 6%; text-align: center;} /* Cliques */
+.dashboard-table th:nth-child(14), .dashboard-table td:nth-child(14) { width: 6%; text-align: center;} /* Home Mobile PVs */
+.dashboard-table th:nth-child(15), .dashboard-table td:nth-child(15) { width: 6%; text-align: center;} /* Home Desktop PVs */
+.dashboard-table th:nth-child(16), .dashboard-table td:nth-child(16) { width: 8%; text-align: center;} /* Ações */
+
+
+/* Botões dentro da tabela */
+.dashboard-table .btn-sm {
+    padding: 6px 12px;
+    font-size: 0.8em;
+    margin: 0 4px;
+    border-radius: var(--bs-border-radius-sm, 4px);
+}
+
+.dashboard-table .btn-edit {
+    background-color: var(--bs-info);
+    color: var(--bs-text-on-primary);
+    border-color: var(--bs-info);
+}
+.dashboard-table .btn-edit:hover {
+    background-color: var(--bs-info-hover);
+    border-color: var(--bs-info-hover);
+}
+.dashboard-table .btn-danger {
+    background-color: var(--bs-danger);
+    color: var(--bs-text-on-primary);
+    border-color: var(--bs-danger);
+}
+.dashboard-table .btn-danger:hover {
+    background-color: var(--bs-danger-hover);
+    border-color: var(--bs-danger-hover);
+}
+
+/* New: Status Badges for User Table */
+.status-badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 75%;
+    font-weight: var(--bs-font-weight-bold);
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: var(--bs-border-radius-pill);
+    color: #fff; /* Default text color for badges */
+}
+
+.status-active {
+    background-color: var(--bs-success);
+}
+.status-pending_email_verification, .status-pending_admin_approval {
+    background-color: var(--bs-warning);
+    color: var(--bs-text-primary); /* Darker text for warning badge */
+}
+.status-suspended, .status-rejected {
+    background-color: var(--bs-danger);
+}
+
+
+/* Responsividade para Tabelas (Mobile) */
+@media (max-width: 992px) {
+    .dashboard-table {
+        font-size: var(--bs-font-size-sm);
+    }
+
+    .dashboard-table thead {
+        display: none;
+    }
+
+    .dashboard-table, .dashboard-table tbody, .dashboard-table tr, .dashboard-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .dashboard-table tbody tr {
+        margin-bottom: var(--spacing-md);
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius-md);
+        box-shadow: var(--bs-shadow-sm);
+        padding: var(--spacing-sm);
+    }
+
+    .dashboard-table tbody td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border: none;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .dashboard-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        white-space: nowrap;
+        text-align: left;
+        font-weight: var(--bs-font-weight-semibold);
+        color: var(--bs-text-secondary);
+        font-size: var(--bs-font-size-sm);
+    }
+
+    /* Ajustes específicos para a coluna de Ações no mobile */
+    .dashboard-table tbody td:last-child {
+        text-align: center;
+        padding-top: var(--spacing-sm);
+        padding-bottom: var(--spacing-sm);
+        border-top: 1px solid var(--bs-border-color);
+        margin-top: var(--spacing-sm);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .dashboard-table tbody td:last-child::before {
+        content: none;
+    }
+}
+
+/* Responsividade para o Formulário */
+@media (max-width: 768px) {
+    .dashboard-form, .admin-form { /* Aplicar também a .admin-form */
+        padding: var(--spacing-md);
+    }
+    .dashboard-form .form-row, .admin-form .form-row {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    .dashboard-form .form-row .form-group, .admin-form .form-row .form-group {
+        width: 100%;
+    }
+    .dashboard-form .form-actions, .admin-form .form-actions {
+        text-align: center;
+    }
+    .dashboard-form .form-group input[type="file"]::-webkit-file-upload-button, .admin-form .form-group input[type="file"]::-webkit-file-upload-button {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+/* ==========================================================================
+   5. Componentes do Módulo de Logs (system_logs.php) - Ajustes de Compactação
+   ========================================================================== */
+
+/* Estilos para as abas de seleção de tipo de log (mantidos) */
+.log-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm, 0.5rem);
+    margin-bottom: var(--spacing-lg, 1.5rem);
+    border-bottom: 1px solid var(--bs-border-color, #e0e0e0);
+    padding-bottom: var(--spacing-sm, 0.5rem);
+}
+
+.log-tab-btn {
+    background-color: var(--bs-bg-light, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    color: var(--bs-text-secondary, #6c757d);
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    border-radius: var(--bs-border-radius-md, 6px);
+    cursor: pointer;
+    font-weight: var(--bs-font-weight-medium);
+    transition: background-color var(--bs-transition-normal), color var(--bs-transition-normal), border-color var(--bs-transition-normal);
+}
+
+.log-tab-btn.active {
+    background-color: var(--bs-primary, #7c154f);
+    color: var(--bs-text-on-primary, #fff);
+    border-color: var(--bs-primary, #7c154f);
+    font-weight: var(--bs-font-weight-semibold);
+}
+
+.log-tab-btn:hover:not(.active) {
+    background-color: var(--bs-primary-light, #fdeaf4);
+    color: var(--bs-primary, #7c154f);
+}
+
+/* Container da tabela de logs (mantido) */
+.log-table-container {
+    background-color: var(--bs-bg-white, #fff);
+    padding: var(--spacing-lg, 1.5rem);
+    border-radius: var(--bs-border-radius-lg, 12px);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    box-shadow: var(--bs-shadow-sm, 0 2px 4px rgba(0,0,0,0.07));
+    overflow-x: auto;
+}
+
+/* Estilo da tabela de logs */
+#logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md, 1rem);
+}
+
+#logs-table thead th {
+    background-color: var(--bs-bg-light, #f8f9fa);
+    padding: 8px 3px;
+    text-align: left;
+    font-weight: var(--bs-font-weight-semibold, 600);
+    color: var(--bs-text-primary, #212529);
+    border-bottom: 2px solid var(--bs-border-color, #e0e0e0);
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-size: var(--bs-font-size-sm, 0.875rem);
+}
+
+#logs-table tbody tr {
+    border-bottom: 1px solid var(--bs-border-color, #e0e0e0);
+}
+
+#logs-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+#logs-table tbody td {
+    padding: 8px 15px;
+    color: var(--bs-text-primary, #212529);
+    vertical-align: top;
+    font-size: 0.85rem;
+    word-break: break-word;
+    max-width: 250px;
+}
+
+/* Estilo para células clicáveis (mensagens de log) (mantido) */
+.log-message-clickable {
+    cursor: pointer;
+    text-decoration: underline;
+    color: var(--bs-primary, #7c154f);
+    font-weight: var(--bs-font-weight-medium);
+}
+
+.log-message-clickable:hover {
+    color: var(--bs-primary-hover, #6a1a40);
+}
+
+/* Estilos para a paginação (mantidos) */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md, 1rem);
+    margin-top: var(--spacing-lg, 1.5rem);
+    padding-top: var(--spacing-md, 1rem);
+    border-top: 1px solid var(--bs-border-color, #e0e0e0);
+}
+
+.pagination-controls .btn {
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    font-size: var(--bs-font-size-md, 1rem);
+    border-radius: var(--bs-border-radius-md, 6px);
+    background-color: var(--bs-bg-light, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    color: var(--bs-text-secondary, #6c757d);
+}
+
+.pagination-controls .btn:hover:not(:disabled) {
+    background-color: var(--bs-primary-light, #fdeaf4);
+    color: var(--bs-primary, #7c154f);
+    border-color: var(--bs-primary, #7c154f);
+}
+
+.pagination-controls .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#page-info {
+    font-size: var(--bs-font-size-md, 1rem);
+    color: var(--bs-text-primary, #212529);
+    font-weight: var(--bs-font-weight-medium);
+}
+
+/* ==========================================================================
+   Estilos do Modal (Pop-up) (mantidos)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: var(--spacing-md);
+}
+
+.modal-content {
+    background-color: var(--bs-bg-white, #fff);
+    border-radius: var(--bs-border-radius-lg, 12px);
+    box-shadow: var(--bs-shadow-md, 0 4px 12px rgba(0,0,0,0.1));
+    width: 90%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg, 1.5rem);
+    border-bottom: 1px solid var(--bs-border-color, #e0e0e0);
+}
+
+.modal-title {
+    font-size: 1.4rem;
+    font-weight: var(--bs-font-weight-bold);
+    color: var(--bs-text-primary, #212529);
+    margin: 0;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--bs-text-secondary, #6c757d);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color var(--bs-transition-normal);
+}
+
+.close-modal-btn:hover {
+    color: var(--bs-primary, #7c154f);
+}
+
+.modal-body {
+    padding: var(--spacing-lg, 1.5rem);
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.log-message-pre {
+    background-color: var(--bs-bg-light, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    border-radius: var(--bs-border-radius-md, 6px);
+    padding: var(--spacing-md, 1rem);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--bs-text-primary, #212529);
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 0;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md, 1rem);
+    padding: var(--spacing-lg, 1.5rem);
+    border-top: 1px solid var(--bs-border-color, #e0e0e0);
+}
+
+/* Responsividade para o Modal (mantida) */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: var(--spacing-md);
+    }
+
+    .modal-header, .modal-footer {
+        padding: var(--spacing-md, 1rem);
+    }
+
+    .modal-title {
+        font-size: 1.2rem;
+    }
+
+    .modal-body {
+        padding: var(--spacing-md, 1rem);
+    }
+
+    .modal-footer {
+        flex-direction: column;
+        gap: var(--spacing-sm, 0.5rem);
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+    }
+}
+
+/* Responsividade para a tabela de logs em telas menores (ajustada para padding) */
+@media (max-width: 992px) {
+    #logs-table thead {
+        display: none;
+    }
+
+    #logs-table, #logs-table tbody, #logs-table tr, #logs-table td {
+        display: block;
+        width: 100%;
+    }
+
+    #logs-table tbody tr {
+        margin-bottom: var(--spacing-md);
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius-md);
+        box-shadow: var(--bs-shadow-sm);
+        padding: var(--spacing-sm);
+    }
+
+    #logs-table tbody td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border: none;
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+    #logs-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        white-space: nowrap;
+        text-align: left;
+        font-weight: var(--bs-font-weight-semibold);
+        color: var(--bs-text-secondary);
+        font-size: var(--bs-font-size-sm);
+    }
+
+    #logs-table tbody td[data-label="Mensagem"],
+    #logs-table tbody td[data-label="User Agent"],
+    #logs-table tbody td[data-label="URI da Requisição"] {
+        white-space: normal;
+        max-width: none;
+        text-align: left;
+    }
+
+    #logs-table tbody td[data-label="Mensagem"]:before,
+    #logs-table tbody td[data-label="User Agent"]:before,
+    #logs-table tbody td[data-label="URI da Requisição"]:before {
+        width: 100%;
+        position: static;
+        display: block;
+        text-align: left;
+        margin-bottom: var(--spacing-xs);
+    }
+}
+
+/* Responsividade para os filtros de tempo e abas em telas menores (mantida) */
+@media (max-width: 768px) {
+    .time-filters, .log-tabs {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .time-filter-btn, .log-tab-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+/* ==========================================================================
+   7. Componentes do Módulo de Traduções (translations.php)
+   ========================================================================== */
+
+/* Abas de seleção de tipo de tradução */
+.translation-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm, 0.5rem);
+    margin-bottom: var(--spacing-lg, 1.5rem);
+    border-bottom: 1px solid var(--bs-border-color, #e0e0e0);
+    padding-bottom: var(--spacing-sm, 0.5rem);
+}
+
+.translation-tab-btn {
+    background-color: var(--bs-bg-light, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    color: var(--bs-text-secondary, #6c757d);
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    border-radius: var(--bs-border-radius-md, 6px);
+    cursor: pointer;
+    font-weight: var(--bs-font-weight-medium);
+    transition: background-color var(--bs-transition-normal), color var(--bs-transition-normal), border-color var(--bs-transition-normal);
+}
+
+.translation-tab-btn.active {
+    background-color: var(--bs-primary, #7c154f);
+    color: var(--bs-text-on-primary, #fff);
+    border-color: var(--bs-primary, #7c154f);
+    font-weight: var(--bs-font-weight-semibold);
+}
+
+.translation-tab-btn:hover:not(.active) {
+    background-color: var(--bs-primary-light, #fdeaf4);
+    color: var(--bs-primary, #7c154f);
+}
+
+.translation-section {
+    background-color: var(--bs-bg-white, #fff);
+    padding: var(--spacing-lg, 1.5rem);
+    border-radius: var(--bs-border-radius-lg, 12px);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    box-shadow: var(--bs-shadow-sm, 0 2px 4px rgba(0,0,0,0.07));
+    margin-bottom: var(--spacing-xl, 2rem);
+}
+
+.section-description {
+    font-size: 0.95rem;
+    color: var(--bs-text-secondary, #6c757d);
+    margin-bottom: var(--spacing-lg, 1.5rem);
+    padding-bottom: var(--spacing-md, 1rem);
+    border-bottom: 1px dashed var(--bs-border-color, #e0e0e0);
+}
+
+/* Estilos para a seção de Gerenciar Traduções (campos de busca) */
+.search-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md, 1rem);
+    margin-bottom: var(--spacing-lg, 1.5rem);
+    align-items: center;
+}
+
+.search-filters .form-control {
+    flex: 1;
+    min-width: 180px;
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    border-radius: var(--bs-border-radius-md, 6px);
+    font-size: 0.9rem;
+    color: var(--bs-text-primary, #212529);
+    background-color: var(--bs-bg-white, #fff);
+}
+
+.search-filters .btn {
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-lg, 1.25rem);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* Estilo para tabelas de tradução (reutiliza o estilo de tabela geral) */
+#missing-translations-table,
+#manage-translations-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md, 1rem);
+}
+
+#missing-translations-table thead th,
+#manage-translations-table thead th {
+    background-color: var(--bs-bg-light, #f8f9fa);
+    padding: 10px 15px;
+    text-align: left;
+    font-weight: var(--bs-font-weight-semibold, 600);
+    color: var(--bs-text-primary, #212529);
+    border-bottom: 2px solid var(--bs-border-color, #e0e0e0);
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-size: var(--bs-font-size-sm, 0.875rem);
+}
+
+#missing-translations-table tbody td,
+#manage-translations-table tbody td {
+    padding: 10px 15px;
+    color: var(--bs-text-primary, #212529);
+    vertical-align: top;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--bs-border-color, #e0e0e0);
+    word-break: break-word;
+}
+
+#missing-translations-table tbody tr:last-child td,
+#manage-translations-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Estilo para a célula de valor da tradução editável */
+.translation-value-cell .display-value {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* No modo de edição, permitimos quebra de linha */
+.translation-value-cell textarea.edit-value {
+    width: 100%;
+    height: 80px;
+    padding: var(--spacing-xs, 0.5rem);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    border-radius: var(--bs-border-radius-sm, 4px);
+    font-size: 0.85rem;
+    resize: vertical;
+}
+
+/* Botões de Ações na tabela */
+.actions-cell .btn-sm {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    margin-right: 5px;
+}
+
+/* Estilos de Paginação (reutilizados do módulo de logs, mas com IDs específicos) */
+#manage-pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md, 1rem);
+    margin-top: var(--spacing-lg, 1.5rem);
+    padding-top: var(--spacing-md, 1rem);
+    border-top: 1px solid var(--bs-border-color, #e0e0e0);
+}
+
+#manage-pagination-controls .btn {
+    padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+    font-size: var(--bs-font-size-md, 1rem);
+    border-radius: var(--bs-border-radius-md, 6px);
+    background-color: var(--bs-bg-light, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #e0e0e0);
+    color: var(--bs-text-secondary, #6c757d);
+}
+
+#manage-pagination-controls .btn:hover:not(:disabled) {
+    background-color: var(--bs-primary-light, #fdeaf4);
+    color: var(--bs-primary, #7c154f);
+    border-color: var(--bs-primary, #7c154f);
+}
+
+#manage-pagination-controls .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#page-info {
+    font-size: var(--bs-font-size-md, 1rem);
+    color: var(--bs-text-primary, #212529);
+    font-weight: var(--bs-font-weight-medium);
+}
+
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .translation-tabs {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .translation-tab-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .search-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-filters .form-control,
+    .search-filters .btn {
+        width: 100%;
+        min-width: unset;
+    }
+
+    #missing-translations-table thead,
+    #manage-translations-table thead {
+        display: none;
+    }
+
+    #missing-translations-table, #missing-translations-table tbody, #missing-translations-table tr, #missing-translations-table td,
+    #manage-translations-table, #manage-translations-table tbody, #manage-translations-table tr, #manage-translations-table td {
+        display: block;
+        width: 100%;
+    }
+
+    #missing-translations-table tbody tr,
+    #manage-translations-table tbody tr {
+        margin-bottom: var(--spacing-md);
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius-md);
+        box-shadow: var(--bs-shadow-sm);
+        padding: var(--spacing-sm);
+    }
+
+    #missing-translations-table tbody td,
+    #manage-translations-table tbody td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border: none;
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+    #missing-translations-table td:before,
+    #manage-translations-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        white-space: nowrap;
+        text-align: left;
+        font-weight: var(--bs-font-weight-semibold);
+        color: var(--bs-text-secondary);
+        font-size: var(--bs-font-size-sm);
+    }
+
+    /* Ajustes específicos para a célula de valor da tradução em mobile */
+    #manage-translations-table tbody td.translation-value-cell {
+        white-space: normal;
+        text-align: left;
+    }
+    #manage-translations-table tbody td.translation-value-cell::before {
+        position: static;
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    /* Centraliza os botões de ação em mobile */
+    #manage-translations-table tbody td.actions-cell {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top: 1px solid var(--bs-border-color);
+        padding-top: var(--spacing-sm);
+    }
+    #manage-translations-table tbody td.actions-cell::before {
+        content: none;
+    }
+}
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+.status-active {
+    background-color: #d4edda;
+    color: #155724;
+}
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+.status-rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+.status-suspended {
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+.tooltip {
+    visibility: hidden;
+    background-color: #333;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+.tooltip-wrapper:hover .tooltip {
+    visibility: visible;
+}
+
+/* ==========================================================================
+   Estilos para Google Maps Autocomplete (pac-container)
+   ========================================================================== */
+
+/* Container principal da lista de sugestões */
+.pac-container {
+    /* Garante que o container de sugestões apareça acima de outros elementos */
+    z-index: 1050 !important; /* Maior que modals ou outros elementos */
+    background-color: var(--bs-bg-white);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    box-shadow: var(--bs-shadow-md);
+    padding: var(--spacing-xs);
+    position: absolute !important; /* Essencial para posicionamento relativo ao input */
+    /* top e left serão definidos pelo Google Maps JS, mas a posição é crucial */
+}
+
+/* Itens individuais da lista de sugestões */
+.pac-item {
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    font-size: var(--bs-font-size-md);
+    color: var(--bs-text-primary);
+    border-bottom: 1px solid var(--bs-border-color); /* Separador entre itens */
+}
+
+.pac-item:last-child {
+    border-bottom: none; /* Remove a borda do último item */
+}
+
+.pac-item:hover, .pac-item-selected {
+    background-color: var(--bs-primary-light);
+    color: var(--bs-primary);
+}
+
+/* Estilo para a parte principal do texto (nome da cidade/local) */
+.pac-item-query {
+    font-weight: var(--bs-font-weight-semibold);
+}
+
+/* Estilo para a parte secundária do texto (país, estado) */
+.pac-item-query + span {
+    color: var(--bs-text-secondary);
+    font-size: var(--bs-font-size-sm);
+}
+
+/* Estilo para o ícone de marcador */
+.pac-icon {
+    /* Pode ser ajustado se o ícone padrão não se encaixar */
+    vertical-align: middle;
+    margin-right: var(--spacing-xs);
+}
+
+/* Ajustes para o input do autocomplete para garantir que o pac-container se posicione corretamente */
+/* O input em si não precisa de position: relative, mas o seu PARENT sim, se quiser que o pac-container
+   fique DENTRO desse parent. No entanto, o Google Maps geralmente posiciona o pac-container
+   diretamente no body, então o position: absolute no .pac-container é o mais importante. */

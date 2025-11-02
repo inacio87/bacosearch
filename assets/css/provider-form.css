@@ -1,0 +1,647 @@
+/* /assets/css/provider-form.css */
+/* Estilos para o formulário de registo de anunciantes, alinhado ao padrão global. */
+
+/* Importa as variáveis globais (se não estiverem já em escopo via outro import principal) */
+/* @import 'variables.css'; */ /* Descomente se for um arquivo separado e necessário */
+
+/* ESTRUTURA GERAL (já controlada por style.css, mas garantimos os containers) */
+.main-container {
+    width: 100%;
+    max-width: 900px; /* Um pouco mais largo para formulários complexos */
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.register-container {
+    background: var(--bs-bg-white);
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--bs-shadow-md);
+    padding: var(--spacing-xl);
+    margin: var(--spacing-md) auto; /* Ajustado para espaçamento entre os containers individuais */
+    border: 1px solid var(--bs-border-color);
+}
+
+.register-container:first-of-type {
+    margin-top: var(--spacing-xl); /* Mais espaço no topo para o primeiro container */
+}
+
+.register-container:last-of-type {
+    margin-bottom: var(--spacing-xl); /* Mais espaço na base para o último container (ações) */
+}
+
+
+.form-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg); /* Adiciona espaço abaixo do cabeçalho do form */
+}
+
+.form-header h1 {
+    font-size: var(--font-size-xxl);
+    font-weight: var(--font-weight-bold);
+    color: var(--bs-primary);
+    margin-bottom: var(--spacing-sm); /* Espaço entre título e subtítulo */
+}
+
+.form-header p {
+    font-size: var(--font-size-lg);
+    color: var(--bs-text-secondary);
+}
+
+
+/* ESTRUTURA DOS MÓDULOS (fieldset) - AGORA DENTRO DE CADA .register-container */
+.form-module {
+    margin-bottom: 0; /* Remove margem, pois o .register-container já gerencia o espaçamento */
+    border: none; /* Remove a borda padrão do fieldset */
+    padding: 0; /* Remove o padding padrão do fieldset */
+}
+
+.form-module:last-of-type {
+    margin-bottom: 0; /* Garante que não haja margem extra */
+}
+
+.form-module legend {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--bs-text-primary);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 0; /* Remover padding padrão do legend que pode causar desalinhamento */
+    width: auto; /* Permite que o fundo do legend se ajuste ao texto */
+}
+
+/* Descrição do módulo */
+.module-description {
+    font-size: var(--font-size-md);
+    color: var(--bs-text-secondary);
+    margin-bottom: var(--spacing-lg); /* Espaçamento abaixo da descrição */
+}
+
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.form-group {
+    margin-bottom: 0; /* Removido o margin-bottom aqui para o gap do grid controlar */
+}
+
+/* APLICAR ISSO para que .form-group.full-width ocupe todas as colunas no grid */
+.form-group.full-width {
+    grid-column: 1 / -1; /* Ocupa de ponta a ponta todas as colunas do grid pai */
+    position: relative; /* Adicionado para corrigir o posicionamento do autocomplete */
+}
+
+
+.form-group label {
+    display: block;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--spacing-xs);
+    color: var(--bs-text-primary);
+}
+
+.form-group .group-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--spacing-sm);
+    color: var(--bs-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-group .form-control {
+    width: 100%;
+    padding: var(--spacing-sm) 12px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+    background: var(--bs-bg-white);
+    font-size: var(--font-size-md);
+    height: var(--input-height-md);
+    color: var(--bs-text-primary);
+}
+
+.form-group textarea.form-control {
+    height: auto;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-group .form-control:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 3px rgba(142, 33, 87, 0.2);
+    outline: none;
+}
+
+/* Contador de caracteres (0/500) */
+.char-counter {
+    font-size: var(--font-size-sm);
+    color: var(--bs-text-light);
+    text-align: right;
+    margin-top: var(--spacing-xs);
+}
+.char-counter.is-invalid {
+    color: var(--bs-error);
+}
+
+
+/* PADRONIZAÇÃO DE RÁDIOS E CHECKBOXES */
+.radio-group, .checkbox-group {
+    /* Estas regras podem ser removidas se não houver um uso direto,
+        pois .language-columns gerencia os checkboxes de idioma */
+}
+.radio-row, .checkbox-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.radio-label, .checkbox-label {
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    min-height: 20px;
+    font-size: var(--font-size-md);
+    color: var(--bs-text-secondary);
+    font-weight: var(--font-weight-regular);
+}
+
+.radio-label input, .checkbox-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.radio-label .control-indicator, 
+.checkbox-label .control-indicator {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 20px;
+    width: 20px;
+    background-color: var(--bs-bg-white);
+    border: 1px solid var(--bs-border-color);
+    transition: all var(--transition-fast);
+}
+
+.radio-label .control-indicator { border-radius: 50%; }
+.checkbox-label .control-indicator { border-radius: var(--bs-border-radius-sm); }
+
+.radio-label:hover .control-indicator, 
+.checkbox-label:hover .control-indicator {
+    border-color: var(--bs-primary);
+}
+
+.radio-label input:checked ~ .control-indicator,
+.checkbox-label input:checked ~ .control-indicator {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.radio-label .control-indicator::after {
+    content: '';
+    position: absolute;
+    display: none;
+    top: 5px; left: 5px; width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--bs-text-on-primary);
+}
+
+.checkbox-label .control-indicator::after {
+    content: '';
+    position: absolute;
+    display: none;
+    left: 6px; top: 2px; width: 5px; height: 10px;
+    border: solid var(--bs-text-on-primary);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.radio-label input:checked ~ .control-indicator::after,
+.checkbox-label input:checked ~ .control-indicator::after {
+    display: block;
+}
+
+
+/* COMPONENTES ESPECÍFICOS DOS MÓDULOS */
+
+/* Profile: Colunas de Idiomas */
+/* Note: A div .language-columns agora está dentro de um .form-group.full-width */
+.language-columns {
+    display: flex; /* Usando flexbox para maior controle */
+    flex-wrap: wrap; /* Permite quebrar em múltiplas linhas */
+    gap: var(--spacing-md); /* Espaçamento entre os itens */
+    margin-top: var(--spacing-sm); /* Pequeno espaço acima da lista de idiomas */
+}
+
+.language-columns .checkbox-group {
+    /* Define a largura de cada item para que caibam duas por linha dentro do .language-columns */
+    flex: 0 0 calc(50% - (var(--spacing-md) / 2)); 
+    max-width: calc(50% - (var(--spacing-md) / 2));
+}
+
+/* Media Queries para Responsividade do .language-columns */
+@media (max-width: 600px) {
+    .language-columns .checkbox-group {
+        flex: 0 0 100%; /* Uma coluna em telas menores */
+        max-width: 100%;
+    }
+}
+/* Se houver espaço suficiente, 3 colunas */
+@media (min-width: 900px) {
+    .language-columns .checkbox-group {
+        flex: 0 0 calc(33.333% - (var(--spacing-md) * 2 / 3)); 
+        max-width: calc(33.333% - (var(--spacing-md) * 2 / 3));
+    }
+}
+
+
+/* Media: Previews */
+.photo-preview img, .photos-container img, .videos-preview video {
+    max-width: 100px;
+    height: auto;
+    margin: 5px;
+    border-radius: var(--bs-border-radius-sm);
+    border: 1px solid var(--bs-border-color);
+}
+.photos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    min-height: 50px;
+}
+
+/* Values: Serviços Especiais */
+.special-service-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+.special-service-row .checkbox-label {
+    flex: 1;
+}
+.special-service-row .special-service-price {
+    flex: 0 0 150px;
+}
+
+/* --- MAPA E AUTOCOMPLETE (Ajustes aqui) --- */
+#map {
+    height: 250px; /* Ajuste se necessário para o seu layout */
+    width: 100%;
+    background-color: var(--bs-bg-light);
+    border-radius: var(--bs-border-radius-md);
+    /* Removido borda de 1px solid #ccc que estava duplicada do JS em logistics.php */
+}
+
+/* Estilos para o grupo de campos de exibição de localização (Cidade, Estado, País) */
+.location-display-group {
+    display: flex;
+    flex-wrap: wrap; /* Permite quebrar em telas menores */
+    gap: var(--spacing-sm); /* Espaçamento entre os campos de display */
+    margin-top: var(--spacing-sm);
+}
+
+.location-display-group .form-control-display {
+    flex: 1 1 calc(33.333% - (var(--spacing-sm) * 2 / 3)); /* 3 colunas em telas maiores */
+    min-width: 100px; /* Garante que não fiquem muito pequenos */
+    padding: var(--spacing-sm);
+    border: 1px solid var(--bs-border-color-light); /* Borda mais suave */
+    background-color: var(--bs-bg-light); /* Fundo sutil */
+    border-radius: var(--bs-border-radius-md);
+    box-sizing: border-box; /* Inclui padding e borda no cálculo da largura */
+    color: var(--bs-text-secondary);
+    font-size: var(--font-size-md);
+}
+
+@media (max-width: 768px) {
+    .location-display-group .form-control-display {
+        flex: 1 1 calc(50% - (var(--spacing-sm) / 2)); /* 2 colunas em tablets */
+    }
+}
+
+@media (max-width: 480px) {
+    .location-display-group .form-control-display {
+        flex: 1 1 100%; /* 1 coluna em celulares */
+    }
+}
+
+
+/* Estilos para o autocomplete do Google Places (pac-container) */
+.pac-container {
+    background-color: var(--bs-bg-white);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    box-shadow: var(--bs-shadow-md);
+    /* Ajustado z-index para garantir que esteja sempre no topo */
+    z-index: 100000 !important; /* Valor muito alto para garantir que fique na frente */
+    margin-top: 2px;
+    width: 100% !important; /* Garante que o dropdown ocupe a largura total do input */
+    max-width: 100%;
+    font-family: var(--bs-font-family); /* Usa a fonte do seu tema */
+    color: var(--bs-text-primary); /* Cor de texto padrão */
+    overflow: hidden; /* Garante que o conteúdo não vaze o border-radius */
+}
+
+.pac-item {
+    padding: 10px 12px; /* Aumentado padding para melhor legibilidade */
+    font-size: var(--font-size-md);
+    color: var(--bs-text-primary);
+    cursor: pointer;
+    border-bottom: 1px solid var(--bs-border-color-light); /* Borda suave entre itens */
+}
+
+.pac-item:last-child {
+    border-bottom: none; /* Remove a borda do último item */
+}
+
+.pac-item:hover {
+    background-color: var(--bs-bg-light); /* Fundo ao passar o mouse */
+}
+
+.pac-item-query {
+    font-weight: var(--font-weight-bold); /* Deixa a parte inicial da query em negrito */
+    color: var(--bs-primary); /* Pode destacar a query com a cor primária */
+}
+
+.pac-matched {
+    font-weight: var(--font-weight-semibold); /* Termos que deram match (mas não são a query inicial) */
+}
+
+/* Estilos para os ícones no autocomplete */
+.pac-icon {
+    /* Garante que os ícones do Google (como o de mapa/localização) se alinhem */
+    vertical-align: middle;
+    margin-right: var(--spacing-xs);
+    width: 18px; /* Tamanho do ícone */
+    height: 18px;
+    opacity: 0.7; /* Suaviza o ícone */
+}
+/* --- FIM DOS AJUSTES DE MAPA E AUTOCOMPLETE --- */
+
+
+/* Logistics: Campos condicionais (mantido como está, apenas para referência) */
+.radius-section, .amenities-section {
+    display: none;
+}
+.radius-section.show, .amenities-section.show {
+    display: block;
+}
+
+
+/* BOTÃO DE SUBMISSÃO */
+.form-actions {
+    text-align: center;
+    margin-top: var(--spacing-xl);
+}
+.btn-primary {
+    padding: 12px var(--spacing-xl);
+    font-size: var(--font-size-lg);
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    border: none;
+    border-radius: var(--bs-border-radius-md);
+    cursor: pointer;
+    transition: background-color var(--transition-normal);
+}
+.btn-primary:hover {
+    background-color: var(--bs-primary-hover);
+}
+/* No seu arquivo /assets/css/provider-form.css */
+
+/* Services: Lista de Serviços em Colunas */
+.services-list {
+    display: flex; /* Transforma o contêiner em um flex container */
+    flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+    gap: var(--spacing-md); /* Espaçamento entre os itens (linhas e colunas) */
+    margin-top: var(--spacing-sm); /* Pequeno espaço acima da lista de serviços */
+    /* Como services-list já está full-width, ele ocupará toda a largura disponível. */
+}
+
+.services-list .service-item {
+    /* Define a largura de cada item para que caibam duas por linha em telas maiores */
+    flex: 0 0 calc(50% - (var(--spacing-md) / 2));
+    max-width: calc(50% - (var(--spacing-md) / 2));
+    
+    /* Adicione um pouco de padding e borda para visualmente separar cada item de serviço, se desejar */
+    /* padding: var(--spacing-sm); */
+    /* border: 1px solid var(--bs-border-color); */
+    /* border-radius: var(--bs-border-radius-sm); */
+}
+
+.services-list .service-item .radio-group.horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm); /* Espaçamento entre os rádio buttons "Faço", "Não faço", "Negociável" */
+}
+
+
+/* Media Queries para Responsividade do .services-list */
+
+/* Em telas menores (até 600px), exibe em uma única coluna */
+@media (max-width: 600px) {
+    .services-list .service-item {
+        flex: 0 0 100%; /* Cada item ocupa a largura total */
+        max-width: 100%;
+    }
+}
+
+/* Em telas médias a grandes (de 601px a 899px), exibe em 2 colunas */
+/* Esta é a regra padrão definida acima, mas pode ser explicitada aqui */
+@media (min-width: 601px) and (max-width: 899px) {
+    .services-list .service-item {
+        flex: 0 0 calc(50% - (var(--spacing-md) / 2)); 
+        max-width: calc(50% - (var(--spacing-md) / 2));
+    }
+}
+
+/* Em telas muito largas (a partir de 900px), exibe em 3 colunas */
+@media (min-width: 900px) {
+    .services-list .service-item {
+        flex: 0 0 calc(33.333% - (var(--spacing-md) * 2 / 3)); 
+        max-width: calc(33.333% - (var(--spacing-md) * 2 / 3));
+    }
+}
+/* No seu arquivo /assets/css/provider-form.css */
+
+/* Services: Lista de Serviços em Colunas */
+.services-list {
+    display: flex; /* Transforma o contêiner em um flex container */
+    flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+    gap: var(--spacing-md); /* Espaçamento entre os itens (linhas e colunas) */
+    margin-top: var(--spacing-sm); /* Pequeno espaço acima da lista de serviços */
+}
+
+.services-list .service-item {
+    /* Define a largura de cada item para que caibam duas por linha em telas maiores */
+    flex: 0 0 calc(50% - (var(--spacing-md) / 2));
+    max-width: calc(50% - (var(--spacing-md) / 2));
+    
+    /* Garante que o label do serviço e o radio-group interno fiquem bem dispostos */
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs); /* Espaçamento entre o label e os rádios */
+}
+
+.services-list .service-item .radio-group.horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm); /* Espaçamento entre os rádio buttons "Faço", "Não faço", "Negociável" */
+}
+
+
+/* Media Queries para Responsividade do .services-list */
+
+/* Em telas menores (até 600px), exibe em uma única coluna */
+@media (max-width: 600px) {
+    .services-list .service-item {
+        flex: 0 0 100%; /* Cada item ocupa a largura total */
+        max-width: 100%;
+    }
+}
+
+/* Em telas médias a grandes (de 601px a 899px), exibe em 2 colunas */
+@media (min-width: 601px) and (max-width: 899px) {
+    .services-list .service-item {
+        flex: 0 0 calc(50% - (var(--spacing-md) / 2)); 
+        max-width: calc(50% - (var(--spacing-md) / 2));
+    }
+}
+
+/* Em telas muito largas (a partir de 900px), exibe em 3 colunas */
+@media (min-width: 900px) {
+    .services-list .service-item {
+        flex: 0 0 calc(33.333% - (var(--spacing-md) * 2 / 3)); 
+        max-width: calc(33.333% - (var(--spacing-md) * 2 / 3));
+    }
+}
+/* No seu arquivo /assets/css/provider-form.css */
+
+/* Estilos para o grupo de input de moeda (€ input) */
+.input-group {
+    display: flex;
+    align-items: center;
+    width: 100%; /* Garante que o grupo ocupe a largura total do seu pai */
+}
+
+.input-group-text {
+    background-color: var(--bs-bg-light); /* Cor de fundo para o símbolo */
+    border: 1px solid var(--bs-border-color);
+    border-right: none; /* Remove a borda entre o texto e o input */
+    border-radius: var(--bs-border-radius-md) 0 0 var(--bs-border-radius-md); /* Borda arredondada apenas na esquerda */
+    padding: var(--spacing-sm) var(--spacing-md);
+    height: var(--input-height-md);
+    display: flex;
+    align-items: center;
+    color: var(--bs-text-secondary);
+    font-weight: var(--font-weight-medium);
+}
+
+.input-group .form-control {
+    border-radius: 0 var(--bs-border-radius-md) var(--bs-border-radius-md) 0; /* Borda arredondada apenas na direita */
+    border-left: none; /* Remove a borda entre o input e o texto */
+}
+
+/* Estilos para os seletores de moeda */
+.currency-select-wrapper {
+    /* O espaçamento entre os seletores é controlado pelo margin-bottom no PHP */
+}
+
+.currency-selector {
+    /* Pode reutilizar .form-control se quiser o mesmo estilo de input */
+    /* ou adicionar estilos específicos aqui se precisar de algo diferente */
+    height: var(--input-height-md);
+    /* Adicione mais estilos se necessário */
+}
+
+/* Para a mensagem de erro da moeda duplicada */
+#currency-validation-feedback {
+    color: var(--bs-error);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+    display: none; /* Por padrão, escondido, JS o mostra */
+}
+/* Estilo para o grupo de input de telefone com DDI e bandeira */
+.phone-input-group {
+    display: flex;
+    gap: var(--spacing-sm); /* Adapte o gap se necessário */
+    width: 100%; /* Garante que o grupo ocupe o espaço disponível */
+}
+
+.phone-input-group .phone-code {
+    flex: 0 0 100px; /* Largura fixa para o seletor de código, ajuste conforme necessário */
+    padding-left: 40px; /* Espaço para a bandeira - ajuste este valor se a bandeira for muito grande */
+    
+    /* Estilos para a bandeira */
+    background-size: 24px 16px; /* Tamanho da bandeira (largura x altura) */
+    background-repeat: no-repeat; /* CRÍTICO: Garante que a bandeira não se repita */
+    background-position: 8px center; /* Posição da bandeira dentro do campo */
+    
+    /* Remova as aparências padrão do select para que a bandeira fique visível no Chrome/Firefox */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* Garante que o select herde os estilos de form-control, se não o fizer automaticamente */
+    /* ... (estilos de borda, radius, etc., que já vêm de .form-control) ... */
+}
+
+.phone-input-group .phone-number {
+    flex: 1; /* Ocupa o restante do espaço disponível */
+}
+    /* Estilos gerais */
+    .form-module { border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .full-width { grid-column: 1 / -1; }
+    .group-title { font-weight: bold; margin-bottom: 5px; }
+    .form-control { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .location-display-group { display: flex; gap: 10px; margin-top: 10px; }
+    .form-control-display { flex: 1; padding: 8px; border: 1px solid #eee; background-color: #f9f9f9; border-radius: 4px; }
+    .radio-group, .checkbox-columns { display: flex; flex-wrap: wrap; gap: 15px; }
+    .radius-section, .amenities-section { display: none; }
+    .radius-section.show, .amenities-section.show { display: block; }
+    #map { height: 300px; width: 100%; border: 1px solid #ccc; border-radius: 4px; }
+    .invalid-feedback { color: #d9534f; font-size: 0.875em; margin-top: 5px; }
+
+    /* Garante que a lista do autocomplete fique visível */
+    .pac-container {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 999999 !important;
+        margin-top: 2px;
+    }
+    .pac-item {
+        padding: 10px;
+        font-size: 1rem;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+    }
+    .pac-item:last-child { border-bottom: none; }
+    .pac-item:hover { background-color: #f0f0f0; }
+    .pac-item-query { font-weight: bold; }
+    .pac-matched { font-weight: bold; }
+    .form-module {
+    margin-bottom: var(--spacing-xl); /* Adicione esta linha se os módulos ficarem colados */
+    border: none;
+    padding: 0;
+}
+/* Garante que o dropdown de sugestões do Google fique acima de tudo */
+.pac-container {
+    z-index: 9999 !important;
+    position: absolute !important;
+}
+
+/* Para evitar que o rodapé ou contêiner pai corte o dropdown */
+body, html {
+    overflow: visible !important;
+}

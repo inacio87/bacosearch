@@ -7,7 +7,6 @@
 README.md
 deploy.ps1
 .deployignore
-vendor/
 node_modules/
 tests/
 *.log

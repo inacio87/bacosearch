@@ -1,0 +1,921 @@
+/**
+ * /assets/css/license.css
+ * Estilos para a nova página de Licenciamento BacoSearch (VERSÃO COMPLETA E AJUSTADA).
+ *
+ * Última Atualização: 02/07/2025 - Ajustes de padronização, responsividade e correção de pequenos detalhes, refatoração para 'license'.
+ */
+
+/* --- Configuração Geral da Página de Licenciamento --- */
+.license-page {
+    width: 100%;
+    /* Garante que a div preencha a largura total */
+    background-color: #f8f9fa;
+    /* Cor de fundo padrão da página */
+    min-height: 100vh;
+    /* Garante que a página tenha pelo menos a altura da viewport,
+     * útil para empurrar o footer para baixo em páginas com pouco conteúdo. */
+    display: flex;
+    flex-direction: column;
+    /* Permite que as seções se empilhem verticalmente */
+}
+
+/* Estilos para todas as seções dentro de .license-page */
+.license-page section {
+    padding: 60px 20px;
+    /* Preenchimento interno para as seções */
+    text-align: center;
+    /* Alinhamento de texto centralizado */
+    border-bottom: 1px solid #e9ecef;
+    /* Linha divisória entre as seções */
+}
+
+/* Garante que a última seção não tenha borda inferior */
+.license-page section:last-of-type {
+    border-bottom: none;
+}
+
+/* Contêiner para centralizar o conteúdo e limitar a largura */
+.license-page .container {
+    max-width: 1140px;
+    /* Largura máxima do conteúdo */
+    margin: 0 auto;
+    /* Centraliza o contêiner na página */
+    padding: 0 15px;
+    /* Preenchimento lateral para telas menores */
+}
+
+/* Títulos principais da página (H1) */
+.license-page h1 {
+    font-size: 2.5rem;
+    /* Tamanho da fonte ajustado */
+    font-weight: 700;
+    /* Negrito */
+    line-height: 1.2;
+    /* Espaçamento entre linhas */
+    color: #343a40;
+    /* Cor do texto */
+    margin-bottom: 15px;
+    /* Margem inferior */
+}
+
+/* Títulos de seção (H2) */
+.license-page h2 {
+    font-size: 2.1rem;
+    /* Tamanho da fonte ajustado */
+    font-weight: 700;
+    /* Negrito */
+    color: #343a40;
+    /* Cor do texto */
+    margin-bottom: 20px;
+    /* Margem inferior */
+}
+
+/* Subtítulos gerais das seções */
+.license-page .section-subtitle,
+.license-page .subtitle {
+    font-size: 1.15rem;
+    /* Tamanho da fonte ajustado */
+    color: #6c757d;
+    /* Cor do texto */
+    max-width: 800px;
+    /* Largura máxima para o subtítulo */
+    margin: 0 auto 40px auto;
+    /* Centraliza e adiciona margem inferior */
+}
+
+/* Texto de prova social na seção Hero */
+.license-page .social-proof {
+    font-size: 1rem;
+    /* Tamanho da fonte */
+    font-weight: 600;
+    /* Semi-negrito */
+    color: #8e2157;
+    /* Cor de destaque */
+    margin-top: 20px;
+    /* Margem superior */
+}
+
+/* --- Seção Hero & Formulário de Contato --- */
+.hero-section {
+    background: linear-gradient(135deg, rgba(248, 249, 250, 0.9), rgba(233, 236, 239, 0.9));
+    /* Gradiente de fundo */
+    padding-bottom: 80px;
+    /* Mais padding inferior para dar espaço ao formulário */
+}
+
+.form-container {
+    background: #ffffff;
+    /* Fundo branco */
+    padding: 40px;
+    /* Preenchimento interno */
+    border-radius: 12px;
+    /* Cantos arredondados */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    /* Sombra para destaque */
+    max-width: 550px;
+    /* Largura máxima do formulário */
+    margin: 40px auto 0;
+    /* Centraliza e adiciona margem superior */
+    text-align: left;
+    /* Alinha o texto dentro do contêiner do formulário à esquerda */
+}
+
+.form-container h2 {
+    font-size: 1.6rem;
+    /* Tamanho do título do formulário */
+    text-align: center;
+    /* Centraliza o título do formulário */
+    margin-bottom: 30px;
+    /* Aumenta a margem para separar do campo */
+    color: #343a40;
+    /* Cor do título */
+}
+
+/* Estilos para inputs e selects do formulário */
+#license-form input,
+#license-form select {
+    width: 100%;
+    /* Ocupa a largura total */
+    padding: 14px;
+    /* Preenchimento interno */
+    margin-bottom: 15px;
+    /* Margem inferior para espaçamento entre campos */
+    border: 1px solid #ced4da;
+    /* Borda padrão */
+    border-radius: 8px;
+    /* Cantos arredondados */
+    font-size: 1rem;
+    /* Tamanho da fonte */
+    height: 50px;
+    /* Altura fixa */
+    transition: all 0.2s ease-in-out;
+    /* Transição suave para foco */
+    box-sizing: border-box;
+    /* Garante que padding e border sejam incluídos na largura/altura */
+}
+
+/* Efeito de foco para inputs e selects */
+#license-form input:focus,
+#license-form select:focus {
+    border-color: #8e2157;
+    /* Cor da borda ao focar */
+    box-shadow: 0 0 0 4px rgba(142, 33, 87, 0.1);
+    /* Sombra de foco */
+    outline: none;
+    /* Remove o outline padrão */
+}
+
+/* Grupo de input de telefone (DDI + número) */
+.phone-input-group {
+    display: flex;
+    /* Permite que DDI e número fiquem na mesma linha */
+    gap: 10px;
+    /* Espaçamento entre os campos */
+    margin-bottom: 15px;
+    /* Margem inferior */
+}
+
+/* Estilos específicos para o seletor de código de telefone (DDI) */
+.phone-code {
+    flex: 0 0 120px;
+    /* Largura fixa para o seletor DDI */
+    padding-left: 45px;
+    /* Espaço para a bandeira e texto */
+    background-size: 24px 16px;
+    /* Tamanho da imagem da bandeira */
+    background-repeat: no-repeat;
+    /* Não repetir a bandeira */
+    background-position: 12px center;
+    /* Posição da bandeira */
+    -webkit-appearance: none;
+    /* Remove estilos padrão do navegador para select */
+    appearance: none;
+    /* Remove estilos padrão do navegador para select */
+}
+
+/* Estilo para o campo de número de telefone */
+.phone-number {
+    flex: 1;
+    /* Ocupa o restante do espaço disponível */
+}
+
+/* Garante que os elementos dentro do phone-input-group não tenham margem dupla */
+#license-form .phone-input-group > * {
+    margin-bottom: 0;
+}
+
+/* Botão de CTA do formulário */
+#license-form button {
+    width: 100%;
+    /* Largura total */
+    padding: 15px;
+    /* Preenchimento */
+    background: #8e2157;
+    /* Cor de fundo */
+    color: #ffffff;
+    /* Cor do texto */
+    border: none;
+    /* Sem borda */
+    border-radius: 8px;
+    /* Cantos arredondados */
+    font-size: 1.1rem;
+    /* Tamanho da fonte */
+    font-weight: 700;
+    /* Negrito */
+    cursor: pointer;
+    /* Cursor de ponteiro */
+    transition: all 0.2s ease-in-out;
+    /* Transição suave */
+    margin-top: 10px;
+    /* Espaçamento superior */
+}
+
+/* Efeito hover no botão do formulário */
+#license-form button:hover {
+    background: #6c1a43;
+    /* Cor de fundo ao passar o mouse */
+    transform: translateY(-2px);
+    /* Pequeno movimento para cima */
+}
+
+/* Mensagem de aviso abaixo do formulário */
+.form-notice {
+    text-align: center;
+    /* Centraliza o texto */
+    font-size: 0.8rem;
+    /* Tamanho da fonte pequeno */
+    color: #6c757d;
+    /* Cor do texto */
+    margin-top: 15px;
+    /* Margem superior */
+}
+
+/* Estilo para mensagens de erro */
+.error-message {
+    background-color: #f8d7da;
+    /* Fundo vermelho claro */
+    color: #721c24;
+    /* Cor do texto vermelho escuro */
+    border: 1px solid #f5c6cb;
+    /* Borda vermelha */
+    padding: 15px;
+    /* Preenchimento interno */
+    border-radius: 8px;
+    /* Cantos arredondados */
+    margin-bottom: 20px;
+    /* Margem inferior */
+    text-align: left;
+    /* Alinha o texto à esquerda */
+    display: none;
+    /* Escondido por padrão, mostrado via JS ou classe 'show' */
+}
+
+.error-message.show {
+    display: block;
+    /* Exibe a mensagem de erro */
+}
+
+.error-message strong {
+    display: block;
+    /* Faz o título da mensagem de erro ocupar uma linha inteira */
+    margin-bottom: 10px;
+    /* Espaçamento abaixo do título */
+}
+
+.error-message ul {
+    list-style: none;
+    /* Remove marcadores de lista */
+    padding: 0;
+    /* Remove padding padrão da lista */
+    margin: 0;
+    /* Remove margem padrão da lista */
+}
+
+.error-message li {
+    margin-bottom: 5px;
+    /* Espaçamento entre os itens da lista */
+}
+
+
+/* --- Seção de Impacto --- */
+.impact-section {
+    background-color: #ffffff;
+    /* Fundo branco */
+}
+
+.impact-grid {
+    display: grid;
+    /* Layout de grade */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* Colunas adaptáveis, mínimo de 200px */
+    gap: 30px;
+    /* Espaçamento entre itens da grade */
+}
+
+.impact-item {
+    text-align: center;
+    /* Centraliza o conteúdo do item */
+}
+
+.impact-number {
+    display: block;
+    /* Ocupa a largura total */
+    font-size: 2.8rem;
+    /* Tamanho grande para o número */
+    font-weight: 700;
+    /* Negrito */
+    color: #8e2157;
+    /* Cor de destaque */
+}
+
+.impact-text {
+    font-size: 0.9rem;
+    /* Tamanho da fonte */
+    color: #495057;
+    /* Cor do texto */
+}
+
+/* --- Seção de Vantagens (Benefits) --- */
+.benefits-section {
+    background-color: #f8f9fa;
+    /* Fundo cinza claro */
+}
+
+.benefits-grid {
+    display: grid;
+    /* Layout de grade */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Colunas adaptáveis */
+    gap: 30px;
+    /* Espaçamento entre itens da grade */
+    text-align: left;
+    /* Alinha o texto à esquerda */
+    margin-top: 50px;
+    /* Margem superior */
+}
+
+.benefit-item {
+    background: #ffffff;
+    /* Fundo branco */
+    padding: 30px;
+    /* Preenchimento interno */
+    border-radius: 12px;
+    /* Cantos arredondados */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    /* Sombra suave */
+    transition: all 0.3s ease;
+    /* Transição suave para hover */
+}
+
+/* Efeito hover no item de vantagem */
+.benefit-item:hover {
+    transform: translateY(-5px);
+    /* Movimento para cima */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    /* Sombra mais pronunciada */
+}
+
+.benefit-item h3 {
+    font-size: 1.15rem;
+    /* Tamanho da fonte ajustado */
+    font-weight: 700;
+    /* Negrito */
+    color: #8e2157;
+    /* Cor de destaque */
+    margin-bottom: 15px;
+    /* Margem inferior */
+}
+
+.benefit-item p {
+    font-size: 0.95rem;
+    /* Tamanho da fonte ajustado */
+    color: #495057;
+    /* Cor do texto */
+    line-height: 1.6;
+    /* Espaçamento entre linhas */
+}
+
+/* --- Seção Linha do Tempo --- */
+.timeline-section {
+    background-color: #ffffff;
+    /* Fundo branco */
+}
+
+.timeline {
+    display: flex;
+    /* Layout flexível */
+    justify-content: space-between;
+    /* Espaçamento igual entre os itens */
+    position: relative;
+    /* Para posicionar a linha */
+    margin-top: 50px;
+    /* Margem superior */
+    padding-bottom: 20px;
+    /* Espaçamento inferior para a linha */
+}
+
+/* Linha horizontal da linha do tempo */
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 5%;
+    width: 90%;
+    height: 4px;
+    background: #e9ecef;
+    z-index: 1;
+    /* Fica atrás dos itens */
+}
+
+.timeline-item {
+    width: 23%;
+    /* Largura de cada item (ajustado para 4 itens) */
+    text-align: center;
+    /* Centraliza o texto */
+    position: relative;
+    z-index: 2;
+    /* Fica acima da linha */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timeline-item span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background: #8e2157;
+    /* Cor do círculo numerado */
+    color: #fff;
+    /* Cor do número */
+    border-radius: 50%;
+    /* Círculo */
+    margin: 0 auto 20px auto;
+    /* Centraliza e margem inferior */
+    font-weight: 700;
+    /* Negrito */
+    flex-shrink: 0; /* Previne que o círculo diminua em telas pequenas */
+}
+
+.timeline-item h3 {
+    font-size: 1.1rem;
+    /* Tamanho do título do item */
+    margin-bottom: 10px;
+    /* Margem inferior */
+    color: #343a40;
+}
+
+.timeline-item p {
+    font-size: 0.9rem;
+    /* Tamanho da fonte do parágrafo */
+    color: #6c757d;
+    /* Cor do texto */
+}
+
+/* --- Seção 'O que está Incluso' --- */
+.included-section {
+    background-color: #f8f9fa;
+    /* Fundo cinza claro */
+}
+
+.included-section ul {
+    list-style: none;
+    /* Remove marcadores de lista */
+    padding: 0;
+    /* Remove preenchimento padrão */
+    text-align: left;
+    /* Alinha o texto da lista à esquerda */
+    max-width: 800px;
+    /* Largura máxima da lista */
+    margin: 0 auto;
+    /* Centraliza a lista */
+    columns: 2;
+    /* Divide em 2 colunas */
+    column-gap: 40px;
+    /* Espaçamento entre as colunas */
+}
+
+.included-section li {
+    font-size: 1rem;
+    /* Tamanho da fonte ajustado */
+    display: flex;
+    /* Permite alinhar ícone e texto */
+    align-items: center;
+    /* Alinha verticalmente */
+    gap: 15px;
+    /* Espaçamento entre ícone e texto */
+    margin-bottom: 15px;
+    /* Margem inferior */
+    break-inside: avoid; /* Previne que o item seja quebrado entre colunas */
+}
+
+.included-section .fa-check-circle {
+    color: #28a745;
+    /* Cor verde para o ícone de check */
+    font-size: 1.5rem;
+    /* Tamanho do ícone */
+    flex-shrink: 0; /* Previne que o ícone diminua */
+}
+
+/* --- Seção FAQ (Perguntas Frequentes) --- */
+.faq-section {
+    background-color: #ffffff;
+    /* Fundo branco */
+}
+
+.faq-item {
+    max-width: 800px;
+    /* Largura máxima do item FAQ */
+    margin: 0 auto 15px;
+    /* Centraliza e margem inferior */
+    text-align: left;
+    /* Alinha o texto à esquerda */
+    border: 1px solid #e9ecef;
+    /* Borda suave */
+    border-radius: 8px;
+    /* Cantos arredondados */
+}
+
+/* Estilos para o elemento details (contém summary e o conteúdo) */
+details {
+    padding: 20px;
+    /* Preenchimento interno */
+}
+
+/* Estilos para o summary (o cabeçalho clicável do FAQ) */
+summary {
+    font-weight: 600;
+    /* Semi-negrito */
+    cursor: pointer;
+    /* Cursor de ponteiro */
+    list-style: none;
+    /* Remove o marcador padrão do navegador */
+    font-size: 1.05rem;
+    /* Tamanho da fonte ajustado */
+    outline: none; /* Remove o outline de foco azul no Chrome */
+}
+
+/* Remove o marcador padrão em navegadores WebKit */
+summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Adiciona o ícone de "+" no final do summary */
+summary::after {
+    content: '+';
+    float: right;
+    /* Flutua para a direita */
+    font-size: 1.5rem;
+    /* Tamanho do ícone */
+    transition: transform 0.2s;
+    /* Transição para rotação */
+}
+
+/* Rotação do ícone para "x" quando o details está aberto */
+details[open] summary::after {
+    transform: rotate(45deg);
+}
+
+/* Estilos para o conteúdo do FAQ */
+details p {
+    margin-top: 15px;
+    /* Margem superior */
+    padding-top: 15px;
+    /* Preenchimento superior */
+    border-top: 1px solid #f1f3f5;
+    /* Borda superior para separar do summary */
+    font-size: 0.95rem;
+    /* Tamanho da fonte ajustado */
+    color: #495057;
+    /* Cor do texto */
+}
+
+/* --- CTA Final (Call to Action) --- */
+.final-cta-section {
+    background: linear-gradient(45deg, #8e2157, #6c1a43);
+    /* Gradiente de fundo roxo/vinho */
+    color: #ffffff;
+    /* Cor do texto branco */
+    padding: 80px 20px;
+    /* Mais padding para dar destaque */
+}
+
+/* Garante que os textos do CTA final sejam brancos */
+.final-cta-section h2,
+.final-cta-section .section-subtitle,
+.final-cta-section .urgency-notice {
+    color: #ffffff;
+}
+
+.urgency-notice {
+    font-weight: 700;
+    /* Negrito */
+    margin: 30px auto;
+    /* Margem superior e centralizado */
+    font-size: 1.2rem;
+    /* Um pouco maior para destaque */
+}
+
+/* Botão de CTA grande e arredondado */
+.cta-button {
+    display: inline-block;
+    /* Comportamento de bloco, mas permite alinhamento inline */
+    background: #ffffff;
+    /* Fundo branco */
+    color: #8e2157;
+    /* Cor do texto de destaque */
+    padding: 15px 40px;
+    /* Preenchimento interno */
+    border-radius: 50px;
+    /* Cantos totalmente arredondados */
+    font-size: 1.1rem;
+    /* Tamanho da fonte ajustado */
+    font-weight: 700;
+    /* Negrito */
+    text-decoration: none;
+    /* Remove sublinhado (se for link) */
+    border: none;
+    /* Sem borda */
+    cursor: pointer;
+    /* Cursor de ponteiro */
+    transition: all 0.2s ease;
+    /* Transição suave para hover */
+}
+
+/* Efeito hover no botão CTA */
+.cta-button:hover {
+    background: #f8f9fa;
+    /* Fundo cinza claro ao passar o mouse */
+    transform: scale(1.05);
+    /* Aumenta ligeiramente o tamanho */
+}
+
+/* --- Frase Final de Citação --- */
+.final-quote {
+    background-color: #343a40;
+    /* Fundo cinza escuro */
+    color: #ced4da;
+    /* Cor do texto cinza claro */
+    padding: 30px 20px;
+    /* Preenchimento interno */
+    text-align: center;
+    /* Centraliza o texto */
+}
+
+.final-quote p {
+    font-style: italic;
+    /* Itálico */
+    font-size: 1.1rem;
+    /* Tamanho da fonte ajustado */
+    max-width: 800px;
+    /* Largura máxima */
+    margin: 0 auto;
+    /* Centraliza o parágrafo */
+    color: #ced4da;
+    /* Garante a cor do texto */
+}
+
+/* --- Modal de Sucesso --- */
+.modal-overlay {
+    position: fixed;
+    /* Fixa na tela */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Fundo escurecido semi-transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    /* Garante que fique acima de outros elementos */
+    visibility: hidden;
+    /* Escondido por padrão */
+    opacity: 0;
+    /* Invisível por padrão */
+    transition: visibility 0.3s, opacity 0.3s ease;
+    /* Transição suave */
+}
+
+.modal-overlay.show {
+    visibility: visible;
+    /* Visível quando a classe 'show' é adicionada */
+    opacity: 1;
+    /* Opaco quando visível */
+}
+
+.modal-content {
+    background-color: #ffffff;
+    /* Fundo branco */
+    padding: 40px;
+    /* Preenchimento interno */
+    border-radius: 12px;
+    /* Cantos arredondados */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    /* Sombra */
+    text-align: center;
+    /* Centraliza o conteúdo do modal */
+    max-width: 450px;
+    /* Largura máxima do modal */
+    position: relative;
+    /* Para posicionar o botão de fechar */
+    transform: translateY(20px);
+    /* Pequeno deslocamento inicial */
+    transition: transform 0.3s ease;
+    /* Transição suave */
+}
+
+.modal-overlay.show .modal-content {
+    transform: translateY(0);
+    /* Volta à posição original ao aparecer */
+}
+
+.modal-close-button {
+    position: absolute;
+    /* Posição absoluta dentro do modal */
+    top: 15px;
+    right: 20px;
+    font-size: 1.8rem;
+    /* Tamanho do X */
+    color: #adb5bd;
+    /* Cor do X */
+    cursor: pointer;
+    transition: color 0.2s ease;
+    /* Transição de cor */
+}
+
+.modal-close-button:hover {
+    color: #495057;
+    /* Cor mais escura ao passar o mouse */
+}
+
+/* Estilos para o ícone de sucesso dentro do modal */
+.modal-content .fa-check-circle {
+    color: #28a745;
+    /* Cor verde */
+    font-size: 48px;
+    /* Tamanho do ícone */
+    margin-bottom: 20px;
+    /* Margem inferior */
+}
+
+/* Estilos para os títulos e parágrafos do modal */
+.modal-content h2 {
+    font-size: 1.8rem;
+    color: #343a40;
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    font-size: 1rem;
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+.modal-content strong {
+    font-weight: 700;
+    color: #343a40;
+}
+
+
+/* --- Responsividade --- */
+@media (max-width: 992px) {
+    .license-page h1 {
+        font-size: 2.2rem;
+    }
+
+    .license-page h2 {
+        font-size: 1.8rem;
+    }
+
+    .included-section ul {
+        columns: 1;
+        /* Em telas menores, a lista de inclusão volta para 1 coluna */
+    }
+}
+
+@media (max-width: 768px) {
+    .license-page section {
+        padding: 40px 15px;
+        /* Reduz o padding das seções em telas menores */
+    }
+
+    .license-page h1 {
+        font-size: 1.8rem;
+        /* Reduz o H1 ainda mais */
+    }
+
+    .license-page h2 {
+        font-size: 1.5rem;
+        /* Reduz o H2 ainda mais */
+    }
+
+    .license-page .section-subtitle,
+    .license-page .subtitle {
+        font-size: 1rem;
+        /* Reduz o tamanho do subtítulo */
+        margin-bottom: 30px;
+    }
+
+    .form-container {
+        padding: 30px 20px;
+        /* Reduz o padding do formulário */
+        margin-top: 30px;
+    }
+
+    .phone-input-group {
+        flex-direction: column;
+        /* DDI e telefone em colunas em telas muito pequenas */
+        gap: 0;
+    }
+
+    .phone-code,
+    .phone-number {
+        width: 100%;
+        margin-bottom: 15px;
+        /* Adiciona margem entre eles */
+    }
+    
+    .phone-code {
+        flex: none; /* Remove a flexbox base para usar width: 100% */
+        margin-bottom: 10px; /* Ajuste se necessário */
+    }
+
+    .impact-grid {
+        grid-template-columns: 1fr 1fr;
+        /* 2 colunas para impacto em mobile */
+        gap: 20px;
+    }
+
+    .impact-number {
+        font-size: 2.2rem;
+        /* Reduz o tamanho dos números de impacto */
+    }
+
+    .benefits-grid {
+        grid-template-columns: 1fr;
+        /* 1 coluna para benefícios em mobile */
+        margin-top: 30px;
+    }
+
+    .benefit-item {
+        padding: 20px;
+        /* Reduz o padding do item de benefício */
+    }
+
+    .timeline {
+        flex-direction: column;
+        /* Linha do tempo em coluna em mobile */
+        align-items: center;
+        /* Centraliza os itens */
+        gap: 40px;
+        /* Espaçamento entre os itens */
+    }
+
+    .timeline::before {
+        display: none;
+        /* Remove a linha horizontal em mobile, pois vira vertical */
+    }
+
+    .timeline-item {
+        width: 100%;
+        /* Ocupa a largura total */
+        max-width: 400px;
+        /* Limita a largura máxima */
+    }
+
+    .final-cta-section {
+        padding: 60px 15px;
+        /* Reduz o padding do CTA final */
+    }
+
+    .cta-button {
+        padding: 12px 30px;
+        /* Reduz o padding do botão CTA */
+        font-size: 1rem;
+        /* Reduz o tamanho da fonte do botão */
+    }
+
+    .final-quote p {
+        font-size: 1rem;
+        /* Reduz o tamanho da fonte da citação final */
+    }
+}
+
+@media (max-width: 480px) {
+    .license-page h1 {
+        font-size: 1.6rem;
+    }
+
+    .license-page h2 {
+        font-size: 1.3rem;
+    }
+
+    .impact-grid {
+        grid-template-columns: 1fr;
+        /* 1 coluna para impacto em telas muito pequenas */
+    }
+}

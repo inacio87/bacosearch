@@ -1,0 +1,347 @@
+/* register.css - Versão final, completa e alinhada com o padrão global */
+
+/* CONTAINER PRINCIPAL */
+.main-container {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.register-container {
+    background: var(--bs-bg-white);
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--bs-shadow-md);
+    padding: var(--spacing-xl);
+    margin: var(--spacing-xl) auto;
+    border: 1px solid var(--bs-border-color);
+    max-width: 650px;
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.register-header h1 {
+    background: linear-gradient(45deg, var(--bs-primary), var(--bs-primary-hover));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xxl);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* FORMULÁRIO */
+.form-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--spacing-sm);
+    color: var(--bs-text-secondary);
+}
+
+.form-group input,
+.form-group select {
+    padding: var(--spacing-sm) 12px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+    background: var(--bs-bg-white);
+    font-size: var(--font-size-md);
+    width: 100%;
+    height: var(--input-height-md);
+    color: var(--bs-text-primary);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 3px rgba(142, 33, 87, 0.2);
+    outline: none;
+}
+
+/* (NOVO) ESTILO PARA O CAMPO DE TELEFONE COM BANDEIRA */
+.phone-input-group {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.phone-input-group .phone-code {
+    flex: 0 0 100px; /* Largura fixa para o seletor de código */
+    padding-left: 40px; /* Espaço para a bandeira */
+    background-size: 24px 16px; /* Tamanho da bandeira */
+    background-repeat: no-repeat; /* A CORREÇÃO PRINCIPAL */
+    background-position: 8px center; /* Posição da bandeira */
+}
+
+.phone-input-group .phone-number {
+    flex: 1; /* Ocupa o resto do espaço */
+}
+
+/* (NOVO) ESTILOS PARA MENSAGENS DE VALIDAÇÃO */
+.invalid-feedback {
+    display: none; /* Escondido por defeito */
+    color: var(--bs-error);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+    font-weight: var(--font-weight-regular);
+}
+
+/* Mostra a mensagem quando o campo tem a classe .is-invalid */
+.form-control.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.form-control.is-invalid {
+    border-color: var(--bs-error) !important;
+}
+
+/* CHECKBOX CUSTOMIZADO */
+.checkbox-group {
+    margin-top: var(--spacing-md);
+}
+.checkbox-label {
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    min-height: 20px;
+    font-size: var(--font-size-md);
+    color: var(--bs-text-secondary);
+}
+
+.checkbox-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkbox-label .control-indicator {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 20px;
+    width: 20px;
+    background-color: var(--bs-bg-white);
+    border: 1px solid var(--bs-border-color);
+    transition: all var(--transition-fast);
+    border-radius: var(--bs-border-radius-sm);
+}
+
+.checkbox-label:hover .control-indicator {
+    border-color: var(--bs-primary);
+}
+
+.checkbox-label input:checked ~ .control-indicator {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.checkbox-label .control-indicator::after {
+    content: '';
+    position: absolute;
+    display: none;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--bs-text-on-primary);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-label input:checked ~ .control-indicator::after {
+    display: block;
+}
+
+/* BOTÕES DE AÇÃO */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-lg);
+}
+
+.btn-primary {
+    padding: 10px var(--spacing-lg);
+    border-radius: var(--bs-border-radius-md);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: background-color var(--transition-normal), transform var(--transition-fast);
+    border: 1px solid transparent;
+    min-width: 150px;
+    background: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    border-color: var(--bs-primary);
+}
+.btn-primary:hover {
+    background: var(--bs-primary-hover);
+    border-color: var(--bs-primary-hover);
+    transform: translateY(-2px);
+}
+/* No register.css ou style.css, adicione/ajuste estas regras */
+
+/* Certifique-se de que estas regras estão em register.css ou style.css */
+.phone-input-group .phone-code {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-size: 24px 16px; /* Tamanho da bandeira */
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    padding-left: 35px; /* Espaço para a bandeira */
+    /* Outros estilos para borda, padding, etc. */
+}
+/* Estilos para a mensagem de sucesso em register.php */
+.success-message {
+    /* Cores de sucesso baseadas nas suas variáveis */
+    background-color: #d4edda; /* Cerca de --bs-success com opacidade */
+    color: #155724; /* Texto mais escuro para contraste */
+    border: 1px solid #c3e6cb;
+    padding: 20px; /* Mais padding para destaque */
+    margin-bottom: 20px;
+    border-radius: 8px; /* --bs-border-radius-lg */
+    display: none; /* Escondido por padrão */
+    align-items: center;
+    gap: 15px; /* Mais espaço entre ícone e texto */
+    font-size: 16px; /* --bs-font-size-lg */
+    font-weight: 500; /* --bs-font-weight-medium */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* --bs-shadow-md */
+}
+
+.success-message.show {
+    display: flex; /* Exibe quando a classe 'show' está presente */
+}
+
+.success-message i {
+    color: #28a745; /* Cor verde de sucesso */
+    font-size: 36px; /* Ícone maior */
+}
+
+/* Opcional: Estilo para o link "Ir para o login" dentro da mensagem, se você decidir adicioná-lo */
+.success-message a {
+    color: #8e2157; /* --bs-primary */
+    font-weight: 700; /* --bs-font-weight-bold */
+    text-decoration: underline;
+}
+.success-message a:hover {
+    color: #a8366b; /* --bs-primary-hover */
+}
+/* Estilos para o Modal (Popup) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease-in-out;
+}
+
+.modal-overlay.show .modal-content {
+    transform: translateY(0);
+}
+
+.modal-content h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.modal-content p {
+    color: #555;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.modal-content .icon-success {
+    color: #28a745; /* Cor verde para sucesso */
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.modal-content .modal-actions {
+    margin-top: 25px;
+}
+
+.modal-content .btn-primary {
+    padding: 12px 30px;
+    font-size: 1em;
+    cursor: pointer;
+}
+/* --- ESTILOS PARA O MÓDULO DE SERVIÇOS (VERSÃO COMPACTA) --- */
+.service-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px 4px;
+    border-bottom: 1px solid #eee;
+    gap: 10px;
+}
+
+.service-name-inline {
+    flex: 1 0 150px;
+    font-weight: 600;
+}
+
+.service-options-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.service-options-inline .radio-label {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 0.9em;
+}
+
+.service-options-inline .price-input-container {
+    display: none;
+    align-items: center;
+    gap: 5px;
+}
+
+.service-options-inline .price-input-container.visible {
+    display: flex;
+}
+
+.service-options-inline .price-input-container .input-group {
+    width: 80px;
+}

@@ -13,6 +13,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+          extensions: mbstring, intl, pdo_mysql, curl, json
+
+      - name: Install Composer dependencies
+        run: |
+          composer install --no-dev --prefer-dist --no-interaction --no-progress
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -34,6 +45,16 @@ jobs:
           # we disable strict host key checking below so no known_hosts entry is required
           true
 
+      - name: Create remote backup (pre-deploy)
+        env:
+          HOST: ${{ secrets.HOSTGATOR_HOST }}
+          USER: ${{ secrets.HOSTGATOR_USER }}
+          PORT: 2222
+        run: |
+          TS="$(date '+%Y%m%d-%H%M%S')"
+          ssh -i ~/.ssh/hostgator_deploy_key -p $PORT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$HOST \
+            "mkdir -p /home4/$USER/backups && cd /home4/$USER && tar -czf backups/bacosearch.com-$TS.tgz bacosearch.com || true"
+
       - name: Rsync files to HostGator
         env:
           HOST: ${{ secrets.HOSTGATOR_HOST }}
@@ -46,7 +67,7 @@ jobs:
             RSYNC_EXCLUDE_FROM="--exclude-from=.deployignore"
           fi
 
-          rsync -az --delete \
+          rsync -az \
             --exclude='.git' \
             --exclude='.github' \
             --exclude='.vscode' \

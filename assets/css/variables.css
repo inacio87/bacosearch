@@ -1,0 +1,100 @@
+/* variables.css - Variáveis globais para o BacoSearch */
+
+:root {
+  /* Cores principais */
+  --bs-primary: #8e2157; /* Cor primária da empresa */
+  --bs-primary-hover: #a8366b; /* Cor primária ao passar o mouse */
+  --bs-primary-light: #fdf6fa; /* Tom claro da cor primária */
+  --bs-secondary: #75767c; /* Cor secundária */
+  --bs-secondary-hover: #5f6065; /* Cor secundária ao passar o mouse */
+  --bs-gold: #caa45f; /* Cor dourada para elementos premium */
+  --bs-beige: #f2f3fa; /* Fundo secundário */
+  
+  /* Cores de texto */
+  --bs-text-primary: #333333; /* Texto principal */
+  --bs-text-secondary: #555555; /* Texto secundário */
+  --bs-text-light: #777777; /* Texto leve */
+  --bs-text-on-primary: #ffffff; /* Texto sobre fundo primário */
+  --bs-text-on-secondary: #ffffff; /* Texto sobre fundo secundário */
+  
+  /* Cores de fundo */
+  --bs-bg-white: #ffffff; /* Fundo branco */
+  --bs-bg-light: #f8f9fa; /* Fundo claro */
+  --bs-bg-lighter: #f2f3fa; /* Fundo mais claro */
+  
+  /* Cores de estado */
+  --bs-error: #e74c3c; /* Cor de erro */
+  --bs-success: #2ecc71; /* Cor de sucesso */
+  --bs-warning: #f39c12; /* Cor de aviso */
+  --bs-info: #3498db; /* Cor de informação */
+  
+  /* Bordas e sombras */
+  --bs-border-color: #dee2e6; /* Cor da borda */
+  --bs-border-radius-xs: 2px; /* Raio de borda extra pequeno */
+  --bs-border-radius-sm: 4px; /* Raio de borda pequeno */
+  --bs-border-radius-md: 6px; /* Raio de borda médio */
+  --bs-border-radius-lg: 8px; /* Raio de borda grande */
+  --bs-border-radius-xl: 12px; /* Raio de borda extra grande */
+  --bs-border-radius-pill: 50rem; /* Raio de borda para pílulas */
+  
+  /* Sombras */
+  --bs-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05); /* Sombra extra pequena */
+  --bs-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08); /* Sombra pequena */
+  --bs-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.12); /* Sombra média */
+  --bs-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra grande */
+  --bs-shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.18); /* Sombra extra grande */
+  
+  /* Espaçamentos */
+  --spacing-xs: 4px; /* Espaçamento extra pequeno */
+  --spacing-sm: 8px; /* Espaçamento pequeno */
+  --spacing-md: 16px; /* Espaçamento médio */
+  --spacing-lg: 24px; /* Espaçamento grande */
+  --spacing-xl: 32px; /* Espaçamento extra grande */
+  --spacing-xxl: 48px; /* Espaçamento duplo extra grande */
+  
+  /* Tipografia */
+  --font-size-xs: 11px; /* Tamanho de fonte extra pequeno */
+  --font-size-sm: 12px; /* Tamanho de fonte pequeno */
+  --font-size-md: 14px; /* Tamanho de fonte médio */
+  --font-size-lg: 16px; /* Tamanho de fonte grande */
+  --font-size-xl: 18px; /* Tamanho de fonte extra grande */
+  --font-size-xxl: 24px; /* Tamanho de fonte duplo extra grande */
+  
+  /* Pesos de fonte */
+  --font-weight-light: 300; /* Peso de fonte leve */
+  --font-weight-regular: 400; /* Peso de fonte regular */
+  --font-weight-medium: 500; /* Peso de fonte médio */
+  --font-weight-semibold: 600; /* Peso de fonte semi-negrito */
+  --font-weight-bold: 700; /* Peso de fonte negrito */
+  
+  /* Alturas de linha */
+  --line-height-tight: 1.2; /* Altura de linha apertada */
+  --line-height-normal: 1.5; /* Altura de linha normal */
+  --line-height-loose: 1.8; /* Altura de linha solta */
+  
+  /* Alturas fixas para elementos de interface */
+  --header-height: 50px; /* Altura do cabeçalho */
+  --city-bar-height: 36px; /* Altura da barra de cidade */
+  --footer-height: 50px; /* Altura do rodapé */
+  --input-height-sm: 30px; /* Altura de entrada pequena */
+  --input-height-md: 36px; /* Altura de entrada média */
+  --input-height-lg: 42px; /* Altura de entrada grande */
+  
+  /* Larguras para elementos de interface */
+  --container-max-width: 1200px; /* Largura máxima do contêiner */
+  --sidebar-width: 250px; /* Largura da barra lateral */
+  
+  /* Transições */
+  --transition-fast: 0.15s ease; /* Transição rápida */
+  --transition-normal: 0.2s ease; /* Transição normal */
+  --transition-slow: 0.3s ease; /* Transição lenta */
+  
+  /* Z-index */
+  --z-index-dropdown: 1000; /* Z-index para dropdowns */
+  --z-index-sticky: 1020; /* Z-index para elementos fixos */
+  --z-index-fixed: 1030; /* Z-index para elementos fixos */
+  --z-index-modal-backdrop: 1040; /* Z-index para fundo de modal */
+  --z-index-modal: 1050; /* Z-index para modais */
+  --z-index-popover: 1060; /* Z-index para popovers */
+  --z-index-tooltip: 1070; /* Z-index para tooltips */
+}

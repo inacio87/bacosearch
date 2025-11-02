@@ -1,0 +1,405 @@
+/**
+ * /assets/css/search.css
+ *
+ * VERSÃO OTIMIZADA FINAL: EXCLUSIVA PARA A PÁGINA DE RESULTADOS DE BUSCA (search.php).
+ * - Remove quaisquer estilos que poderiam conflitar com a página index.php.
+ * - Garante compatibilidade com o header, city bar e footer fixos.
+ * - Utiliza exclusivamente as variáveis globais do variables.css (com prefixo --bs-).
+ * - Foco na clareza, espaçamento e hierarquia visual para resultados de busca.
+ * - Correções FINAIS de layout na barra de busca (input e botão) e em responsividade.
+ */
+
+/* ============================================= */
+/* 1. Layout Principal da Página de Busca (search.php)
+/* Aplica-se ao <main class="main-content"> na página search.php
+/* Assumimos que o HTML de search.php tem um <div class="page-content-wrapper">
+/* dentro do <main class="main-content"> para centralização.
+/* ============================================= */
+
+.main-content {
+    /* Mantenha APENAS os paddings top/bottom para acomodar header/city bar e footer fixos. */
+    padding-top: calc(var(--bs-header-height) + var(--bs-city-bar-height) + var(--bs-spacing-lg));
+    padding-bottom: calc(var(--bs-footer-height) + var(--bs-spacing-lg));
+    
+    /* Garante que o main-content ocupe a largura total para que o container interno centralize */
+    width: 100%;
+    box-sizing: border-box;
+
+    /* Alinhe o conteúdo do main ao centro, para que o .page-content-wrapper fique centralizado */
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: flex-start;
+}
+
+/* IMPORTANTE: Este div DEVE envolver todo o conteúdo dentro do <main> em search.php */
+/* Ex: <main class="main-content"><div class="page-content-wrapper"> ... todo o conteúdo ... </div></main> */
+.page-content-wrapper {
+    max-width: var(--bs-container-max-width); /* Centraliza o conteúdo principal (desktop) */
+    margin: 0 auto;
+    width: 100%; /* Ocupa 100% da largura do main-content (até o max-width) */
+    box-sizing: border-box;
+    /* Adicione um padding lateral global aqui para desktop, dando espaço nas laterais */
+    padding-left: var(--bs-spacing-md);
+    padding-right: var(--bs-spacing-md);
+}
+
+
+/* ============================================= */
+/* 2. Cabeçalho e Formulário de Busca na Página de RESULTADOS
+/* Contém o título <h1> e o formulário de busca COMPACTO
+/* ============================================= */
+
+.search-header-container {
+    width: 100%;
+    margin-bottom: var(--bs-spacing-xl);
+    text-align: center;
+    padding: 0;
+}
+
+.search-page-title {
+    font-size: var(--bs-font-size-xxl);
+    color: var(--bs-text-primary);
+    margin-bottom: var(--bs-spacing-md);
+    font-weight: var(--bs-font-weight-bold);
+}
+
+/* Formulário de busca COMPACTO na página de resultados (barra de busca do topo) */
+.search-form-inline {
+    position: relative;
+    display: flex;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--bs-bg-white);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    box-shadow: var(--bs-shadow-sm);
+    overflow: hidden;
+    height: var(--bs-input-height-md);
+}
+
+.search-input-inline {
+    flex-grow: 1; /* Permite que o input ocupe o máximo de espaço disponível */
+    flex-shrink: 1; /* Permite que o input encolha se necessário, mas flex-grow deve prevalecer */
+    flex-basis: 0; /* IMPORTE: Garante que o item não tenha tamanho inicial, deixando flex-grow ditar */
+    
+    border: none;
+    padding: 0 var(--bs-spacing-md);
+    font-size: var(--bs-font-size-md);
+    color: var(--bs-text-primary);
+    background-color: transparent;
+    transition: all var(--bs-transition-normal);
+    padding-right: 40px; /* Espaço para o spinner/loading inline */
+}
+
+.search-input-inline::placeholder {
+    color: var(--bs-text-light);
+    opacity: 0.8;
+}
+
+.search-form-inline:focus-within {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 2px rgba(142, 33, 87, 0.2);
+}
+.search-input-inline:focus {
+    outline: none;
+}
+
+.search-button-inline {
+    flex-shrink: 0; /* IMPEDIR que o botão encolha */
+    border: none;
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    padding: 0 var(--bs-spacing-md);
+    cursor: pointer;
+    font-size: var(--bs-font-size-lg);
+    border-radius: 0 var(--bs-border-radius-md) var(--bs-border-radius-md) 0;
+    transition: background-color var(--bs-transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--bs-spacing-xs);
+    /* Removido height daqui, o container pai já define */
+}
+
+.search-button-inline:hover {
+    background-color: var(--bs-primary-hover);
+}
+
+/* ============================================= */
+/* 3. Lista de Resultados
+/* ... (Mantenha inalterado) ...
+/* ============================================= */
+
+/* ============================================= */
+/* 4. Mensagens de Sem Resultados / Prompt
+/* ... (Mantenha inalterado) ...
+/* ============================================= */
+
+/* ============================================= */
+/* 5. Paginação
+/* ... (Mantenha inalterado) ...
+/* ============================================= */
+
+/* ============================================= */
+/* 6. Estilos do Contêiner de Sugestões de Busca
+/* ... (Mantenha inalterado, pois o problema não era aqui) ...
+/* ============================================= */
+
+/* Estilos para o contêiner de sugestões principal */
+/* Este é o div#search-suggestions criado pelo JS */
+.search-form-inline > .search-suggestions {
+    position: absolute;
+    width: calc(100% + 2px);
+    top: calc(100% + var(--bs-spacing-sm));
+    left: -1px;
+    background-color: var(--bs-bg-white);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    box-shadow: var(--bs-shadow-md);
+    z-index: var(--bs-z-index-dropdown);
+    max-height: 300px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: var(--bs-spacing-sm) 0;
+}
+
+/* Estilos para o loading/spinner DENTRO DO INPUT na página search.php */
+.search-form-inline > .search-suggestions.is-inline-loading {
+    top: 50%;
+    right: var(--bs-spacing-md);
+    left: auto;
+    transform: translateY(-50%);
+    width: auto;
+    max-width: calc(100% - 60px);
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    pointer-events: none;
+    z-index: var(--bs-z-index-tooltip);
+    
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading {
+    padding: 0;
+    justify-content: flex-end;
+    color: var(--bs-text-light);
+}
+.search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading i {
+    font-size: var(--bs-font-size-md);
+    color: var(--bs-secondary);
+}
+.search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading span {
+    display: none;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    padding: var(--bs-spacing-sm) var(--bs-spacing-md);
+    gap: var(--bs-spacing-sm);
+    cursor: pointer;
+    color: var(--bs-text-primary);
+    transition: background-color var(--bs-transition-normal);
+}
+
+.suggestion-item:hover,
+.suggestion-item.highlighted {
+    background-color: var(--bs-primary-light);
+}
+
+.suggestion-item i {
+    color: var(--bs-primary);
+    font-size: var(--bs-font-size-md);
+}
+
+.suggestion-text {
+    flex-grow: 1;
+    font-size: var(--bs-font-size-md);
+}
+
+.suggestion-text strong {
+    font-weight: var(--bs-font-weight-bold);
+    color: var(--bs-primary);
+}
+
+.suggestion-type {
+    font-size: var(--bs-font-size-sm);
+    color: var(--bs-text-light);
+    background-color: var(--bs-bg-light);
+    padding: 2px 6px;
+    border-radius: var(--bs-border-radius-sm);
+    white-space: nowrap;
+}
+
+.suggestion-frequency {
+    font-size: var(--bs-font-size-sm);
+    color: var(--bs-text-light);
+    margin-left: var(--bs-spacing-xs);
+}
+
+.suggestion-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--bs-spacing-md);
+    color: var(--bs-text-secondary);
+    font-size: var(--bs-font-size-md);
+    gap: var(--bs-spacing-sm);
+}
+
+.suggestion-loading i {
+    color: var(--bs-primary);
+    font-size: var(--bs-font-size-lg);
+}
+
+.fa-spin {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ============================================= */
+/* 7. Responsividade
+/* ============================================= */
+
+@media (max-width: 768px) {
+    .main-content {
+        padding-top: calc(var(--bs-header-height) + var(--bs-city-bar-height) + var(--bs-spacing-md));
+        padding-bottom: calc(var(--bs-footer-height) + var(--bs-spacing-md));
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .page-content-wrapper {
+        padding-left: var(--bs-spacing-sm);
+        padding-right: var(--bs-spacing-sm);
+    }
+
+    .search-header-container {
+        padding: 0;
+    }
+
+    /* Correção da barra de busca em mobile (search-form-inline) */
+    .search-form-inline {
+        flex-direction: column;
+        height: auto;
+        border: 1px solid var(--bs-border-color);
+        box-shadow: var(--bs-shadow-sm);
+        border-radius: var(--bs-border-radius-md);
+    }
+
+    .search-input-inline {
+        border-bottom: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius-md) var(--bs-border-radius-md) 0 0;
+        padding: var(--bs-spacing-sm) var(--bs-spacing-md);
+        width: 100%;
+        padding-right: 40px; /* Manter padding-right para o spinner em mobile também */
+    }
+    
+    .search-input-inline:focus {
+        border-color: var(--bs-primary);
+        box-shadow: none;
+    }
+
+    .search-form-inline:focus-within {
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 0 2px rgba(142, 33, 87, 0.2);
+    }
+
+    .search-button-inline {
+        border-radius: 0 0 var(--bs-border-radius-md) var(--bs-border-radius-md);
+        width: 100%;
+        height: var(--bs-input-height-md);
+    }
+
+    .results-section {
+        padding: 0;
+    }
+    .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+    .results-count {
+        width: 100%;
+        margin-bottom: var(--bs-spacing-sm);
+        padding-bottom: var(--bs-spacing-sm);
+    }
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: var(--bs-spacing-md);
+    }
+    .result-card.enhanced {
+        padding: var(--bs-spacing-md);
+    }
+    .result-title {
+        font-size: var(--bs-font-size-lg);
+    }
+    .result-description {
+        font-size: var(--bs-font-size-md);
+    }
+    .pagination {
+        flex-wrap: wrap;
+        gap: var(--bs-spacing-xs);
+        padding: var(--bs-spacing-sm);
+    }
+    .pagination-btn {
+        min-width: 32px;
+        height: var(--bs-input-height-sm);
+        font-size: var(--bs-font-size-sm);
+        padding: var(--bs-spacing-xs) var(--bs-spacing-sm);
+    }
+    .pagination-info {
+        font-size: var(--bs-font-size-sm);
+    }
+
+    /* Em mobile, o loading de sugestões volta a ser abaixo do campo, não inline */
+    .search-form-inline > .search-suggestions.is-inline-loading {
+        position: absolute;
+        top: calc(100% + var(--bs-spacing-sm));
+        right: auto;
+        left: 0;
+        transform: none;
+        width: 100%;
+        max-width: none;
+        padding: var(--bs-spacing-sm) 0;
+        background: var(--bs-bg-white);
+        border: 1px solid var(--bs-border-color);
+        box-shadow: var(--bs-shadow-md);
+        pointer-events: auto;
+        z-index: var(--bs-z-index-dropdown);
+    }
+    .search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading {
+        padding: var(--bs-spacing-md);
+        justify-content: center;
+        color: var(--bs-text-secondary);
+    }
+    .search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading i {
+        font-size: var(--bs-font-size-lg);
+        color: var(--bs-primary);
+    }
+    .search-form-inline > .search-suggestions.is-inline-loading .suggestion-loading span {
+        display: inline; /* Mostra o texto em mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .search-page-title {
+        font-size: var(--bs-font-size-xl);
+    }
+    .search-form-inline > .search-suggestions { /* Sugestões para mobile */
+        width: 100%;
+        left: 0;
+        border-radius: var(--bs-border-radius-md);
+    }
+}

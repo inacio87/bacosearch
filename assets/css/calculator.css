@@ -1,0 +1,486 @@
+/**
+ * /assets/css/calculator.css
+ * Estilos para a página da Calculadora de Lucro da Franquia.
+ * Última Atualização: 02/07/2025 - Adicionado suporte para layout de duas colunas (mensal/anual);
+ * Mantido layout compacto com variáveis globais.
+ * NOVO: Estilos para o campo de telefone com DDI e bandeira.
+ * CORREÇÃO: Estilos para mensagens de erro específicas do formulário de feedback.
+ */
+
+body {
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: var(--bs-bg-light);
+    color: var(--bs-text-primary);
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-normal);
+}
+
+.calculator-page-container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: var(--bs-bg-white);
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--bs-shadow-md);
+    overflow: hidden;
+}
+
+.intro-section {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+.intro-section h1 {
+    color: var(--bs-primary);
+    font-size: 2.2rem;
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 10px;
+    line-height: var(--line-height-tight);
+}
+.intro-section p {
+    color: var(--bs-text-secondary);
+    font-size: var(--font-size-md);
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.intro-section p.subtitle {
+    font-weight: var(--font-weight-medium);
+    margin-bottom: 10px;
+}
+
+.calc-section {
+    margin-bottom: 30px;
+}
+.calc-section h2 {
+    font-size: 1.8rem;
+    color: var(--bs-text-primary);
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--bs-border-color);
+    padding-bottom: 10px;
+    text-align: center;
+    font-weight: var(--font-weight-semibold);
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--bs-bg-lighter);
+}
+.input-group:last-of-type {
+    border-bottom: none;
+}
+.input-group label {
+    flex: 1;
+    text-align: left;
+    font-weight: var(--font-weight-medium);
+    color: var(--bs-text-primary);
+    font-size: var(--font-size-md);
+    padding-right: 15px;
+}
+.input-group input[type="number"] {
+    flex: 0 0 100px;
+    padding: 8px 10px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    font-size: var(--font-size-lg);
+    text-align: right;
+    background-color: var(--bs-bg-white);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+    transition: var(--transition-normal);
+}
+.input-group input[type="number"]:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 3px rgba(var(--bs-primary), 0.1);
+    outline: none;
+}
+.input-group input[type="number"]::-webkit-outer-spin-button,
+.input-group input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.input-group input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.results-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.results-column {
+    flex: 1;
+    padding: 15px;
+    background-color: var(--bs-bg-light);
+    border-radius: var(--bs-border-radius-md);
+    border: 1px solid var(--bs-border-color);
+}
+.results-column h3 {
+    font-size: 1.3rem;
+    color: var(--bs-primary);
+    margin-bottom: 15px;
+    font-weight: var(--font-weight-semibold);
+}
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--bs-border-color);
+    font-size: var(--font-size-md);
+    color: var(--bs-text-secondary);
+}
+.result-item:last-of-type {
+    border-bottom: none;
+}
+.result-item strong {
+    color: var(--bs-text-primary);
+    flex: 2;
+    text-align: left;
+    font-weight: var(--font-weight-semibold);
+}
+.result-item span {
+    flex: 1;
+    text-align: right;
+    font-weight: var(--font-weight-bold);
+    color: var(--bs-primary);
+}
+.result-item ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+    text-align: right;
+}
+.result-item ul li {
+    font-size: var(--font-size-sm);
+    color: var(--bs-text-light);
+    margin-bottom: 3px;
+}
+.result-item ul li span {
+    font-weight: var(--font-weight-regular);
+    color: var(--bs-text-light);
+}
+
+.highlight {
+    background-color: var(--bs-success);
+    opacity: 1.15;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: var(--bs-border-radius-lg);
+    border: 1px solid rgba(var(--bs-success), 0.4);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+}
+.highlight span {
+    color: var(--bs-success);
+    font-size: var(--font-size-xl);
+}
+.result-item .cost-value {
+    color: var(--bs-error);
+    font-weight: var(--font-weight-bold);
+}
+
+/* ESTILOS PARA O FORMULÁRIO DE FEEDBACK */
+.feedback-form-container {
+    background-color: var(--bs-bg-light);
+    padding: 30px;
+    border-radius: var(--bs-border-radius-lg);
+    margin-top: 40px;
+    border: 1px solid var(--bs-border-color);
+    box-shadow: var(--bs-shadow-sm);
+}
+.feedback-form-container h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--bs-primary);
+    font-size: 1.8rem;
+    font-weight: var(--font-weight-semibold);
+}
+.feedback-form-container p {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--bs-text-secondary);
+    font-size: var(--font-size-md);
+}
+.feedback-form-container .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+.feedback-form-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: var(--font-weight-medium);
+    color: var(--bs-text-primary);
+    font-size: var(--font-size-md);
+}
+.feedback-form-container input[type="text"],
+.feedback-form-container input[type="email"],
+.feedback-form-container input[type="tel"], /* Adicionado input tel */
+.feedback-form-container textarea,
+.feedback-form-container select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    font-size: var(--font-size-md);
+    box-sizing: border-box;
+    background-color: var(--bs-bg-white);
+    transition: var(--transition-normal);
+}
+.feedback-form-container textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+.feedback-form-container input:focus,
+.feedback-form-container select:focus,
+.feedback-form-container textarea:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 3px rgba(var(--bs-primary), 0.1);
+    outline: none;
+}
+.feedback-form-container .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    border: none;
+    border-radius: var(--bs-border-radius-md);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    margin-top: 25px;
+}
+.feedback-form-container .btn-primary:hover {
+    background-color: var(--bs-primary-hover);
+    transform: translateY(-1px);
+}
+.success-message {
+    background-color: rgba(var(--bs-success), 1.15);
+    color: var(--bs-text-primary);
+    padding: 15px;
+    border-radius: var(--bs-border-radius-md);
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: var(--font-weight-semibold);
+    border: 1px solid rgba(var(--bs-success), 0.4);
+    font-size: var(--font-size-md);
+}
+
+/* ESTILOS PARA O CAMPO DE TELEFONE (DDI + NÚMERO) */
+.feedback-form-container .form-group .phone-input-group {
+    display: flex;
+    gap: 10px; /* Espaçamento entre o seletor de DDI e o input do número */
+    margin-bottom: 0; /* Remove margin-bottom que pode vir de .form-group global */
+    padding: 0; /* Remove padding que pode vir de .form-group global */
+    border-bottom: none; /* Remove borda que pode vir de .input-group global */
+}
+
+.feedback-form-container .form-group .phone-code {
+    flex: 0 0 100px; /* Largura fixa para o seletor de DDI */
+    padding-right: 10px; 
+    padding-left: 14px; /* Padding padrão para o texto do DDI antes da bandeira carregar */
+    appearance: none; /* Remover setas padrão do select */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Seta customizada para o select */
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23495057%22%20d%3D%22M6%208.5L2.5%205h7L6%208.5z%22%2F%3E%3C%2Fsvg%3E'); 
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Posição da seta customizada */
+}
+
+.feedback-form-container .form-group .phone-number {
+    flex: 1; /* O input do número ocupa o restante do espaço */
+}
+
+/* ESTILOS PARA MENSAGENS DE ERRO ESPECÍFICAS DO FORMULÁRIO DE FEEDBACK */
+/* Aplica-se às mensagens de erro que aparecem DENTRO de um form-group (como a do telefone) */
+.feedback-form-container .form-group .error-message {
+    padding: 8px 12px; /* Menor padding para mensagens mais compactas */
+    margin-top: 5px; /* Espaçamento pequeno acima do erro */
+    margin-bottom: 10px; /* Espaçamento abaixo do erro */
+    font-size: var(--font-size-sm); /* Tamanho de fonte menor */
+    border-radius: var(--bs-border-radius-sm); /* Cantos mais suaves */
+    color: #721c24; /* Ex: Vermelho escuro */
+    background-color: #f8d7da; /* Ex: Vermelho claro */
+    border-color: #f5c6cb; /* Ex: Borda vermelha */
+    box-shadow: none; /* Remova qualquer sombra que possa atrapalhar */
+    text-align: left; /* Garante alinhamento à esquerda */
+}
+
+/* Garante que o texto de erro não tenha bullet points se for uma ul, e sem margens internas */
+.feedback-form-container .form-group .error-message ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.feedback-form-container .form-group .error-message li {
+    margin-bottom: 0;
+}
+
+
+/* --- RESPONSIVIDADE --- */
+
+@media (max-width: 768px) {
+    .calculator-page-container {
+        margin: var(--spacing-lg) auto;
+        padding: var(--spacing-lg);
+    }
+    .intro-section h1 {
+        font-size: 1.8rem;
+    }
+    .calc-section h2 {
+        font-size: var(--font-size-lg);
+    }
+    .results-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .results-column {
+        padding: var(--spacing-md);
+    }
+    .input-group {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--spacing-sm) 0;
+    }
+    .input-group label {
+        margin-bottom: var(--spacing-xs);
+        padding-right: 0;
+    }
+    .input-group input[type="number"] {
+        width: 100%;
+        flex: none;
+    }
+    .result-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--spacing-sm) 0;
+    }
+    .result-item strong, .result-item span, .result-item ul {
+        width: 100%;
+        text-align: left;
+        margin-bottom: var(--spacing-xs);
+    }
+    .result-item ul li {
+        margin-left: var(--spacing-md);
+    }
+    .feedback-form-container {
+        padding: var(--spacing-lg);
+    }
+    
+    /* ESTILOS RESPONSIVOS PARA O TELEFONE */
+    .feedback-form-container .form-group .phone-input-group {
+        flex-direction: row; /* Mantém lado a lado em telas menores, se houver espaço */
+        gap: 5px; /* Ajuste o gap para telas menores */
+    }
+    .feedback-form-container .form-group .phone-code {
+        flex: 0 0 80px; /* Pode diminuir um pouco o DDI em telas menores */
+    }
+}
+
+@media (max-width: 480px) {
+    .calculator-page-container {
+        padding: var(--spacing-md);
+        margin: var(--spacing-md) auto;
+    }
+    .intro-section h1 {
+        font-size: 1.6rem;
+    }
+    .calc-section h2 {
+        font-size: var(--font-size-md);
+    }
+    .highlight {
+        font-size: var(--font-size-md);
+        padding: var(--spacing-md);
+    }
+    .highlight span {
+        font-size: var(--font-size-lg);
+    }
+    /* Estilos mais compactos para telefone em telas muito pequenas */
+    .feedback-form-container .form-group .phone-input-group {
+        flex-wrap: wrap; /* Permite quebrar linha se não couber */
+    }
+    .feedback-form-container .form-group .phone-code,
+    .feedback-form-container .form-group .phone-number {
+        flex: 1 1 100%; /* Cada um ocupa a linha toda se quebrar */
+    }
+}
+/* Estilos para o Modal de Sucesso (geral, pode ser usado em outros modais também) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+.modal-overlay.show .modal-content {
+    transform: translateY(0);
+}
+.modal-close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.2s ease;
+}
+.modal-close-button:hover {
+    color: #333;
+}
+.modal-content h2 {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    color: #333;
+}
+.modal-content p {
+    margin-bottom: 20px;
+    color: #555;
+    line-height: 1.5;
+}
+/* Estilo para o botão inferior do modal (se houver) */
+.modal-content .modal-close-button-bottom {
+    background-color: var(--bs-primary); /* Use sua variável CSS */
+    color: var(--bs-text-on-primary); /* Use sua variável CSS */
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--bs-border-radius-md);
+    cursor: pointer;
+    font-size: var(--font-size-md);
+    transition: background-color 0.2s ease;
+}
+.modal-content .modal-close-button-bottom:hover {
+    background-color: var(--bs-primary-hover);
+}

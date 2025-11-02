@@ -1,0 +1,872 @@
+/* style.css - Versão refatorada e corrigida do CSS global do BacoSearch */
+
+/* Variáveis de cores e espaçamentos */
+:root {
+    /* Cores principais */
+    --bs-primary: #8e2157;
+    --bs-primary-hover: #a8366b;
+    --bs-primary-light: #fdf6fa;
+    --bs-secondary: #75767c;
+    --bs-secondary-hover: #5f6065;
+    --bs-gold: #caa45f;
+    --bs-beige: #f2f3fa;
+    
+    /* Cores de texto */
+    --bs-text-primary: #333333;
+    --bs-text-secondary: #555555;
+    --bs-text-light: #777777;
+    --bs-text-on-primary: #ffffff;
+    
+    /* Cores de fundo */
+    --bs-bg-white: #ffffff;
+    --bs-bg-light: #f8f9fa;
+    --bs-bg-lighter: #f2f3fa;
+    
+    /* Cores de estado */
+    --bs-error: #e74c3c;
+    --bs-success: #2ecc71;
+    --bs-warning: #f39c12;
+    --bs-info: #3498db;
+    
+    /* Bordas e sombras */
+    --bs-border-color: #dee2e6;
+    --bs-border-radius-xs: 2px;
+    --bs-border-radius-sm: 4px;
+    --bs-border-radius-md: 6px;
+    --bs-border-radius-lg: 8px;
+    --bs-border-radius-xl: 12px;
+    --bs-border-radius-pill: 50rem;
+
+    --bs-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --bs-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --bs-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.12);
+    --bs-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --bs-shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.18);
+    
+    /* Espaçamentos */
+    --bs-spacing-xs: 4px;
+    --bs-spacing-sm: 8px;
+    --bs-spacing-md: 16px;
+    --bs-spacing-lg: 24px;
+    --bs-spacing-xl: 32px;
+    --bs-spacing-xxl: 48px;
+    
+    /* Tipografia */
+    --bs-font-size-xs: 11px;
+    --bs-font-size-sm: 12px;
+    --bs-font-size-md: 14px;
+    --bs-font-size-lg: 16px;
+    --bs-font-size-xl: 18px;
+    --bs-font-size-xxl: 24px;
+
+    /* Pesos de fonte */
+    --bs-font-weight-light: 300;
+    --bs-font-weight-regular: 400;
+    --bs-font-weight-medium: 500;
+    --bs-font-weight-semibold: 600;
+    --bs-font-weight-bold: 700;
+
+    /* Alturas de linha */
+    --bs-line-height-tight: 1.2;
+    --bs-line-height-normal: 1.5;
+    --bs-line-height-loose: 1.8;
+    
+    /* Alturas fixas para elementos de interface (já existentes) */
+    --bs-header-height: 50px; /* Altura da primeira barra do cabeçalho */
+    --bs-city-bar-height: 36px; /* Altura da barra de cidade/idioma */
+    --bs-footer-height: 50px;
+    --bs-input-height-sm: 30px;
+    --bs-input-height-md: 38px;
+    --bs-input-height-lg: 42px;
+
+    /* Larguras para elementos de interface */
+    --bs-container-max-width: 1200px;
+    --bs-sidebar-width: 250px;
+
+    /* Transições */
+    --bs-transition-fast: 0.15s ease;
+    --bs-transition-normal: 0.2s ease;
+    --bs-transition-slow: 0.3s ease;
+
+    /* Z-index */
+    --bs-z-index-dropdown: 1000;
+    --bs-z-index-sticky: 1020;
+    --bs-z-index-fixed: 1030; /* Use este para elementos fixos como header/city-bar */
+    --bs-z-index-modal-backdrop: 1040;
+    --bs-z-index-modal: 1050;
+    --bs-z-index-popover: 1060;
+    --bs-z-index-tooltip: 1070;
+
+    /* ALTURA TOTAL COMBINADA DO CABEÇALHO FIXO - **AJUSTE ESTES VALORES COM A MEDIDA REAL!** */
+    /* Use as ferramentas do desenvolvedor (F12) para somar a altura da sua 'header' e 'city-bar' */
+    --total-fixed-header-height-desktop: calc(var(--bs-header-height) + var(--bs-city-bar-height)); /* Exemplo: 50px + 36px = 86px */
+    --total-fixed-header-height-mobile: calc(var(--bs-header-height) + var(--bs-city-bar-height));  /* Exemplo: 50px + 36px = 86px */
+}
+
+/* --- Definição da Fonte Variável --- */
+@font-face {
+    font-family: 'Inter';
+    src: url('../font/Inter-VariableFont_opsz,wght.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../font/Inter-Italic-VariableFont_opsz,wght.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: italic;
+}
+
+
+/* Reset e configurações gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bs-bg-light);
+    color: var(--bs-text-primary);
+    font-size: var(--bs-font-size-md);
+    line-height: var(--bs-line-height-normal);
+
+    /* IMPORTANTE: Empurrar o conteúdo do BODY para baixo da ALTURA TOTAL do cabeçalho fixo */
+    padding-top: var(--total-fixed-header-height-desktop); /* Padrão para desktop */
+}
+
+
+/* --- Classes Utilitárias --- */
+.d-flex { display: flex; }
+.align-items-center { align-items: center; }
+.justify-content-center { justify-content: center; }
+.justify-content-space-between { justify-content: space-between; }
+.flex-column { flex-direction: column; }
+.gap-sm { gap: var(--bs-spacing-sm); }
+.gap-xs { gap: var(--bs-spacing-xs); }
+
+/* --- Links --- */
+a {
+    text-decoration: none;
+    color: var(--bs-primary);
+    transition: color var(--bs-transition-normal);
+}
+
+a:hover {
+    color: var(--bs-primary-hover);
+}
+
+a.underline {
+    text-decoration: underline;
+}
+
+/* --- Header Fixo (barra superior) --- */
+header { /* Assumindo que seu header.php tem uma tag <header> para a barra superior */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: var(--bs-bg-white);
+    border-bottom: 1px solid var(--bs-border-color);
+    padding: var(--bs-spacing-sm) var(--bs-spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: var(--bs-z-index-fixed);
+    box-shadow: var(--bs-shadow-sm);
+    height: var(--bs-header-height); /* Altura da primeira barra do cabeçalho (50px) */
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--bs-spacing-sm);
+}
+
+.header-button {
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    border: none;
+    padding: 6px 12px;
+    font-size: var(--bs-font-size-sm);
+    font-weight: var(--bs-font-weight-semibold);
+    border-radius: var(--bs-border-radius-sm);
+    cursor: pointer;
+    transition: background-color var(--bs-transition-normal), color var(--bs-transition-normal);  
+    height: var(--bs-input-height-sm);
+    display: flex;
+    align-items: center;
+}
+
+.header-button:hover {
+    background-color: var(--bs-primary-hover);
+    color: var(--bs-text-on-primary);  
+}
+
+.header-center img {
+    max-height: 28px;
+    width: auto;
+}
+
+/* --- Linha da Cidade (City Bar) --- */
+/* Este é o elemento que contém "Português | Guimarães" */
+.city-bar { /* Assumindo que seu header.php tem um elemento com essa classe para a city bar */
+    position: fixed;
+    top: var(--bs-header-height); /* Posiciona abaixo da primeira barra do header */
+    width: 100%;
+    background-color: var(--bs-bg-light);
+    padding: var(--bs-spacing-xs) var(--bs-spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: calc(var(--bs-z-index-fixed) - 1); /* Abaixo do header principal, mas ainda fixo */
+    box-shadow: var(--bs-shadow-sm);
+    height: var(--bs-city-bar-height); /* Altura da city-bar (36px) */
+}
+
+.city-bar .city {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--bs-spacing-xs);
+    background-color: var(--bs-primary-light);
+    color: var(--bs-text-primary);
+    font-size: var(--bs-font-size-sm);
+    font-weight: var(--bs-font-weight-regular);
+    padding: 3px 10px;
+    border-radius: var(--bs-border-radius-md);
+    box-shadow: var(--bs-shadow-xs);
+    transition: background-color var(--bs-transition-normal);
+    height: 24px;
+}
+
+.city-bar .city:hover {
+    background-color: var(--bs-beige);
+}
+
+/* ===================================================================== */
+/* --- SELETOR DE IDIOMA PERSONALIZADO --- */
+/* ===================================================================== */
+.language-selector {
+    position: relative;
+}
+
+.custom-select {
+    position: relative;
+}
+
+.selected-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--bs-spacing-sm);
+    background-color: var(--bs-bg-white);
+    color: var(--bs-text-secondary);
+    font-size: var(--bs-font-size-sm);
+    font-weight: var(--bs-font-weight-medium);
+    padding: 4px 8px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-sm);
+    cursor: pointer;
+    transition: border-color var(--bs-transition-normal), box-shadow var(--bs-transition-normal);
+    min-width: 100px;
+    height: 28px;
+}
+
+.selected-option:hover {
+    border-color: var(--bs-secondary-hover);
+}
+
+.selected-option.active {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 2px rgba(142, 33, 87, 0.2);
+}
+
+.selected-option .dropdown-arrow {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid var(--bs-text-light);
+    transition: transform var(--bs-transition-normal);
+}
+
+.selected-option.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.options-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--bs-bg-white);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-sm);
+    box-shadow: var(--bs-shadow-md);
+    z-index: var(--bs-z-index-dropdown);
+    margin-top: var(--bs-spacing-xs);
+    max-height: 250px;
+    overflow-y: auto;
+    padding: var(--bs-spacing-xs) 0;
+    list-style: none;
+}
+
+.options-list.show {
+    display: block;
+}
+
+.options-list .option {
+    display: flex;
+    align-items: center;
+    padding: var(--bs-spacing-sm) var(--bs-spacing-md);
+    font-size: var(--bs-font-size-sm);
+    color: var(--bs-text-primary);
+    cursor: pointer;
+    transition: background-color var(--bs-transition-normal), color var(--bs-transition-normal);
+}
+
+.options-list .option:hover {
+    background-color: var(--bs-primary-light);
+}
+
+.options-list .option.selected {
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    font-weight: var(--bs-font-weight-semibold);
+}
+
+/* --- FIM DO SELETOR DE IDIOMA --- */
+
+
+/* --- Main Content GLOBAL (Aplicado a todas as páginas) --- */
+/* Este é o main para a INDEX.PHP. Ele centraliza o conteúdo. */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza horizontalmente o conteúdo */
+    
+    padding-left: var(--bs-spacing-md);
+    padding-right: var(--bs-spacing-md);
+    box-sizing: border-box;
+    width: 100%;
+    /* Altura mínima para empurrar o footer para baixo, se necessário */
+    
+    padding-bottom: var(--bs-spacing-xl); /* Adiciona um padding na parte inferior do main para empurrar o footer */
+}
+
+/* --- Content Wrapper Global para centralização de conteúdo dentro do main --- */
+/* Esta classe NÃO É USADA NA INDEX.PHP, lá o próprio main centraliza o conteúdo.
+   Ela será usada em outras páginas (como search.php, register.php) que precisam
+   de um max-width e margin:auto para o conteúdo dentro do main. */
+.global-content-wrapper {
+    max-width: var(--bs-container-max-width);
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* Logo no main (da página inicial index.php) */
+.logo img {
+    max-width: 180px;
+    height: auto;
+    margin-top: 100px;
+}
+
+/* --- Buscador da página inicial (index.php) --- */
+/* Esta seção se aplica apenas à barra de busca da index.php */
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.search-container input {
+    padding: 8px 12px;
+    border: 1px solid var(--bs-border-color);
+    border-right: none;
+    border-radius: var(--bs-border-radius-md) 0 0 var(--bs-border-radius-md);
+    font-size: var(--bs-font-size-md);
+    height: var(--bs-input-height-md);
+    color: var(--bs-text-primary);
+    width: 100%;
+}
+.search-container input::placeholder {
+    color: var(--bs-text-light);
+    opacity: 0.8;
+}
+.search-container input:focus {
+    outline: none;
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 2px rgba(142, 33, 87, 0.2);
+}
+.search-container .search-button {
+    padding: 8px 12px;
+    border: 1px solid var(--bs-primary);
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    border-radius: 0 var(--bs-border-radius-md) var(--bs-border-radius-md) 0;
+    height: var(--bs-input-height-md);
+    cursor: pointer;
+    transition: background-color var(--bs-transition-normal);
+}
+.search-container .search-button:hover {
+    background-color: var(--bs-primary-hover);
+}
+
+
+/* --- Footer Fixo --- */
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--bs-bg-white);
+    border-top: 1px solid var(--bs-border-color);
+    padding: var(--bs-spacing-sm) 0;
+    z-index: var(--bs-z-index-fixed);
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.08);
+    height: var(--bs-footer-height);
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+.footer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.footer-icon {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) saturate(100%) invert(21%) sepia(47%) saturate(3167%) hue-rotate(300deg) brightness(89%) contrast(92%);
+}
+
+.footer-nav a:hover .footer-icon {
+    filter: brightness(0) saturate(100%) invert(21%) sepia(47%) saturate(3167%) hue-rotate(300deg) brightness(89%) contrast(92%) brightness(0.8);
+}
+
+.footer-label {
+    color: var(--bs-text-primary);
+    font-size: var(--bs-font-size-xs);
+    font-weight: var(--bs-font-weight-medium);
+    text-transform: uppercase;
+}
+
+
+/* --- Menu Dropdown --- */
+.menu-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.menu-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--bs-bg-white);
+    min-width: 180px;
+    box-shadow: var(--bs-shadow-md);
+    z-index: var(--bs-z-index-dropdown);
+    right: 0;
+    bottom: 100%;
+    margin-bottom: var(--bs-spacing-sm);
+    border-radius: var(--bs-border-radius-sm);
+    border: 1px solid var(--bs-border-color);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity var(--bs-transition-normal), transform var(--bs-transition-normal);
+}
+
+.dropdown-content.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Caso o dropdown seja usado na city-bar */
+.city-bar .dropdown-content {
+    top: 100%;
+    bottom: auto;
+    margin-top: var(--bs-spacing-sm);
+    margin-bottom: 0;
+}
+
+
+.dropdown-content a {
+    color: var(--bs-text-primary);
+    padding: 8px 12px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: var(--bs-spacing-sm);
+    font-size: var(--bs-font-size-sm);
+    font-weight: var(--bs-font-weight-medium);
+    border-bottom: 1px solid var(--bs-border-color);
+    transition: background-color var(--bs-transition-normal), color var(--bs-transition-normal), border-bottom-color var(--bs-transition-normal);
+}
+
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    border-bottom-color: var(--bs-primary);  
+}
+
+.dropdown-content a i {
+    font-size: var(--bs-font-size-sm);
+}
+
+/* --- Modal de Aviso de Idade --- */
+.bs-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: var(--bs-z-index-modal-backdrop);
+    overflow: auto;
+}
+
+.bs-modal-overlay.active {
+    display: flex;
+}
+
+.bs-modal-box {
+    background-color: var(--bs-bg-white);
+    padding: var(--bs-spacing-lg);
+    border-radius: var(--bs-border-radius-md);
+    max-width: 90%;
+    width: 400px;
+    text-align: center;
+    box-shadow: var(--bs-shadow-lg);
+    margin: var(--bs-spacing-md) auto;
+}
+
+.bs-modal-box h2 {
+    font-size: var(--bs-font-size-xl);
+    font-weight: var(--bs-font-weight-bold);
+    color: var(--bs-text-primary);
+    margin-bottom: var(--bs-spacing-md);
+}
+
+.bs-modal-box p {
+    font-size: var(--bs-font-size-md);
+    font-weight: var(--bs-font-weight-regular);
+    color: var(--bs-text-secondary);
+    margin-bottom: var(--bs-spacing-md);
+}
+
+.bs-modal-box .terms-notice {
+    font-size: var(--bs-font-size-sm);
+    line-height: var(--bs-line-height-normal);
+}
+
+.bs-modal-box .terms-notice a {
+    color: var(--bs-primary);
+    text-decoration: none;
+}
+
+.bs-modal-box .terms-notice a:hover {
+    color: var(--bs-primary-hover);
+    text-decoration: underline;
+}
+
+.bs-modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--bs-spacing-md);
+}
+
+
+/* --- Estilos para o Contêiner de Sugestões de Busca (do search-enhanced.js) --- */
+/* Estes estilos se aplicam APENAS para o .search-container da INDEX.PHP */
+/* Assumimos que o .search-suggestions é filho direto do .search-container */
+.search-container > .search-suggestions {
+    position: absolute;
+    width: 100%;
+    top: calc(100% + var(--bs-spacing-sm));
+    left: 0;
+    background-color: var(--bs-bg-white);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-md);
+    box-shadow: var(--bs-shadow-md);
+    z-index: var(--bs-z-index-dropdown);
+    max-height: 300px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: var(--bs-spacing-sm) 0;
+}
+
+/* Estilos para o loading/spinner DENTRO DO INPUT na página inicial */
+.search-container > .search-suggestions.is-inline-loading {
+    top: 50%;
+    right: var(--bs-spacing-md);
+    left: auto;
+    transform: translateY(-50%);
+    width: auto;
+    max-width: calc(100% - 60px);
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    pointer-events: none;
+    z-index: var(--bs-z-index-tooltip);
+    
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Ajustes no .suggestion-loading quando ele está inline (na index) */
+.search-container > .search-suggestions.is-inline-loading .suggestion-loading {
+    padding: 0;
+    justify-content: flex-end;
+    color: var(--bs-text-light);
+}
+.search-container > .search-suggestions.is-inline-loading .suggestion-loading i {
+    font-size: var(--bs-font-size-md);
+    color: var(--bs-secondary);
+}
+.search-container > .search-suggestions.is-inline-loading .suggestion-loading span {
+    display: none;
+}
+
+/* Estilos para os itens de sugestão (aplicam-se a ambos, index e search) */
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    padding: var(--bs-spacing-sm) var(--bs-spacing-md);
+    gap: var(--bs-spacing-sm);
+    cursor: pointer;
+    color: var(--bs-text-primary);
+    transition: background-color var(--bs-transition-normal);
+}
+
+.suggestion-item:hover,
+.suggestion-item.highlighted {
+    background-color: var(--bs-primary-light);
+}
+
+.suggestion-item i {
+    color: var(--bs-primary);
+    font-size: var(--bs-font-size-md);
+}
+
+.suggestion-text {
+    flex-grow: 1;
+    font-size: var(--bs-font-size-md);
+}
+
+.suggestion-text strong {
+    font-weight: var(--bs-font-weight-bold);
+    color: var(--bs-primary);
+}
+
+.suggestion-type {
+    font-size: var(--bs-font-size-sm);
+    color: var(--bs-text-light);
+    background-color: var(--bs-bg-light);
+    padding: 2px 6px;
+    border-radius: var(--bs-border-radius-sm);
+    white-space: nowrap;
+}
+
+.suggestion-frequency {
+    font-size: var(--bs-font-size-sm);
+    color: var(--bs-text-light);
+    margin-left: var(--bs-spacing-xs);
+}
+
+/* Estilos para a mensagem de loading normal (spinner + texto) - usado quando não é inline ou em mobile */
+.suggestion-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--bs-spacing-md);
+    color: var(--bs-text-secondary);
+    font-size: var(--bs-font-size-md);
+    gap: var(--bs-spacing-sm);
+}
+
+.suggestion-loading i {
+    color: var(--bs-primary);
+    font-size: var(--bs-font-size-lg);
+}
+
+.fa-spin {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* --- Ajustes de Responsividade --- */
+@media (max-width: 768px) {
+    .header-button {
+        font-size: var(--bs-font-size-xs);
+        padding: 4px 10px;
+    }
+    
+    .search-container input,
+    .search-container .search-button {
+        height: var(--bs-input-height-md);
+    }
+
+    .city-bar {
+        padding: var(--bs-spacing-xs) var(--bs-spacing-sm);
+    }
+    
+    .selected-option {
+        font-size: var(--bs-font-size-sm);
+        padding: 4px 8px;
+        min-width: 90px;
+        height: 24px;
+    }
+
+    .dropdown-content {
+        min-width: 140px;
+    }
+
+    .dropdown-content a {
+        font-size: var(--bs-font-size-xs);
+        padding: 6px 10px;
+    }
+
+    .bs-modal-box {
+        padding: var(--bs-spacing-md);
+        width: 95%;
+        margin: var(--bs-spacing-sm) auto;
+    }
+
+    /* Em mobile, o loading de sugestões da index volta a ser abaixo do campo, não inline */
+    .search-container > .search-suggestions.is-inline-loading {
+        position: absolute;
+        top: calc(100% + var(--bs-spacing-sm));
+        right: auto;
+        left: 0;
+        transform: none;
+        width: 100%;
+        max-width: none;
+        padding: var(--bs-spacing-sm) 0;
+        background: var(--bs-bg-white);
+        border: 1px solid var(--bs-border-color);
+        box-shadow: var(--bs-shadow-md);
+        pointer-events: auto;
+        z-index: var(--bs-z-index-dropdown);
+    }
+    .search-container > .search-suggestions.is-inline-loading .suggestion-loading {
+        padding: var(--bs-spacing-md);
+        justify-content: center;
+        color: var(--bs-text-secondary);
+    }
+    .search-container > .search-suggestions.is-inline-loading .suggestion-loading i {
+        font-size: var(--bs-font-size-lg);
+        color: var(--bs-primary);
+    }
+    .search-container > .search-suggestions.is-inline-loading .suggestion-loading span {
+        display: inline; /* Mostra o texto em mobile */
+    }
+}
+
+@media (max-width: 400px) {
+    .city-bar {
+        padding: var(--bs-spacing-xs) var(--bs-spacing-sm);
+    }
+    
+    .selected-option {
+        font-size: var(--bs-font-size-sm);
+        padding: 4px 8px;
+        min-width: 100%;
+        height: 24px;
+    }
+
+    .dropdown-content {
+        min-width: 140px;
+    }
+
+    .dropdown-content a {
+        font-size: var(--bs-font-size-xs);
+        padding: 6px 10px;
+    }
+
+    .bs-modal-box {
+        padding: var(--bs-spacing-md);
+        width: 95%;
+        margin: var(--bs-spacing-sm) auto;
+    }
+}
+
+/* Scrollbar personalizado para desktop */
+@media (min-width: 769px) {
+    .options-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .options-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 6px;
+    }
+
+    .options-list::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 6px;
+    }
+
+    .options-list::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+}

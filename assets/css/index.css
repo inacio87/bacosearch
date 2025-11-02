@@ -1,0 +1,353 @@
+/* home.css */
+
+/*
+ * Estilos para a página inicial (index.php) do BacoSearch.
+ * Adapta o layout conforme as imagens de referência.
+ *
+ * Este arquivo COMPLEMENTA e SOBRESCREVE (seletivamente) o 'style.css'.
+ * NÃO CONTÉM REGRAS PARA O HEADER, FOOTER, RESET OU VARIÁVEIS GLOBAIS,
+ * pois estes devem ser gerenciados pelo 'style.css'.
+ *
+ * Última Atualização: 10/07/2025 - Ajustes para nova estrutura de divs agrupadas.
+ */
+
+/* Garante que o body empurre o footer para baixo e tenha cor de fundo */
+body {
+    font-family: var(--bs-font-main);
+    background-color: var(--bs-bg-light);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: var(--bs-text-primary);
+    /* O padding-top do body é gerenciado EXCLUSIVAMENTE pelo style.css para o header fixo. */
+}
+
+/* ===================================================================== */
+/* ESTRUTURA PRINCIPAL (COMPLEMENTANDO style.css)
+/* ===================================================================== */
+main.main-content {
+    flex-grow: 1; /* Permite que o main ocupe todo o espaço vertical disponível */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza horizontalmente o conteúdo */
+    padding-left: var(--bs-spacing-lg); /* Mantém padding lateral */
+    padding-right: var(--bs-spacing-lg); /* Mantém padding lateral */
+    /* Paddings verticais do main.main-content devem ser ZERADOS para esticar ao máximo */
+    padding-top: 0;
+    padding-bottom: 0;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Container principal para a disposição das divs agrupadas na homepage */
+.banners-homepage {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza horizontalmente os elementos internos */
+    gap: 0; /* MUITO IMPORTANTE: Define gap como 0 para gerenciar espaçamentos APENAS com margens individuais */
+    width: 100%;
+    max-width: 900px; /* Largura máxima para o conteúdo principal em desktop */
+    margin: 0 auto;
+    padding: 0; /* Remover padding, para não restringir o espaço vertical/horizontal */
+    flex-grow: 1; /* **CRUCIAL:** Permite que .banners-homepage se estique verticalmente */
+    justify-content: space-between; /* **CRUCIAL:** Distribui o espaço entre as DIVS AGRUPADAS */
+}
+
+
+/* ===================================================================== */
+/* DIVS AGRUPADAS - POSICIONAMENTO VERTICAL
+/* ===================================================================== */
+
+/* DIV 1: BANNER GLOBAL */
+.group-banner-global {
+    width: 100%;
+    margin-top: 0; /* Colado no topo do .banners-homepage */
+    margin-bottom: 0; /* A margem para o group-logo-search será definida no group-logo-search */
+}
+
+/* DIV 2: LOGO E SEARCH */
+.group-logo-search {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Ajustado: Margem superior para afastar do banner global. */
+    margin-top: 20vh; /* Exemplo: 20% da altura da viewport para o espaço acima */
+    margin-bottom: 20vh; /* Exemplo: 20% da altura da viewport para o espaço abaixo */
+}
+
+/* DIV 3: BANNER NACIONAL */
+.group-banner-national {
+    width: 100%;
+    margin-top: 0; /* O espaçamento vertical já vem do group-logo-search.margin-bottom */
+    margin-bottom: var(--bs-spacing-xl); /* Espaço entre o nacional e os regionais */
+}
+
+/* DIV 4: BANNERS REGIONAIS */
+.group-banners-regional {
+    width: 100%;
+    margin-top: 0; /* O espaçamento vertical já vem do group-banner-national.margin-bottom */
+    margin-bottom: 0; /* Colado na base do .banners-homepage */
+}
+
+
+/* ===================================================================== */
+/* ESTILOS INTERNOS DOS COMPONENTES (SEM MUDANÇA DE ESPAÇAMENTO EXTERNO)
+/* ===================================================================== */
+
+/* Banner Global */
+.banner-global,
+.banner-national,
+.banner-regional {
+    width: 100%;
+    border-radius: var(--bs-border-radius-xl);
+    overflow: hidden;
+    box-shadow: var(--bs-shadow-md);
+    background-color: var(--bs-bg-white);
+    border: 1px solid var(--bs-border-color);
+    position: relative;
+    /* Margens já controladas pelas divs group-*. */
+    margin: 0;
+}
+
+/* Estilos para as imagens dos anúncios */
+/* Aplica posicionamento absoluto e object-fit para as imagens e seus elementos picture */
+.ad-banner-top img,
+.ad-banner-national img,
+.ad-banner-regional img,
+.ad-banner-top picture,
+.ad-banner-national picture,
+.ad-banner-regional picture {
+    position: absolute; /* Posiciona absolutamente dentro do pai relativo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem cubra a área, cortando se necessário */
+    display: block; /* Garante que se comportem como elementos de bloco */
+    border-radius: var(--bs-border-radius-xl); /* Adiciona bordas arredondadas aos banners */
+    box-shadow: none; /* A sombra está no elemento pai <a> */
+}
+
+/* Aplica a proporção de aspecto ao elemento <a>, que é o pai direto da imagem/picture */
+.ad-banner-top a,
+.ad-banner-national a,
+.ad-banner-regional a {
+    display: block;
+    position: relative; /* Estabelece o contexto de posicionamento para os filhos absolutos */
+    width: 100%;
+    padding-top: 25%; /* Proporção de Aspecto 4:1 (altura é 25% da largura) */
+    overflow: hidden; /* Esconde qualquer transbordamento do object-fit */
+    border-radius: var(--bs-border-radius-xl); /* Corresponde ao border-radius da imagem */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave, movida para o <a> */
+}
+
+/* Labels dos banners */
+.banner-label {
+    position: absolute;
+    top: var(--bs-spacing-sm);
+    right: var(--bs-spacing-sm);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--bs-text-on-primary);
+    padding: var(--bs-spacing-xs) var(--bs-spacing-sm);
+    border-radius: var(--bs-border-radius-md);
+    font-size: var(--bs-font-size-sm);
+    font-weight: var(--bs-font-weight-medium);
+    text-transform: uppercase;
+    z-index: 10;
+}
+
+/* Logo BacoSearch Central */
+.logo {
+    width: 100%;
+    text-align: center;
+    /* Margem interna dentro do group-logo-search */
+    margin-top: 0;
+    margin-bottom: var(--bs-spacing-lg); /* Espaço do logo para a busca */
+}
+
+.logo img {
+    max-width: 350px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Container da Busca (input e botão) */
+.search-container {
+    display: flex;
+    width: 100%;
+    max-width: 650px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-pill);
+    overflow: hidden;
+    background-color: var(--bs-bg-white);
+    box-shadow: var(--bs-shadow-md);
+    height: var(--bs-input-height-lg);
+    /* Margem interna dentro do group-logo-search */
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.search-container input[type="text"] {
+    flex-grow: 1;
+    border: none;
+    padding: 0 var(--bs-spacing-lg);
+    font-size: var(--bs-font-size-lg);
+    color: var(--bs-text-primary);
+    outline: none;
+    background-color: transparent;
+}
+
+.search-container input[type="text"]::placeholder {
+    color: var(--bs-text-light);
+    opacity: 0.8;
+}
+
+.search-container .search-button {
+    background-color: var(--bs-primary);
+    color: var(--bs-text-on-primary);
+    border: none;
+    padding: 0 var(--bs-spacing-lg);
+    cursor: pointer;
+    font-size: var(--bs-font-size-xl);
+    transition: background-color var(--bs-transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    height: 100%;
+}
+
+.search-container .search-button:hover {
+    background-color: var(--bs-primary-hover);
+}
+
+/* Container para os banners regionais (lado a lado) */
+/* Ajuste: Aplicar flexbox diretamente a .banner-regionals */
+.banner-regionals {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centraliza itens quando há apenas um ou em mobile */
+    gap: var(--bs-spacing-md); /* Espaçamento entre os banners */
+    width: 100%;
+    margin: 0; /* Margens controladas pela div group-banners-regional */
+}
+
+.banner-regionals .banner-regional {
+    /* Em mobile, cada banner ocupa a largura total */
+    width: 100%; 
+    max-width: 400px; /* Limita a largura máxima para mobile para não esticar demais */
+    flex-shrink: 0; /* Impede que o item encolha abaixo de sua largura base */
+    border: none;
+    background: none;
+    box-shadow: none;
+}
+
+
+/* ============================================= */
+/* RESPONSIVIDADE PARA A HOMEPAGE
+/* ============================================= */
+
+/* Esconde o banner em ecrãs de desktop se for apenas para telemóvel */
+@media (min-width: 768px) {
+    .mobile-only {
+        display: none !important;
+    }
+}
+/* Esconde o banner em ecrãs de telemóvel se for apenas para desktop */
+@media (max-width: 767px) {
+    .desktop-only {
+        display: none !important;
+    }
+}
+
+@media (min-width: 768px) {
+    /* Estilos para telas maiores (desktop) */
+    /* Remove a flex-direction: column padrão para .banner-regionals em desktop */
+    .banner-regionals { 
+        flex-direction: row; /* Coloca os regionais lado a lado em desktop */
+        justify-content: space-between; /* Espaçamento entre eles */
+        flex-wrap: nowrap; /* Garante que não quebre a linha em desktop */
+        align-items: flex-start; /* Alinha os itens ao topo se tiverem alturas diferentes */
+    }
+
+    .banner-regionals .banner-regional {
+        /* Ajustado para 45% da largura do contêiner pai, conforme solicitado */
+        width: 45%; 
+        max-width: unset; /* Remove o max-width para desktop */
+        flex-shrink: 0; /* Impede que o item encolha abaixo de sua largura base */
+    }
+}
+
+@media (max-width: 768px) {
+    main.main-content {
+        padding-left: var(--bs-spacing-md);
+        padding-right: var(--bs-spacing-md);
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .banners-homepage {
+        padding: 0;
+    }
+
+    /* Ajustes das margens das divs agrupadas para mobile */
+    .group-banner-global {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .group-logo-search {
+        margin-top: 15vh; /* Ajuste o VH para o espaçamento em mobile */
+        margin-bottom: 15vh; /* Ajuste o VH para o espaçamento em mobile */
+    }
+    .group-banner-national {
+        margin-top: 0;
+        margin-bottom: var(--bs-spacing-xl);
+    }
+    .group-banners-regional {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    /* Alturas das imagens em mobile */
+    .ad-banner-top img { max-height: 120px; }
+    .ad-banner-national img { max-height: 100px; }
+    .ad-banner-regional img { max-height: 80px; }
+
+    /* Estilos internos que já existiam para mobile */
+    .logo img { max-width: 200px; }
+    .search-container { max-width: 100%; height: var(--bs-input-height-md); }
+    .search-container input[type="text"] { padding: 0 var(--bs-spacing-md); font-size: var(--bs-font-size-md); }
+    .search-container .search-button { padding: 0 var(--bs-spacing-md); font-size: var(--bs-font-size-lg); }
+    /* Removido flex-direction: column e gap de .banner-regionals aqui, pois já está no topo */
+    /* Removido flex: 1 1 100% e max-width de .banner-regionals .banner-regional aqui, pois já está no topo */
+}
+
+@media (max-width: 480px) {
+    main.main-content {
+        padding-left: var(--bs-spacing-sm);
+        padding-right: var(--bs-spacing-sm);
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .banners-homepage {
+        padding: 0;
+    }
+
+    /* Ajustes das margens das divs agrupadas para mobile muito pequeno */
+    .group-logo-search {
+        margin-top: 10vh; /* Menor espaço em mobile pequeno */
+        margin-bottom: 10vh; /* Menor espaço em mobile pequeno */
+    }
+
+    /* Estilos internos que já existiam para mobile muito pequeno */
+    .logo img { max-width: 150px; }
+    .search-container { height: var(--bs-input-height-md); }
+    .search-container input[type="text"] { font-size: var(--bs-font-size-sm); padding: 0 var(--bs-spacing-sm); }
+    .search-container .search-button { font-size: var(--bs-font-size-md); }
+    .ad-banner-top img { max-height: 90px; }
+    .ad-banner-national img { max-height: 80px; }
+    .ad-banner-regional img { max-height: 60px; }
+}

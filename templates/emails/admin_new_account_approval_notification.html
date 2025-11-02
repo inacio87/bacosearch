@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{admin_subject_fallback}}</title>
+    <link rel="stylesheet" href="{{mail_css_url}}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{site_url}}/assets/images/logo.png" alt="{{logo_alt_text}}">
+        </div>
+        <div class="content">
+            <p>Olá Admin,</p>
+            <p>Uma nova conta foi registada e está aguardando a sua aprovação!</p>
+            
+            <p>Detalhes da Conta:</p>
+            <ul>
+                <li>Nome: {{user_name}}</li>
+                <li>Email: {{user_email}}</li>
+                <li>Tipo de Conta: {{account_type}}</li>
+                <li>ID da Conta: {{account_id}}</li>
+            </ul>
+
+            <p style="text-align: center;">
+                <a href="{{admin_dashboard_link}}" class="button">Aceder ao Dashboard de Aprovações</a>
+            </p>
+
+            <p>Por favor, aceda ao painel de administração para rever e aprovar ou rejeitar esta conta.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{current_year}} {{site_name}}. {{all_rights_reserved}}.</p>
+            <p>{{spam_notice}}</p>
+        </div>
+        <img src="{{tracking_pixel_url}}" width="1" height="1" style="display:none;" alt="">
+    </div>
+</body>
+</html>
