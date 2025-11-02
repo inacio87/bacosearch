@@ -11,15 +11,27 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # =========================================================================================
 # 2. REGRAS PARA BLOQUEIO DE BOTS MALICIOSOS E SCANNERES
 #    Bloqueia apenas bots conhecidos e tentativas de acesso a arquivos sensíveis.
+#    RELAXADO: Removido bloqueio genérico de "bot|spider" que causava falsos positivos
 # =========================================================================================
-RewriteCond %{HTTP_USER_AGENT} (bot|spider|crawl|scraper|curl|wget|python-requests|java|go-http-client|axios|http\ client|headlesschrome|phantomjs|puppeteer|Expanse|fasthttp) [NC,OR]
-RewriteCond %{REQUEST_URI} (wp-admin|wp-login|xmlrpc\.php|phpmyadmin|myadmin|\.env|config\.php|install|setup|test|\.sql|\.bak|\.log) [NC]
+# Permite arquivos de diagnóstico
+RewriteCond %{REQUEST_URI} ^/(diagnostic|test_search).*\.php$ [NC]
+RewriteRule .* - [L]
+
+# Bloqueia apenas scrapers óbvios (não navegadores normais)
+RewriteCond %{HTTP_USER_AGENT} (curl|wget|python-requests|scrapy|go-http-client|headlesschrome|phantomjs|puppeteer) [NC,OR]
+RewriteCond %{REQUEST_URI} (wp-admin|wp-login|xmlrpc\.php|phpmyadmin|myadmin|\.env|config\.php|install|setup|\.sql|\.bak|\.log) [NC]
 RewriteRule .* - [F,L]
 
 # =========================================================================================
 # 3. REGRAS PARA PERMITIR ACESSO DIRETO A ENDPOINTS ESPECÍFICOS
 #    Garante acesso a APIs e arquivos específicos sem reescrita.
 # =========================================================================================
+# Arquivos de diagnóstico e teste
+RewriteRule ^diagnostic\.php$ - [L]
+RewriteRule ^test_search.*\.php$ - [L]
+RewriteRule ^debug.*\.php$ - [L]
+
+# APIs
 RewriteRule ^api/admin_create_admin.php$ - [L]
 RewriteRule ^api/admin_user_actions.php$ - [L]
 RewriteRule ^api/api_logs.php$ - [L]
