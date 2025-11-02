@@ -47,10 +47,9 @@ $snippet = static function (?string $text, int $max = 150): string {
     <div class="container">
       <form method="GET" action="<?php echo $e($searchAction); ?>" class="search-form">
         <div class="search-input-wrapper">
-          <i class="fas fa-search search-icon-left"></i>
           <input type="text" name="term" value="<?php echo $e($term); ?>" 
                  placeholder="<?php echo $e($t_placeholder); ?>" class="search-input" autocomplete="on">
-          <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+          <button type="submit" class="search-btn">Buscar</button>
         </div>
       </form>
     </div>
@@ -64,23 +63,23 @@ $snippet = static function (?string $text, int $max = 150): string {
         <nav class="category-tabs">
           <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=all'); ?>" 
              class="tab <?php echo $activeTab === 'all' ? 'active' : ''; ?>">
-            <i class="fas fa-th"></i> Todos <span class="count">(<?php echo $totalResults; ?>)</span>
+            Todos <span class="count">(<?php echo $totalResults; ?>)</span>
           </a>
           <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=providers'); ?>" 
              class="tab <?php echo $activeTab === 'providers' ? 'active' : ''; ?>">
-            <i class="fas fa-user"></i> Acompanhantes <span class="count">(<?php echo $totalProviders; ?>)</span>
+            Acompanhantes <span class="count">(<?php echo $totalProviders; ?>)</span>
           </a>
           <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=clubs'); ?>" 
              class="tab <?php echo $activeTab === 'clubs' ? 'active' : ''; ?>">
-            <i class="fas fa-glass-cheers"></i> Clubes <span class="count">(<?php echo $totalClubs; ?>)</span>
+            Clubes <span class="count">(<?php echo $totalClubs; ?>)</span>
           </a>
           <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=companies'); ?>" 
              class="tab <?php echo $activeTab === 'companies' ? 'active' : ''; ?>">
-            <i class="fas fa-building"></i> Empresas <span class="count">(<?php echo $totalCompanies; ?>)</span>
+            Empresas <span class="count">(<?php echo $totalCompanies; ?>)</span>
           </a>
           <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=services'); ?>" 
              class="tab <?php echo $activeTab === 'services' ? 'active' : ''; ?>">
-            <i class="fas fa-concierge-bell"></i> Serviços <span class="count">(<?php echo $totalServices; ?>)</span>
+            Serviços <span class="count">(<?php echo $totalServices; ?>)</span>
           </a>
         </nav>
       </div>
@@ -101,7 +100,7 @@ $snippet = static function (?string $text, int $max = 150): string {
                 <div class="results-group">
                   <?php if ($activeTab === 'all'): ?>
                     <h2 class="group-title">
-                      <i class="fas fa-user"></i> Acompanhantes
+                      Acompanhantes
                       <?php if ($totalProviders > count($providersResults)): ?>
                         <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=providers'); ?>" class="view-all">
                           Ver todos (<?php echo $totalProviders; ?>)
@@ -119,7 +118,7 @@ $snippet = static function (?string $text, int $max = 150): string {
                   ?>
                     <div class="result-item">
                       <div class="result-icon">
-                        <i class="fas fa-user-circle"></i>
+                        
                       </div>
                       <div class="result-content">
                         <h3 class="result-title">
@@ -127,10 +126,10 @@ $snippet = static function (?string $text, int $max = 150): string {
                         </h3>
                         <div class="result-meta">
                           <?php if ($gender): ?>
-                            <span class="meta-item"><i class="fas fa-venus-mars"></i> <?php echo $e(ucfirst($gender)); ?></span>
+                            <span class="meta-item"><?php echo $e(ucfirst($gender)); ?></span>
                           <?php endif; ?>
                           <?php if ($country): ?>
-                            <span class="meta-item"><i class="fas fa-flag"></i> <?php echo $e($country); ?></span>
+                            <span class="meta-item"><?php echo $e($country); ?></span>
                           <?php endif; ?>
                         </div>
                       </div>
@@ -147,7 +146,7 @@ $snippet = static function (?string $text, int $max = 150): string {
                 <div class="results-group">
                   <?php if ($activeTab === 'all'): ?>
                     <h2 class="group-title">
-                      <i class="fas fa-glass-cheers"></i> Clubes
+                      Clubes
                       <?php if ($totalClubs > count($clubsResults)): ?>
                         <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=clubs'); ?>" class="view-all">
                           Ver todos (<?php echo $totalClubs; ?>)
@@ -164,7 +163,7 @@ $snippet = static function (?string $text, int $max = 150): string {
                   ?>
                     <div class="result-item">
                       <div class="result-icon">
-                        <i class="fas fa-glass-cheers"></i>
+                        
                       </div>
                       <div class="result-content">
                         <h3 class="result-title">
@@ -187,7 +186,7 @@ $snippet = static function (?string $text, int $max = 150): string {
                 <div class="results-group">
                   <?php if ($activeTab === 'all'): ?>
                     <h2 class="group-title">
-                      <i class="fas fa-building"></i> Empresas
+                      Empresas
                       <?php if ($totalCompanies > count($companiesResults)): ?>
                         <a href="<?php echo $e($searchAction . '?term=' . urlencode($term) . '&tab=companies'); ?>" class="view-all">
                           Ver todos (<?php echo $totalCompanies; ?>)
@@ -204,7 +203,7 @@ $snippet = static function (?string $text, int $max = 150): string {
                   ?>
                     <div class="result-item">
                       <div class="result-icon">
-                        <i class="fas fa-building"></i>
+                        
                       </div>
                       <div class="result-content">
                         <h3 class="result-title">
@@ -226,7 +225,7 @@ $snippet = static function (?string $text, int $max = 150): string {
               
               <!-- Sem Resultados -->
               <div class="no-results">
-                <i class="fas fa-search"></i>
+                
                 <h3><?php echo $e($t_no_results); ?></h3>
                 <p>Tente usar palavras-chave diferentes ou mais genéricas</p>
               </div>
@@ -241,7 +240,7 @@ $snippet = static function (?string $text, int $max = 150): string {
             <!-- Filtros -->
             <div class="sidebar-widget">
               <h3 class="widget-title">
-                <i class="fas fa-filter"></i> Filtros
+                Filtros
               </h3>
               <div class="widget-content">
                 <p class="text-muted">Em breve: filtros avançados</p>
@@ -251,12 +250,12 @@ $snippet = static function (?string $text, int $max = 150): string {
             <!-- Clubes Destacados -->
             <div class="sidebar-widget">
               <h3 class="widget-title">
-                <i class="fas fa-glass-cheers"></i> Clubes
+                Clubes
               </h3>
               <div class="widget-content">
                 <div class="sidebar-card">
                   <div class="card-placeholder">
-                    <i class="fas fa-image"></i>
+                    
                   </div>
                   <p class="card-text">Anúncios em breve</p>
                 </div>
@@ -266,12 +265,12 @@ $snippet = static function (?string $text, int $max = 150): string {
             <!-- Anúncios -->
             <div class="sidebar-widget">
               <h3 class="widget-title">
-                <i class="fas fa-ad"></i> Anúncios
+                Anúncios
               </h3>
               <div class="widget-content">
                 <div class="sidebar-card">
                   <div class="card-placeholder">
-                    <i class="fas fa-image"></i>
+                    
                   </div>
                   <p class="card-text">Espaço publicitário</p>
                 </div>
@@ -281,12 +280,12 @@ $snippet = static function (?string $text, int $max = 150): string {
             <!-- Empresas Destacadas -->
             <div class="sidebar-widget">
               <h3 class="widget-title">
-                <i class="fas fa-building"></i> Empresas
+                Empresas
               </h3>
               <div class="widget-content">
                 <div class="sidebar-card">
                   <div class="card-placeholder">
-                    <i class="fas fa-image"></i>
+                    
                   </div>
                   <p class="card-text">Empresas em destaque</p>
                 </div>
