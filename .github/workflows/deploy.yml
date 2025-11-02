@@ -29,12 +29,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rsync openssh-client
 
-      - name: Create deploy test file
-        run: |
-          echo "Deploy test file - $(date '+%Y-%m-%d %H:%M:%S')" > deploy-test.txt
-          echo "Workflow run: ${{ github.run_id }}" >> deploy-test.txt
-          echo "Commit: ${{ github.sha }}" >> deploy-test.txt
-
       - name: Prepare SSH key
         env:
           HOSTGATOR_SSH_KEY: ${{ secrets.HOSTGATOR_SSH_KEY }}
@@ -87,12 +81,3 @@ jobs:
             find . -type d -exec chmod 755 {} +
             rm -f .env .env.local || true
           EOF
-
-      - name: Verify deployment
-        env:
-          HOST: ${{ secrets.HOSTGATOR_HOST }}
-          USER: ${{ secrets.HOSTGATOR_USER }}
-          PORT: 2222
-        run: |
-          echo "Verificando arquivo de teste do deploy..."
-          ssh -i ~/.ssh/hostgator_deploy_key -p $PORT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$HOST "cat /home4/$USER/bacosearch.com/deploy-test.txt"
