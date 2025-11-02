@@ -23,6 +23,14 @@ date_default_timezone_set('Europe/Lisbon');
 // Carregamentos centrais
 // ======================================================================
 require_once __DIR__ . '/config.php';
+// Composer autoload (for external libs like PHPMailer, Stripe, etc.)
+// Loaded early to make classes available to included files.
+if (defined('ROOT_PATH')) {
+    $composerAutoload = rtrim(ROOT_PATH, '/\\') . '/vendor/autoload.php';
+    if (is_file($composerAutoload)) {
+        require_once $composerAutoload;
+    }
+}
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/search_helpers.php';
 

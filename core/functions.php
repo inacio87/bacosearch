@@ -16,10 +16,6 @@ if (!defined('IN_BACOSEARCH')) {
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once dirname(__DIR__) . '/vendor/phpmailer/src/Exception.php';
-require_once dirname(__DIR__) . '/vendor/phpmailer/src/PHPMailer.php';
-require_once dirname(__DIR__) . '/vendor/phpmailer/src/SMTP.php';
-
 // Cache em memória do processo para traduções
 $translationsCache = [];
 
