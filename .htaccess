@@ -1,0 +1,103 @@
+# Habilitar o módulo de reescrita de URLs
+RewriteEngine On
+
+# =========================================================================================
+# 1. REDIRECIONAMENTO HTTP PARA HTTPS
+#    Força todas as requisições para HTTPS.
+# =========================================================================================
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# =========================================================================================
+# 2. REGRAS PARA BLOQUEIO DE BOTS MALICIOSOS E SCANNERES
+#    Bloqueia apenas bots conhecidos e tentativas de acesso a arquivos sensíveis.
+# =========================================================================================
+RewriteCond %{HTTP_USER_AGENT} (bot|spider|crawl|scraper|curl|wget|python-requests|java|go-http-client|axios|http\ client|headlesschrome|phantomjs|puppeteer|Expanse|fasthttp) [NC,OR]
+RewriteCond %{REQUEST_URI} (wp-admin|wp-login|xmlrpc\.php|phpmyadmin|myadmin|\.env|config\.php|install|setup|test|\.sql|\.bak|\.log) [NC]
+RewriteRule .* - [F,L]
+
+# =========================================================================================
+# 3. REGRAS PARA PERMITIR ACESSO DIRETO A ENDPOINTS ESPECÍFICOS
+#    Garante acesso a APIs e arquivos específicos sem reescrita.
+# =========================================================================================
+RewriteRule ^api/admin_create_admin.php$ - [L]
+RewriteRule ^api/admin_user_actions.php$ - [L]
+RewriteRule ^api/api_logs.php$ - [L]
+RewriteRule ^api/ads.php$ - [L]
+RewriteRule ^api/api_register.php$ - [L]
+RewriteRule ^api/api_register_providers.php$ - [L]
+RewriteRule ^api/api_top10.php$ - [L] 
+RewriteRule ^api/check_session.php$ - [L]
+RewriteRule ^api/dashboard_ads.php$ - [L]
+RewriteRule ^api/dashboard_stats.php$ - [L]
+RewriteRule ^api/filter-providers.php$ - [L]
+RewriteRule ^api/geolocation.php$ - [L]
+RewriteRule ^api/process_calculator_data.php$ - [L]
+RewriteRule ^api/process_license_lead.php$ - [L]
+RewriteRule ^api/search-suggestions-api.php$ - [L]
+RewriteRule ^api/track-visit.php$ - [L]
+RewriteRule ^api/track_email_click.php$ - [L]
+RewriteRule ^api/track_email_open.php$ - [L]
+RewriteRule ^api/update_translations.php$ - [L]
+RewriteRule ^api/verify_email_and_set_password.php$ - [L]
+RewriteRule ^api/verify_registration.php$ - [L]
+RewriteRule ^api/providers.php$ - [L]
+RewriteRule ^api/clubs.php$ - [L]
+RewriteRule ^api/services.php$ - [L]
+RewriteRule ^api/streets.php$ - [L]
+RewriteRule ^api/businesses.php$ - [L]
+
+# Keep your existing non-API rules if they are correct
+RewriteRule ^search.php$ - [L]
+RewriteRule ^search-providers.php$ - [L]
+# Add any other top-level PHP files that should be directly accessible without rewrite.
+# Example: If create-checkout-session.php is at the root level, not inside /api/
+# RewriteRule ^create-checkout-session.php$ - [L]
+# =========================================================================================
+# 4. REGRA PARA URLS AMIGÁVEIS DE PERFIS DE PROVEDORES
+#    Exemplo: /acompanhante-brasileira-em-guimaraes-lulu-60 -> providers.php?id=60
+# =========================================================================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9-]+)-(\d+)$ providers.php?id=$2 [L,QSA]
+
+# =========================================================================================
+# 5. REGRAS PARA REMOVER O .PHP DAS URLS
+#    Remove a extensão .php das URLs, mantendo compatibilidade.
+# =========================================================================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L,QSA]
+
+# =========================================================================================
+# 6. REDIRECIONAR OUTRAS REQUISIÇÕES PARA O INDEX.PHP
+#    Atua como front controller para rotas não específicas.
+# =========================================================================================
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+# =========================================================================================
+# 7. CONFIGURAÇÕES DE CACHE
+#    Cache para arquivos estáticos.
+# =========================================================================================
+<FilesMatch "\.(png|jpg|jpeg|svg|gif|ico|css|js)$">
+    Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>
+
+# =========================================================================================
+# 8. REGRAS DE BLOQUEIO DE IP ESPECÍFICAS
+#    IPs bloqueados foram removidos para evitar falsos positivos; adicione apenas IPs confirmados.
+# =========================================================================================
+<Files 403.shtml>
+    Order allow,deny
+    Allow from all
+</Files>
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php82” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82___lsphp .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

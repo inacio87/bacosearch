@@ -1,0 +1,36 @@
+# Node / PHP dependencies
+/vendor/
+/node_modules/
+
+# Environment
+.env
+env
+
+# Uploads, logs and backups
+/uploads/
+/logs/
+backups/
+error_log
+*.sql
+
+# IDE / OS files
+/.idea/
+/.vscode/
+Thumbs.db
+desktop.ini
+__MACOSX/
+.DS_Store
+vamos /vendor/
+/node_modules/
+.env
+env
+/uploads/
+/logs/
+error_log
+*.sql
+/.idea/
+/.vscode/
+Thumbs.db
+desktop.ini
+__MACOSX/
+/.DS_Store
