@@ -313,7 +313,22 @@ require_once TEMPLATE_PATH . 'header.php';
               <div class="phone-input-group">
                 <select id="phone_code" name="phone_code" required class="form-control phone-code">
                   <?php
-                    $selectedPhoneCodeValue = $form_data['phone_code'] ?? '+351';
+                    // Auto-detecta DDI baseado no país da sessão (IP)
+                    $selectedPhoneCodeValue = $form_data['phone_code'] ?? null;
+                    if (empty($selectedPhoneCodeValue) && !empty($_SESSION['country_code'])) {
+                      try {
+                        $db_conn_phone_auto = getDBConnection();
+                        $stmt_phone_auto = $db_conn_phone_auto->prepare("SELECT calling_code FROM countries WHERE iso_code = :iso_code LIMIT 1");
+                        $stmt_phone_auto->execute([':iso_code' => strtoupper($_SESSION['country_code'])]);
+                        $autoPhoneCode = $stmt_phone_auto->fetchColumn();
+                        if ($autoPhoneCode) { $selectedPhoneCodeValue = (string)$autoPhoneCode; }
+                      } catch (Throwable $e_phone_auto) {
+                        log_system_error("Register Page: Erro ao detectar DDI do país da sessão: " . $e_phone_auto->getMessage(), 'notice', 'register_auto_phone_code');
+                      }
+                    }
+                    // Fallback para Portugal se não detectou
+                    if (empty($selectedPhoneCodeValue)) { $selectedPhoneCodeValue = '+351'; }
+                    
                     foreach ($phoneCodes as $code):
                       $isSelected = ($selectedPhoneCodeValue === $code['calling_code']);
                   ?>
