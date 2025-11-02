@@ -103,9 +103,11 @@ $use_precise_location_title = getTranslation('use_precise_location', $languageCo
 
     <span class="city">
         <span id="city-display"><?= htmlspecialchars($city, ENT_QUOTES, 'UTF-8'); ?></span>
-        <button id="locate-me-btn" class="link-button" title="<?= htmlspecialchars($use_precise_location_title, ENT_QUOTES, 'UTF-8'); ?>">
-            Localizar
-        </button>
+        <i
+            class="fas fa-crosshairs"
+            id="locate-me-btn"
+            title="<?= htmlspecialchars($use_precise_location_title, ENT_QUOTES, 'UTF-8'); ?>"
+        ></i>
     </span>
 
     <div class="menu-dropdown">
@@ -114,26 +116,30 @@ $use_precise_location_title = getTranslation('use_precise_location', $languageCo
             aria-label="<?= htmlspecialchars($translations['header_menu'], ENT_QUOTES, 'UTF-8'); ?>"
             title="<?= htmlspecialchars($translations['header_menu'], ENT_QUOTES, 'UTF-8'); ?>"
         >
-            <?= htmlspecialchars($translations['header_menu'], ENT_QUOTES, 'UTF-8'); ?>
+            <img
+                src="<?= htmlspecialchars(SITE_URL . '/assets/icons/icon-menu.svg', ENT_QUOTES, 'UTF-8'); ?>"
+                alt="<?= htmlspecialchars($translations['header_menu'], ENT_QUOTES, 'UTF-8'); ?>"
+                class="menu-icon"
+            >
         </button>
         <div id="dropdown-menu" class="dropdown-content">
             <a href="<?= htmlspecialchars(SITE_URL . '/pages/about_us.php', ENT_QUOTES, 'UTF-8'); ?>">
-                <?= htmlspecialchars($translations['about_us'] ?? 'about_us', ENT_QUOTES, 'UTF-8'); ?>
+                <i class="fas fa-info-circle"></i> <?= htmlspecialchars($translations['about_us'] ?? 'about_us', ENT_QUOTES, 'UTF-8'); ?>
             </a>
             <a href="<?= htmlspecialchars(SITE_URL . '/pages/terms_of_service.php', ENT_QUOTES, 'UTF-8'); ?>">
-                <?= htmlspecialchars($translations['terms_of_service'] ?? 'terms_of_service', ENT_QUOTES, 'UTF-8'); ?>
+                <i class="fas fa-file-contract"></i> <?= htmlspecialchars($translations['terms_of_service'] ?? 'terms_of_service', ENT_QUOTES, 'UTF-8'); ?>
             </a>
             <a href="<?= htmlspecialchars(SITE_URL . '/pages/privacy_policy.php', ENT_QUOTES, 'UTF-8'); ?>">
-                <?= htmlspecialchars($translations['privacy_policy'] ?? 'privacy_policy', ENT_QUOTES, 'UTF-8'); ?>
+                <i class="fas fa-shield-alt"></i> <?= htmlspecialchars($translations['privacy_policy'] ?? 'privacy_policy', ENT_QUOTES, 'UTF-8'); ?>
             </a>
             <a href="<?= htmlspecialchars(SITE_URL . '/pages/cookie_policy.php', ENT_QUOTES, 'UTF-8'); ?>">
-                <?= htmlspecialchars($translations['cookie_policy'] ?? 'cookie_policy', ENT_QUOTES, 'UTF-8'); ?>
+                <i class="fas fa-cookie-bite"></i> <?= htmlspecialchars($translations['cookie_policy'] ?? 'cookie_policy', ENT_QUOTES, 'UTF-8'); ?>
             </a>
             <a href<?= '="' . htmlspecialchars(SITE_URL . '/pages/license.php', ENT_QUOTES, 'UTF-8') . '"'; ?>>
-                <?= htmlspecialchars($translations['header_licenses'] ?? 'header_licenses', ENT_QUOTES, 'UTF-8'); ?>
+                <i class="fas fa-id-card"></i> <?= htmlspecialchars($translations['header_licenses'] ?? 'header_licenses', ENT_QUOTES, 'UTF-8'); ?>
             </a>
             <a href="<?= htmlspecialchars(SITE_URL . '/pages/contact.php', ENT_QUOTES, 'UTF-8'); ?>">
-                <?= htmlspecialchars($translations['contact_us'] ?? 'contact_us', ENT_QUOTES, 'UTF-8'); ?>
+                <i class="fas fa-envelope"></i> <?= htmlspecialchars($translations['contact_us'] ?? 'contact_us', ENT_QUOTES, 'UTF-8'); ?>
             </a>
         </div>
     </div>
