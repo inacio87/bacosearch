@@ -6,6 +6,7 @@
 
 define('IN_BACOSEARCH', true);
 require_once __DIR__ . '/core/bootstrap.php';
+require_once __DIR__ . '/core/search_expand_helpers.php';
 
 $page_name = 'search_page';
 
@@ -65,17 +66,23 @@ $activeTab = isset($_GET['tab']) ? trim($_GET['tab']) : 'all';
 
 try {
     if (!empty($term)) {
-        $like_term = '%' . $term . '%';
+        // EXPANDE O TERMO COM SINÔNIMOS DO search_intents
+        $expandedTerms = expandSearchTerm($term, $pdo);
         
-        // 1. PROVIDERS
+        // Constrói padrões LIKE para todos os termos expandidos
+        $likePatterns = array_map(function($t) { return '%' . $t . '%'; }, $expandedTerms);
+        
+        // 1. PROVIDERS - Busca expandida com sinônimos
         try {
-            // Busca apenas em display_name que é a única coluna de texto
+            // Constrói WHERE dinâmico para busca expandida
+            list($whereClause, $whereParams) = buildExpandedSearchWhere('p.display_name', $expandedTerms, 'pterm');
+            
             $countProvidersStmt = $pdo->prepare("
                 SELECT COUNT(DISTINCT p.id)
                 FROM providers p
-                WHERE p.display_name LIKE :term
+                WHERE {$whereClause}
             ");
-            $countProvidersStmt->execute([':term' => $like_term]);
+            $countProvidersStmt->execute($whereParams);
             $totalProviders = (int)$countProvidersStmt->fetchColumn();
 
             if ($totalProviders > 0 && ($activeTab === 'all' || $activeTab === 'providers')) {
@@ -87,12 +94,15 @@ try {
                            c.name AS country, 'provider' AS result_type
                     FROM providers p
                     LEFT JOIN countries c ON p.nationality_id = c.id
-                    WHERE p.display_name LIKE :term
+                    WHERE {$whereClause}
                     GROUP BY p.id
                     ORDER BY p.updated_at DESC
                     LIMIT :limit OFFSET :offset
                 ");
-                $providersStmt->bindValue(':term', $like_term, PDO::PARAM_STR);
+                
+                foreach ($whereParams as $key => $val) {
+                    $providersStmt->bindValue($key, $val, PDO::PARAM_STR);
+                }
                 $providersStmt->bindValue(':limit', $limit, PDO::PARAM_INT);
                 $providersStmt->bindValue(':offset', $offsetVal, PDO::PARAM_INT);
                 $providersStmt->execute();
@@ -213,7 +223,11 @@ try {
         }
 
         $totalResults = $totalProviders + $totalCompanies + $totalClubs + $totalServices;
-        logGlobalSearch($pdo, $term);
+        
+        // REGISTRA A BUSCA PARA ANALYTICS (global_searches + search_logs)
+        $visitor_id = $_SESSION['visitor_db_id'] ?? null;
+        logGlobalSearch($term, $totalResults, $pdo, $visitor_id);
+        logSearchLog($term, $totalResults, $pdo, $visitor_id);
     }
 } catch (Exception $e) {
     log_system_error("search.php error: " . $e->getMessage(), 'ERROR', 'search_failure');
