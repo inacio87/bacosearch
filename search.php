@@ -72,6 +72,9 @@ try {
         // Constrói padrões LIKE para todos os termos expandidos
         $likePatterns = array_map(function($t) { return '%' . $t . '%'; }, $expandedTerms);
         
+        // Para queries simples (companies, clubs, services) - mantém compatibilidade
+        $like_term = '%' . $term . '%';
+        
         // 1. PROVIDERS - Busca expandida com sinônimos
         try {
             // Constrói WHERE dinâmico para busca expandida
