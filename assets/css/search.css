@@ -1,76 +1,124 @@
-/* /assets/css/search.css - Layout 2 Colunas com Sidebar *//* /assets/css/search.css - Layout 2 Colunas com Sidebar *//* /assets/css/search.css - Busca Estilo Google *//**
+/* BACOSEARCH - Página de Busca - Layout 2 Colunas *//* /assets/css/search.css - Layout 2 Colunas com Sidebar *//* /assets/css/search.css - Layout 2 Colunas com Sidebar *//* /assets/css/search.css - Busca Estilo Google *//**
+
+/* Estilo limpo e profissional inspirado no Google */
 
 
 
-/* Container */
+/* ========== RESET E BASE ========== */
 
-.container {
+* {/* Container */
 
-  max-width: 1200px;/* Container */ * /assets/css/search.css
+  margin: 0;
 
-  margin: 0 auto;
+  padding: 0;.container {
 
-  padding: 0 15px;.container {
+  box-sizing: border-box;
 
-  width: 100%;
+}  max-width: 1200px;/* Container */ * /assets/css/search.css
+
+
+
+body {  margin: 0 auto;
+
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+
+  background: #f8f9fa;  padding: 0 15px;.container {
+
+  color: #202124;
+
+  line-height: 1.6;  width: 100%;
+
+}
 
   box-sizing: border-box;  max-width: 1200px;/* Barra de Busca Google Style */ *
 
-}
+.container {
+
+  max-width: 1400px;}
 
   margin: 0 auto;
 
-/* ========== BARRA DE BUSCA ========== */
+  padding: 0 20px;  margin: 0 auto;
 
-.search-bar-section {  padding: 0 15px;.search-bar-google { * VERSÃO OTIMIZADA FINAL: EXCLUSIVA PARA A PÁGINA DE RESULTADOS DE BUSCA (search.php).
+  width: 100%;
 
-  background: #fff;
-
-  padding: 20px 0;}
-
-  border-bottom: 1px solid #e0e0e0;
-
-}  max-width: 720px; * - Remove quaisquer estilos que poderiam conflitar com a página index.php.
+}/* ========== BARRA DE BUSCA ========== */
 
 
 
-.search-form {/* ========== BARRA DE BUSCA ========== */
+/* ========== BARRA DE BUSCA NO TOPO ========== */.search-bar-section {  padding: 0 15px;.search-bar-google { * VERSÃO OTIMIZADA FINAL: EXCLUSIVA PARA A PÁGINA DE RESULTADOS DE BUSCA (search.php).
 
-  max-width: 800px;
+.search-bar-section {
 
-  margin: 0 auto;.search-bar-section {  margin: 0 auto; * - Garante compatibilidade com o header, city bar e footer fixos.
+  background: #fff;  background: #fff;
+
+  padding: 20px 0;
+
+  border-bottom: 1px solid #e0e0e0;  padding: 20px 0;}
+
+  box-shadow: 0 1px 6px rgba(32,33,36,0.1);
+
+  position: sticky;  border-bottom: 1px solid #e0e0e0;
+
+  top: 0;
+
+  z-index: 100;}  max-width: 720px; * - Remove quaisquer estilos que poderiam conflitar com a página index.php.
 
 }
 
+
+
+.search-form {
+
+  max-width: 900px;.search-form {/* ========== BARRA DE BUSCA ========== */
+
+  margin: 0 auto;
+
+  width: 100%;  max-width: 800px;
+
+  padding: 0 20px;
+
+}  margin: 0 auto;.search-bar-section {  margin: 0 auto; * - Garante compatibilidade com o header, city bar e footer fixos.
+
+
+
+.search-input-wrapper {}
+
+  display: flex;
+
+  align-items: center;  background: #fff;
+
   background: #fff;
 
-.search-input-wrapper {
+  border: 1px solid #dfe1e5;.search-input-wrapper {
 
-  display: flex;  padding: 20px 0;  padding: 20px 15px; * - Utiliza exclusivamente as variáveis globais do variables.css (com prefixo --bs-).
+  border-radius: 24px;
 
-  align-items: center;
+  padding: 0 20px;  display: flex;  padding: 20px 0;  padding: 20px 15px; * - Utiliza exclusivamente as variáveis globais do variables.css (com prefixo --bs-).
+
+  transition: all 0.2s;
+
+  box-shadow: 0 1px 6px rgba(32,33,36,0.1);  align-items: center;
+
+}
 
   background: #f5f5f5;  border-bottom: 1px solid #e0e0e0;
 
-  border: 2px solid #ddd;
+.search-input-wrapper:hover {
 
-  border-radius: 50px;}} * - Foco na clareza, espaçamento e hierarquia visual para resultados de busca.
+  box-shadow: 0 1px 6px rgba(32,33,36,0.18);  border: 2px solid #ddd;
 
-  padding: 8px 20px;
+  border-color: #d0d0d0;
 
-  transition: all 0.3s;
+}  border-radius: 50px;}} * - Foco na clareza, espaçamento e hierarquia visual para resultados de busca.
 
-}
 
-.search-form { * - Correções FINAIS de layout na barra de busca (input e botão) e em responsividade.
 
-.search-input-wrapper:focus-within {
+.search-input-wrapper:focus-within {  padding: 8px 20px;
 
-  background: #fff;  max-width: 800px;
+  box-shadow: 0 1px 6px rgba(32,33,36,0.28);
 
-  border-color: #8B1538;
-
-  box-shadow: 0 2px 8px rgba(139, 21, 56, 0.15);  margin: 0 auto;.google-search-form { */
+  border-color: #8B1538;  transition: all 0.3s;
 
 }
 
@@ -78,711 +126,1448 @@
 
 .search-icon-left {
 
+  color: #8B1538;.search-form { * - Correções FINAIS de layout na barra de busca (input e botão) e em responsividade.
+
+  font-size: 20px;
+
+  margin-right: 12px;.search-input-wrapper:focus-within {
+
+  flex-shrink: 0;
+
+}  background: #fff;  max-width: 800px;
+
+
+
+.search-input {  border-color: #8B1538;
+
+  flex: 1;
+
+  border: none;  box-shadow: 0 2px 8px rgba(139, 21, 56, 0.15);  margin: 0 auto;.google-search-form { */
+
+  background: transparent;
+
+  outline: none;}
+
+  font-size: 16px;
+
+  padding: 14px 0;}
+
+  color: #202124;
+
+  font-weight: 400;.search-icon-left {
+
+}
+
   color: #999;  width: 100%;
-
-  font-size: 18px;
-
-  margin-right: 12px;.search-input-wrapper {
-
-}
-
-  display: flex;}/* ============================================= */
-
-.search-input {
-
-  flex: 1;  align-items: center;
-
-  border: none;
-
-  background: transparent;  background: #f5f5f5;/* 1. Layout Principal da Página de Busca (search.php)
-
-  outline: none;
-
-  font-size: 16px;  border: 2px solid #ddd;
-
-  padding: 8px 0;
-
-  color: #333;  border-radius: 50px;.search-input-wrapper {/* Aplica-se ao <main class="main-content"> na página search.php
-
-}
-
-  padding: 8px 20px;
 
 .search-input::placeholder {
 
-  color: #999;  transition: all 0.3s;  display: flex;/* Assumimos que o HTML de search.php tem um <div class="page-content-wrapper">
+  color: #9aa0a6;  font-size: 18px;
 
 }
 
-}
+  margin-right: 12px;.search-input-wrapper {
 
 .search-btn {
 
-  background: #8B1538;  align-items: center;/* dentro do <main class="main-content"> para centralização.
+  background: #8B1538;}
 
   color: #fff;
 
-  border: none;.search-input-wrapper:focus-within {
+  border: none;  display: flex;}/* ============================================= */
 
   border-radius: 50%;
 
-  width: 40px;  background: #fff;  background: #fff;/* ============================================= */
+  width: 44px;.search-input {
 
-  height: 40px;
+  height: 44px;
 
-  display: flex;  border-color: var(--primary-color, #8B1538);
+  display: flex;  flex: 1;  align-items: center;
 
   align-items: center;
 
-  justify-content: center;  box-shadow: 0 2px 8px rgba(139, 21, 56, 0.15);  border: 1px solid #dfe1e5;
+  justify-content: center;  border: none;
 
   cursor: pointer;
 
-  transition: all 0.3s;}
+  transition: all 0.2s;  background: transparent;  background: #f5f5f5;/* 1. Layout Principal da Página de Busca (search.php)
 
-}
+  font-size: 18px;
 
-  border-radius: 24px;.main-content {
+  flex-shrink: 0;  outline: none;
 
-.search-btn:hover {
+  margin-left: 10px;
 
-  background: #6B1028;.search-icon-left {
-
-  transform: scale(1.05);
-
-}  color: #999;  padding: 8px 16px;    /* Mantenha APENAS os paddings top/bottom para acomodar header/city bar e footer fixos. */
+}  font-size: 16px;  border: 2px solid #ddd;
 
 
 
-/* ========== ABAS DE CATEGORIA ========== */  font-size: 18px;
+.search-btn:hover {  padding: 8px 0;
 
-.search-tabs-section {
+  background: #6B1028;
 
-  background: #fff;  margin-right: 12px;  transition: all 0.2s;    padding-top: calc(var(--bs-header-height) + var(--bs-city-bar-height) + var(--bs-spacing-lg));
+  transform: scale(1.05);  color: #333;  border-radius: 50px;.search-input-wrapper {/* Aplica-se ao <main class="main-content"> na página search.php
 
-  border-bottom: 2px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(139, 21, 56, 0.3);
 
 }}
 
 
 
-.category-tabs {  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);    padding-bottom: calc(var(--bs-footer-height) + var(--bs-spacing-lg));
+.search-btn:active {  padding: 8px 20px;
 
-  display: flex;
+  transform: scale(0.98);
 
-  gap: 5px;.search-input {
-
-  overflow-x: auto;
-
-  -webkit-overflow-scrolling: touch;  flex: 1;}    
-
-}
-
-  border: none;
-
-.category-tabs .tab {
-
-  display: flex;  background: transparent;    /* Garante que o main-content ocupe a largura total para que o container interno centralize */
-
-  align-items: center;
-
-  gap: 8px;  outline: none;
-
-  padding: 12px 20px;
-
-  text-decoration: none;  font-size: 16px;.search-input-wrapper:hover,    width: 100%;
-
-  color: #666;
-
-  font-size: 14px;  padding: 8px 0;
-
-  font-weight: 500;
-
-  border-bottom: 3px solid transparent;  color: #333;.search-input-wrapper:focus-within {    box-sizing: border-box;
-
-  white-space: nowrap;
-
-  transition: all 0.3s;}
-
-}
-
-  box-shadow: 0 2px 8px rgba(32, 33, 36, 0.4);
-
-.category-tabs .tab:hover {
-
-  color: #8B1538;.search-input::placeholder {
-
-  background: #f9f9f9;
-
-}  color: #999;  border-color: rgba(223, 225, 229, 0);    /* Alinhe o conteúdo do main ao centro, para que o .page-content-wrapper fique centralizado */
+}.search-input::placeholder {
 
 
 
-.category-tabs .tab.active {}
+/* ========== ABAS DE CATEGORIAS ========== */  color: #999;  transition: all 0.3s;  display: flex;/* Assumimos que o HTML de search.php tem um <div class="page-content-wrapper">
 
-  color: #8B1538;
+.category-tabs {
 
-  border-bottom-color: #8B1538;}    display: flex;
+  background: #fff;}
 
-  font-weight: 600;
+  border-bottom: 1px solid #e0e0e0;
+
+  padding: 0;}
+
+  margin-bottom: 20px;
 
 }.search-btn {
 
 
 
-.category-tabs .tab i {  background: var(--primary-color, #8B1538);    flex-direction: column; 
+.category-tabs .container {  background: #8B1538;  align-items: center;/* dentro do <main class="main-content"> para centralização.
 
-  font-size: 16px;
+  padding: 0;
 
 }  color: #fff;
 
 
 
-.category-tabs .tab .count {  border: none;.search-icon {    align-items: center; 
+.tabs-list {  border: none;.search-input-wrapper:focus-within {
 
-  color: #999;
+  display: flex;
 
-  font-size: 13px;  border-radius: 50%;
+  list-style: none;  border-radius: 50%;
 
-  font-weight: 400;
+  margin: 0;
 
-}  width: 40px;  color: #9aa0a6;    justify-content: flex-start;
+  padding: 0;  width: 40px;  background: #fff;  background: #fff;/* ============================================= */
+
+  overflow-x: auto;
+
+  -webkit-overflow-scrolling: touch;  height: 40px;
+
+  scrollbar-width: none;
+
+}  display: flex;  border-color: var(--primary-color, #8B1538);
 
 
 
-/* ========== LAYOUT GRID (70% + 30%) ========== */  height: 40px;
+.tabs-list::-webkit-scrollbar {  align-items: center;
 
-.search-content-section {
+  display: none;
 
-  background: #f8f8f8;  display: flex;  font-size: 18px;}
+}  justify-content: center;  box-shadow: 0 2px 8px rgba(139, 21, 56, 0.15);  border: 1px solid #dfe1e5;
 
-  padding: 30px 0;
 
-  min-height: 500px;  align-items: center;
+
+.tab-item {  cursor: pointer;
+
+  flex-shrink: 0;
+
+}  transition: all 0.3s;}
+
+
+
+.tab-link {}
+
+  display: block;
+
+  padding: 16px 24px;  border-radius: 24px;.main-content {
+
+  color: #5f6368;
+
+  text-decoration: none;.search-btn:hover {
+
+  font-size: 14px;
+
+  font-weight: 500;  background: #6B1028;.search-icon-left {
+
+  border-bottom: 3px solid transparent;
+
+  transition: all 0.2s;  transform: scale(1.05);
+
+  white-space: nowrap;
+
+}}  color: #999;  padding: 8px 16px;    /* Mantenha APENAS os paddings top/bottom para acomodar header/city bar e footer fixos. */
+
+
+
+.tab-link:hover {
+
+  color: #202124;
+
+  background: #f8f9fa;/* ========== ABAS DE CATEGORIA ========== */  font-size: 18px;
 
 }
 
-  justify-content: center;  margin-right: 12px;
+.search-tabs-section {
 
-.search-grid-layout {
+.tab-link.active {
 
-  display: grid;  cursor: pointer;
+  color: #8B1538;  background: #fff;  margin-right: 12px;  transition: all 0.2s;    padding-top: calc(var(--bs-header-height) + var(--bs-city-bar-height) + var(--bs-spacing-lg));
 
-  grid-template-columns: 1fr 350px;
+  border-bottom-color: #8B1538;
 
-  gap: 20px;  transition: all 0.3s;}/* IMPORTANTE: Este div DEVE envolver todo o conteúdo dentro do <main> em search.php */
+}  border-bottom: 2px solid #f0f0f0;
 
-  align-items: start;
+
+
+.tab-icon {}}
+
+  margin-right: 8px;
+
+  font-size: 16px;
+
+}
+
+.category-tabs {  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);    padding-bottom: calc(var(--bs-footer-height) + var(--bs-spacing-lg));
+
+/* ========== LAYOUT GRID 2 COLUNAS ========== */
+
+.search-grid-layout {  display: flex;
+
+  display: grid;
+
+  grid-template-columns: 1fr 320px;  gap: 5px;.search-input {
+
+  gap: 24px;
+
+  align-items: start;  overflow-x: auto;
+
+  margin-top: 20px;
+
+  margin-bottom: 40px;  -webkit-overflow-scrolling: touch;  flex: 1;}    
+
+}
+
+}
+
+/* ========== COLUNA DE RESULTADOS (ESQUERDA) ========== */
+
+.results-column {  border: none;
+
+  background: #fff;
+
+  border-radius: 8px;.category-tabs .tab {
+
+  box-shadow: 0 1px 3px rgba(60,64,67,0.1);
+
+  min-height: 400px;  display: flex;  background: transparent;    /* Garante que o main-content ocupe a largura total para que o container interno centralize */
+
+}
+
+  align-items: center;
+
+.results-header {
+
+  padding: 16px 24px;  gap: 8px;  outline: none;
+
+  border-bottom: 1px solid #e8eaed;
+
+}  padding: 12px 20px;
+
+
+
+.results-count {  text-decoration: none;  font-size: 16px;.search-input-wrapper:hover,    width: 100%;
+
+  font-size: 14px;
+
+  color: #70757a;  color: #666;
+
+  margin: 0;
+
+}  font-size: 14px;  padding: 8px 0;
+
+
+
+.no-results {  font-weight: 500;
+
+  padding: 40px 24px;
+
+  text-align: center;  border-bottom: 3px solid transparent;  color: #333;.search-input-wrapper:focus-within {    box-sizing: border-box;
+
+  color: #5f6368;
+
+}  white-space: nowrap;
+
+
+
+.no-results-icon {  transition: all 0.3s;}
+
+  font-size: 48px;
+
+  color: #dadce0;}
+
+  margin-bottom: 16px;
+
+}  box-shadow: 0 2px 8px rgba(32, 33, 36, 0.4);
+
+
+
+.no-results h3 {.category-tabs .tab:hover {
+
+  font-size: 20px;
+
+  color: #202124;  color: #8B1538;.search-input::placeholder {
+
+  margin-bottom: 8px;
+
+  font-weight: 400;  background: #f9f9f9;
+
+}
+
+}  color: #999;  border-color: rgba(223, 225, 229, 0);    /* Alinhe o conteúdo do main ao centro, para que o .page-content-wrapper fique centralizado */
+
+.no-results p {
+
+  font-size: 14px;
+
+  color: #5f6368;
+
+  margin: 0;.category-tabs .tab.active {}
+
+}
+
+  color: #8B1538;
+
+/* ========== ITENS DE RESULTADO ========== */
+
+.results-list {  border-bottom-color: #8B1538;}    display: flex;
+
+  list-style: none;
+
+  padding: 0;  font-weight: 600;
+
+  margin: 0;
+
+}}.search-btn {
+
+
+
+.result-item {
+
+  display: flex;
+
+  align-items: flex-start;.category-tabs .tab i {  background: var(--primary-color, #8B1538);    flex-direction: column; 
+
+  padding: 20px 24px;
+
+  border-bottom: 1px solid #e8eaed;  font-size: 16px;
+
+  transition: background 0.2s;
+
+  gap: 16px;}  color: #fff;
+
+}
+
+
+
+.result-item:hover {
+
+  background: #f8f9fa;.category-tabs .tab .count {  border: none;.search-icon {    align-items: center; 
+
+}
+
+  color: #999;
+
+.result-item:last-child {
+
+  border-bottom: none;  font-size: 13px;  border-radius: 50%;
+
+}
+
+  font-weight: 400;
+
+.result-icon {
+
+  width: 48px;}  width: 40px;  color: #9aa0a6;    justify-content: flex-start;
+
+  height: 48px;
+
+  background: linear-gradient(135deg, #8B1538 0%, #6B1028 100%);
+
+  border-radius: 50%;
+
+  display: flex;/* ========== LAYOUT GRID (70% + 30%) ========== */  height: 40px;
+
+  align-items: center;
+
+  justify-content: center;.search-content-section {
+
+  color: #fff;
+
+  font-size: 20px;  background: #f8f8f8;  display: flex;  font-size: 18px;}
+
+  flex-shrink: 0;
+
+  box-shadow: 0 2px 4px rgba(139, 21, 56, 0.2);  padding: 30px 0;
+
+}
+
+  min-height: 500px;  align-items: center;
+
+.result-content {
+
+  flex: 1;}
+
+  min-width: 0;
+
+}  justify-content: center;  margin-right: 12px;
+
+
+
+.result-title {.search-grid-layout {
+
+  font-size: 18px;
+
+  font-weight: 500;  display: grid;  cursor: pointer;
+
+  margin: 0 0 4px 0;
+
+}  grid-template-columns: 1fr 350px;
+
+
+
+.result-link {  gap: 20px;  transition: all 0.3s;}/* IMPORTANTE: Este div DEVE envolver todo o conteúdo dentro do <main> em search.php */
+
+  color: #1a0dab;
+
+  text-decoration: none;  align-items: start;
+
+  transition: color 0.2s;
+
+}}}
+
+
+
+.result-link:hover {
+
+  color: #8B1538;
+
+  text-decoration: underline;/* ========== COLUNA DE RESULTADOS (ESQUERDA) ========== *//* Ex: <main class="main-content"><div class="page-content-wrapper"> ... todo o conteúdo ... </div></main> */
+
+}
+
+.results-column {
+
+.result-link:visited {
+
+  color: #681da8;  background: #fff;.search-btn:hover {
+
+}
+
+  border-radius: 8px;
+
+.result-meta {
+
+  display: flex;  padding: 20px;  background: var(--primary-dark, #6B1028);.google-search-input {.page-content-wrapper {
+
+  flex-wrap: wrap;
+
+  gap: 12px;  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+  margin: 8px 0;
+
+  font-size: 13px;  min-height: 400px;  transform: scale(1.05);
+
+  color: #5f6368;
 
 }}
 
 
 
-/* ========== COLUNA DE RESULTADOS (ESQUERDA) ========== *//* Ex: <main class="main-content"><div class="page-content-wrapper"> ... todo o conteúdo ... </div></main> */
+.meta-item {}  flex: 1;    max-width: var(--bs-container-max-width); /* Centraliza o conteúdo principal (desktop) */
 
-.results-column {
+  display: flex;
 
-  background: #fff;.search-btn:hover {
+  align-items: center;.results-group {
 
-  border-radius: 8px;
+  gap: 4px;
 
-  padding: 20px;  background: var(--primary-dark, #6B1028);.google-search-input {.page-content-wrapper {
+}  margin-bottom: 30px;
 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 
-  min-height: 400px;  transform: scale(1.05);
 
-}
+.meta-icon {}
 
-}  flex: 1;    max-width: var(--bs-container-max-width); /* Centraliza o conteúdo principal (desktop) */
+  font-size: 14px;
 
-.results-group {
-
-  margin-bottom: 30px;
+  color: #8B1538;/* ========== ABAS DE CATEGORIA ========== */  border: none;    margin: 0 auto;
 
 }
-
-/* ========== ABAS DE CATEGORIA ========== */  border: none;    margin: 0 auto;
 
 .results-group:last-child {
 
-  margin-bottom: 0;.search-tabs-section {
+.result-actions {
+
+  margin-top: 12px;  margin-bottom: 0;.search-tabs-section {
 
 }
 
-  background: #fff;  outline: none;    width: 100%; /* Ocupa 100% da largura do main-content (até o max-width) */
+}
 
-.group-title {
+.btn-view-profile {
 
-  display: flex;  border-bottom: 2px solid #f0f0f0;
+  display: inline-flex;  background: #fff;  outline: none;    width: 100%; /* Ocupa 100% da largura do main-content (até o max-width) */
 
   align-items: center;
 
-  justify-content: space-between;}  font-size: 16px;    box-sizing: border-box;
+  gap: 6px;.group-title {
 
-  font-size: 20px;
+  background: #8B1538;
 
-  font-weight: 600;
+  color: #fff;  display: flex;  border-bottom: 2px solid #f0f0f0;
+
+  padding: 8px 16px;
+
+  border-radius: 4px;  align-items: center;
+
+  text-decoration: none;
+
+  font-size: 14px;  justify-content: space-between;}  font-size: 16px;    box-sizing: border-box;
+
+  font-weight: 500;
+
+  transition: all 0.2s;  font-size: 20px;
+
+  border: none;
+
+  cursor: pointer;  font-weight: 600;
+
+}
 
   color: #333;
 
-  margin-bottom: 15px;.category-tabs {  padding: 4px 0;    /* Adicione um padding lateral global aqui para desktop, dando espaço nas laterais */
+.btn-view-profile:hover {
 
-  padding-bottom: 10px;
+  background: #6B1028;  margin-bottom: 15px;.category-tabs {  padding: 4px 0;    /* Adicione um padding lateral global aqui para desktop, dando espaço nas laterais */
+
+  box-shadow: 0 2px 4px rgba(139, 21, 56, 0.3);
+
+  transform: translateY(-1px);  padding-bottom: 10px;
+
+}
 
   border-bottom: 2px solid #f0f0f0;  display: flex;
+
+.btn-view-profile:active {
+
+  transform: translateY(0);}
 
 }
 
   gap: 5px;  font-family: arial, sans-serif;    padding-left: var(--bs-spacing-md);
 
-.group-title i {
+/* ========== PAGINAÇÃO ========== */
 
-  margin-right: 10px;  overflow-x: auto;
-
-  color: #8B1538;
-
-}  -webkit-overflow-scrolling: touch;  background: transparent;    padding-right: var(--bs-spacing-md);
-
-
-
-.group-title .view-all {}
-
-  font-size: 14px;
-
-  color: #8B1538;}}
-
-  text-decoration: none;
-
-  font-weight: 500;.category-tabs .tab {
-
-}
+.pagination {.group-title i {
 
   display: flex;
 
-.group-title .view-all:hover {
-
-  text-decoration: underline;  align-items: center;
-
-}
-
-  gap: 8px;.search-submit-btn {
-
-/* Item de Resultado (Linha Horizontal) */
-
-.result-item {  padding: 12px 20px;
-
-  display: flex;
-
-  align-items: center;  text-decoration: none;  background: none;/* ============================================= */
-
-  gap: 15px;
-
-  padding: 15px;  color: #666;
-
-  border-bottom: 1px solid #f0f0f0;
-
-  transition: all 0.3s;  font-size: 14px;  border: none;/* 2. Cabeçalho e Formulário de Busca na Página de RESULTADOS
-
-}
-
-  font-weight: 500;
-
-.result-item:hover {
-
-  background: #f9f9f9;  border-bottom: 3px solid transparent;  padding: 8px;/* Contém o título <h1> e o formulário de busca COMPACTO
-
-}
-
-  white-space: nowrap;
-
-.result-item:last-child {
-
-  border-bottom: none;  transition: all 0.3s;  cursor: pointer;/* ============================================= */
-
-}
-
-}
-
-.result-icon {
-
-  flex-shrink: 0;  color: #70757a;
-
-  width: 50px;
-
-  height: 50px;.category-tabs .tab:hover {
-
-  display: flex;
-
-  align-items: center;  color: var(--primary-color, #8B1538);  font-size: 18px;.search-header-container {
-
-  justify-content: center;
-
-  background: linear-gradient(135deg, #8B1538, #6B1028);  background: #f9f9f9;
-
-  color: #fff;
-
-  border-radius: 50%;}  transition: color 0.2s;    width: 100%;
-
-  font-size: 24px;
-
-}
-
-
-
-.result-content {.category-tabs .tab.active {}    margin-bottom: var(--bs-spacing-xl);
-
-  flex: 1;
-
-  min-width: 0;  color: var(--primary-color, #8B1538);
-
-}
-
-  border-bottom-color: var(--primary-color, #8B1538);    text-align: center;
-
-.result-title {
-
-  margin: 0 0 5px;  font-weight: 600;
-
-  font-size: 18px;
-
-  font-weight: 600;}.search-submit-btn:hover {    padding: 0;
-
-}
-
-
-
-.result-title a {
-
-  color: #333;.category-tabs .tab i {  color: #202124;}
-
-  text-decoration: none;
-
-  transition: color 0.3s;  font-size: 16px;
-
-}
-
-}}
-
-.result-title a:hover {
-
-  color: #8B1538;
-
-}
-
-.category-tabs .tab .count {.search-page-title {
-
-.result-description {
-
-  margin: 5px 0 0;  color: #999;
-
-  font-size: 14px;
-
-  color: #666;  font-size: 13px;/* Abas de Categoria */    font-size: var(--bs-font-size-xxl);
-
-  line-height: 1.5;
-
-}  font-weight: 400;
-
-
-
-.result-meta {}.search-tabs {    color: var(--bs-text-primary);
-
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 15px;
-
-  font-size: 13px;/* ========== LAYOUT GRID (70% + 30%) ========== */  max-width: 1200px;    margin-bottom: var(--bs-spacing-md);
-
-  color: #999;
-
-}.search-content-section {
-
-
-
-.meta-item {  background: #f8f8f8;  margin: 0 auto;    font-weight: var(--bs-font-weight-bold);
-
-  display: flex;
-
-  align-items: center;  padding: 30px 0;
-
-  gap: 5px;
-
-}  min-height: 500px;  display: flex;}
-
-
-
-.meta-item i {}
-
-  font-size: 12px;
-
-}  gap: 8px;
-
-
-
-.result-action {.search-grid-layout {
-
-  flex-shrink: 0;
-
-}  display: grid;  padding: 0 15px;/* Formulário de busca COMPACTO na página de resultados (barra de busca do topo) */
-
-
-
-.btn-view {  grid-template-columns: 70% 30%;
-
-  display: inline-block;
-
-  padding: 8px 20px;  gap: 20px;  border-bottom: 1px solid #dadce0;.search-form-inline {
-
-  background: #8B1538;
-
-  color: #fff;}
-
-  text-decoration: none;
-
-  border-radius: 20px;  overflow-x: auto;    position: relative;
-
-  font-size: 14px;
-
-  font-weight: 500;/* ========== COLUNA DE RESULTADOS (ESQUERDA) ========== */
-
-  transition: all 0.3s;
-
-  white-space: nowrap;.results-column {  -webkit-overflow-scrolling: touch;    display: flex;
-
-}
-
-  background: #fff;
-
-.btn-view:hover {
-
-  background: #6B1028;  border-radius: 8px;}    max-width: 600px;
-
-  transform: translateY(-2px);
-
-  box-shadow: 0 4px 8px rgba(139, 21, 56, 0.3);  padding: 20px;
-
-}
-
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);    margin: 0 auto;
-
-/* Sem Resultados */
-
-.no-results {}
-
-  text-align: center;
-
-  padding: 60px 20px;.search-tabs .tab {    background-color: var(--bs-bg-white);
-
-  color: #999;
-
-}.results-group {
-
-
-
-.no-results i {  margin-bottom: 30px;  display: flex;    border: 1px solid var(--bs-border-color);
-
-  font-size: 64px;
-
-  margin-bottom: 20px;}
-
-  opacity: 0.3;
-
-}  align-items: center;    border-radius: var(--bs-border-radius-md);
-
-
-
-.no-results h3 {.group-title {
-
-  font-size: 24px;
-
-  color: #666;  display: flex;  gap: 8px;    box-shadow: var(--bs-shadow-sm);
-
-  margin-bottom: 10px;
-
-}  align-items: center;
-
-
-
-.no-results p {  justify-content: space-between;  padding: 12px 16px;    overflow: hidden;
-
-  font-size: 16px;
-
-}  font-size: 20px;
-
-
-
-/* ========== SIDEBAR (DIREITA) ========== */  font-weight: 600;  text-decoration: none;    height: var(--bs-input-height-md);
-
-.sidebar-column {
-
-  display: flex;  color: #333;
-
-  flex-direction: column;
-
-  gap: 20px;  margin-bottom: 15px;  color: #5f6368;}
-
-}
-
-  padding-bottom: 10px;
-
-.sidebar-widget {
-
-  background: #fff;  border-bottom: 2px solid #f0f0f0;  font-size: 14px;
-
-  border-radius: 8px;
-
-  padding: 15px;}
-
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-
-}  font-weight: 500;.search-input-inline {
-
-
-
-.widget-title {.group-title i {
-
-  display: flex;
-
-  align-items: center;  margin-right: 10px;  border-bottom: 3px solid transparent;    flex-grow: 1; /* Permite que o input ocupe o máximo de espaço disponível */
-
-  gap: 8px;
-
-  font-size: 16px;  color: var(--primary-color, #8B1538);
-
-  font-weight: 600;
-
-  color: #333;}  white-space: nowrap;    flex-shrink: 1; /* Permite que o input encolha se necessário, mas flex-grow deve prevalecer */
-
-  margin-bottom: 12px;
-
-  padding-bottom: 8px;
-
-  border-bottom: 2px solid #f0f0f0;
-
-}.group-title .view-all {  transition: all 0.2s;    flex-basis: 0; /* IMPORTE: Garante que o item não tenha tamanho inicial, deixando flex-grow ditar */
-
-
-
-.widget-title i {  font-size: 14px;
-
-  color: #8B1538;
-
-}  color: var(--primary-color, #8B1538);}    
-
-
-
-.widget-content {  text-decoration: none;
-
-  font-size: 14px;
-
-  color: #666;  font-weight: 500;    border: none;
-
-}
-
-}
-
-.text-muted {
-
-  color: #999;.search-tabs .tab:hover {    padding: 0 var(--bs-spacing-md);
-
-  font-style: italic;
-
-}.group-title .view-all:hover {
-
-
-
-/* Cards da Sidebar */  text-decoration: underline;  color: #202124;    font-size: var(--bs-font-size-md);
-
-.sidebar-card {
-
-  background: #f8f8f8;}
-
-  border-radius: 6px;
-
-  padding: 15px;}    color: var(--bs-text-primary);
-
-  text-align: center;
-
-  margin-bottom: 10px;/* Item de Resultado (Linha Horizontal) */
-
-}
-
-.result-item {    background-color: transparent;
-
-.sidebar-card:last-child {
-
-  margin-bottom: 0;  display: flex;
-
-}
-
-  align-items: center;.search-tabs .tab.active {    transition: all var(--bs-transition-normal);
-
-.card-placeholder {
-
-  width: 100%;  gap: 15px;
-
-  height: 150px;
-
-  background: linear-gradient(135deg, #e0e0e0, #f0f0f0);  padding: 15px;  color: #1a73e8;    padding-right: 40px; /* Espaço para o spinner/loading inline */
-
-  border-radius: 4px;
-
-  display: flex;  border-bottom: 1px solid #f0f0f0;
+  justify-content: center;  margin-right: 10px;  overflow-x: auto;
 
   align-items: center;
 
-  justify-content: center;  transition: all 0.3s;  border-bottom-color: #1a73e8;}
+  gap: 8px;  color: #8B1538;
 
-  margin-bottom: 10px;
+  padding: 24px;
 
-}}
+  margin-top: 20px;}  -webkit-overflow-scrolling: touch;  background: transparent;    padding-right: var(--bs-spacing-md);
+
+  background: #fff;
+
+  border-radius: 8px;
+
+  box-shadow: 0 1px 3px rgba(60,64,67,0.1);
+
+}.group-title .view-all {}
 
 
 
-.card-placeholder i {}
+.pagination a,  font-size: 14px;
 
-  font-size: 48px;
+.pagination span {
 
-  color: #ccc;.result-item:hover {
+  display: flex;  color: #8B1538;}}
+
+  align-items: center;
+
+  justify-content: center;  text-decoration: none;
+
+  min-width: 40px;
+
+  height: 40px;  font-weight: 500;.category-tabs .tab {
+
+  padding: 0 12px;
+
+  border-radius: 4px;}
+
+  text-decoration: none;
+
+  color: #5f6368;  display: flex;
+
+  font-size: 14px;
+
+  font-weight: 500;.group-title .view-all:hover {
+
+  transition: all 0.2s;
+
+}  text-decoration: underline;  align-items: center;
+
+
+
+.pagination a:hover {}
+
+  background: #f8f9fa;
+
+  color: #202124;  gap: 8px;.search-submit-btn {
 
 }
 
-  background: #f9f9f9;.search-input-inline::placeholder {
+/* Item de Resultado (Linha Horizontal) */
 
-.card-text {
+.pagination .active {
 
-  font-size: 13px;}
+  background: #8B1538;.result-item {  padding: 12px 20px;
 
-  color: #999;
+  color: #fff;
 
-  margin: 0;.search-tabs .tab i {    color: var(--bs-text-light);
+}  display: flex;
+
+
+
+.pagination .disabled {  align-items: center;  text-decoration: none;  background: none;/* ============================================= */
+
+  opacity: 0.5;
+
+  cursor: not-allowed;  gap: 15px;
+
+  pointer-events: none;
+
+}  padding: 15px;  color: #666;
+
+
+
+/* ========== SIDEBAR (DIREITA) ========== */  border-bottom: 1px solid #f0f0f0;
+
+.sidebar-column {
+
+  display: flex;  transition: all 0.3s;  font-size: 14px;  border: none;/* 2. Cabeçalho e Formulário de Busca na Página de RESULTADOS
+
+  flex-direction: column;
+
+  gap: 20px;}
+
+  position: sticky;
+
+  top: 90px;  font-weight: 500;
+
+}
+
+.result-item:hover {
+
+.sidebar-widget {
+
+  background: #fff;  background: #f9f9f9;  border-bottom: 3px solid transparent;  padding: 8px;/* Contém o título <h1> e o formulário de busca COMPACTO
+
+  border-radius: 8px;
+
+  padding: 20px;}
+
+  box-shadow: 0 1px 3px rgba(60,64,67,0.1);
+
+  transition: box-shadow 0.2s;  white-space: nowrap;
 
 }
 
 .result-item:last-child {
 
+.sidebar-widget:hover {
+
+  box-shadow: 0 2px 8px rgba(60,64,67,0.15);  border-bottom: none;  transition: all 0.3s;  cursor: pointer;/* ============================================= */
+
+}
+
+}
+
+.widget-header {
+
+  display: flex;}
+
+  align-items: center;
+
+  gap: 10px;.result-icon {
+
+  margin-bottom: 16px;
+
+  padding-bottom: 12px;  flex-shrink: 0;  color: #70757a;
+
+  border-bottom: 2px solid #8B1538;
+
+}  width: 50px;
+
+
+
+.widget-icon {  height: 50px;.category-tabs .tab:hover {
+
+  font-size: 20px;
+
+  color: #8B1538;  display: flex;
+
+}
+
+  align-items: center;  color: var(--primary-color, #8B1538);  font-size: 18px;.search-header-container {
+
+.widget-title {
+
+  font-size: 16px;  justify-content: center;
+
+  font-weight: 600;
+
+  color: #202124;  background: linear-gradient(135deg, #8B1538, #6B1028);  background: #f9f9f9;
+
+  margin: 0;
+
+}  color: #fff;
+
+
+
+.widget-content {  border-radius: 50%;}  transition: color 0.2s;    width: 100%;
+
+  font-size: 14px;
+
+  color: #5f6368;  font-size: 24px;
+
+  line-height: 1.6;
+
+}}
+
+
+
+/* Widget de Filtros */
+
+.filters-group {
+
+  display: flex;.result-content {.category-tabs .tab.active {}    margin-bottom: var(--bs-spacing-xl);
+
+  flex-direction: column;
+
+  gap: 12px;  flex: 1;
+
+}
+
+  min-width: 0;  color: var(--primary-color, #8B1538);
+
+.filter-item {
+
+  display: flex;}
+
+  align-items: center;
+
+  gap: 8px;  border-bottom-color: var(--primary-color, #8B1538);    text-align: center;
+
+}
+
+.result-title {
+
+.filter-item input[type="checkbox"] {
+
+  width: 18px;  margin: 0 0 5px;  font-weight: 600;
+
+  height: 18px;
+
+  cursor: pointer;  font-size: 18px;
+
+  accent-color: #8B1538;
+
+}  font-weight: 600;}.search-submit-btn:hover {    padding: 0;
+
+
+
+.filter-item label {}
+
+  font-size: 14px;
+
+  color: #202124;
+
+  cursor: pointer;
+
+  flex: 1;.result-title a {
+
+}
+
+  color: #333;.category-tabs .tab i {  color: #202124;}
+
+.filter-count {
+
+  font-size: 12px;  text-decoration: none;
+
+  color: #70757a;
+
+  background: #f1f3f4;  transition: color 0.3s;  font-size: 16px;
+
+  padding: 2px 8px;
+
+  border-radius: 12px;}
+
+}
+
+}}
+
+/* Widget de Clubes */
+
+.clubs-list {.result-title a:hover {
+
+  list-style: none;
+
+  padding: 0;  color: #8B1538;
+
+  margin: 0;
+
+  display: flex;}
+
+  flex-direction: column;
+
+  gap: 12px;.category-tabs .tab .count {.search-page-title {
+
+}
+
+.result-description {
+
+.club-item {
+
+  display: flex;  margin: 5px 0 0;  color: #999;
+
+  align-items: center;
+
+  gap: 12px;  font-size: 14px;
+
+  padding: 10px;
+
+  border-radius: 6px;  color: #666;  font-size: 13px;/* Abas de Categoria */    font-size: var(--bs-font-size-xxl);
+
+  transition: background 0.2s;
+
+  text-decoration: none;  line-height: 1.5;
+
+  color: #202124;
+
+}}  font-weight: 400;
+
+
+
+.club-item:hover {
+
+  background: #f8f9fa;
+
+}.result-meta {}.search-tabs {    color: var(--bs-text-primary);
+
+
+
+.club-icon {  display: flex;
+
+  width: 40px;
+
+  height: 40px;  flex-wrap: wrap;
+
+  background: linear-gradient(135deg, #8B1538 0%, #6B1028 100%);
+
+  border-radius: 50%;  gap: 15px;
+
+  display: flex;
+
+  align-items: center;  font-size: 13px;/* ========== LAYOUT GRID (70% + 30%) ========== */  max-width: 1200px;    margin-bottom: var(--bs-spacing-md);
+
+  justify-content: center;
+
+  color: #fff;  color: #999;
+
+  font-size: 18px;
+
+  flex-shrink: 0;}.search-content-section {
+
+}
+
+
+
+.club-info {
+
+  flex: 1;.meta-item {  background: #f8f8f8;  margin: 0 auto;    font-weight: var(--bs-font-weight-bold);
+
+  min-width: 0;
+
+}  display: flex;
+
+
+
+.club-name {  align-items: center;  padding: 30px 0;
+
+  font-size: 14px;
+
+  font-weight: 500;  gap: 5px;
+
+  color: #202124;
+
+  margin: 0 0 2px 0;}  min-height: 500px;  display: flex;}
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+}.meta-item i {}
+
+
+
+.club-location {  font-size: 12px;
+
+  font-size: 12px;
+
+  color: #70757a;}  gap: 8px;
+
+  margin: 0;
+
+}
+
+
+
+/* Widget de Anúncios */.result-action {.search-grid-layout {
+
+.ad-widget {
+
+  background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);  flex-shrink: 0;
+
+  border: 1px solid #e8eaed;
+
+  text-align: center;}  display: grid;  padding: 0 15px;/* Formulário de busca COMPACTO na página de resultados (barra de busca do topo) */
+
+  padding: 30px 20px;
+
+}
+
+
+
+.ad-placeholder {.btn-view {  grid-template-columns: 70% 30%;
+
+  font-size: 48px;
+
+  color: #dadce0;  display: inline-block;
+
+  margin-bottom: 12px;
+
+}  padding: 8px 20px;  gap: 20px;  border-bottom: 1px solid #dadce0;.search-form-inline {
+
+
+
+.ad-text {  background: #8B1538;
+
+  font-size: 12px;
+
+  color: #9aa0a6;  color: #fff;}
+
+  margin: 0;
+
+}  text-decoration: none;
+
+
+
+/* Widget de Empresas */  border-radius: 20px;  overflow-x: auto;    position: relative;
+
+.companies-list {
+
+  list-style: none;  font-size: 14px;
+
+  padding: 0;
+
+  margin: 0;  font-weight: 500;/* ========== COLUNA DE RESULTADOS (ESQUERDA) ========== */
+
+  display: flex;
+
+  flex-direction: column;  transition: all 0.3s;
+
+  gap: 10px;
+
+}  white-space: nowrap;.results-column {  -webkit-overflow-scrolling: touch;    display: flex;
+
+
+
+.company-item {}
+
+  display: flex;
+
+  align-items: center;  background: #fff;
+
+  gap: 10px;
+
+  padding: 8px;.btn-view:hover {
+
+  border-radius: 6px;
+
+  transition: background 0.2s;  background: #6B1028;  border-radius: 8px;}    max-width: 600px;
+
+  text-decoration: none;
+
+  color: #202124;  transform: translateY(-2px);
+
+  font-size: 14px;
+
+}  box-shadow: 0 4px 8px rgba(139, 21, 56, 0.3);  padding: 20px;
+
+
+
+.company-item:hover {}
+
+  background: #f8f9fa;
+
+}  box-shadow: 0 2px 4px rgba(0,0,0,0.05);    margin: 0 auto;
+
+
+
+.company-icon {/* Sem Resultados */
+
+  width: 32px;
+
+  height: 32px;.no-results {}
+
+  background: linear-gradient(135deg, #8B1538 0%, #6B1028 100%);
+
+  border-radius: 6px;  text-align: center;
+
+  display: flex;
+
+  align-items: center;  padding: 60px 20px;.search-tabs .tab {    background-color: var(--bs-bg-white);
+
+  justify-content: center;
+
+  color: #fff;  color: #999;
+
+  font-size: 16px;
+
+  flex-shrink: 0;}.results-group {
+
+}
+
+
+
+.company-name {
+
+  flex: 1;.no-results i {  margin-bottom: 30px;  display: flex;    border: 1px solid var(--bs-border-color);
+
+  font-weight: 500;
+
+  white-space: nowrap;  font-size: 64px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;  margin-bottom: 20px;}
+
+}
+
+  opacity: 0.3;
+
 /* ========== RESPONSIVO ========== */
 
-@media (max-width: 992px) {  border-bottom: none;  font-size: 16px;    opacity: 0.8;
+}  align-items: center;    border-radius: var(--bs-border-radius-md);
+
+/* Tablets */
+
+@media (max-width: 1024px) {
 
   .search-grid-layout {
 
-    grid-template-columns: 1fr;}
+    grid-template-columns: 1fr 280px;.no-results h3 {.group-title {
+
+    gap: 16px;
+
+  }  font-size: 24px;
+
+  
+
+  .sidebar-widget {  color: #666;  display: flex;  gap: 8px;    box-shadow: var(--bs-shadow-sm);
+
+    padding: 16px;
+
+  }  margin-bottom: 10px;
+
+}
+
+}  align-items: center;
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+  .container {
+
+    padding: 0 15px;.no-results p {  justify-content: space-between;  padding: 12px 16px;    overflow: hidden;
 
   }
 
-  }}
+    font-size: 16px;
+
+  .search-bar-section {
+
+    position: static;}  font-size: 20px;
+
+  }
+
+  
+
+  .search-form {
+
+    padding: 0 15px;/* ========== SIDEBAR (DIREITA) ========== */  font-weight: 600;  text-decoration: none;    height: var(--bs-input-height-md);
+
+  }
 
   .sidebar-column {
 
-    display: grid;.result-icon {
+  .search-input-wrapper {
 
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    padding: 0 15px;  display: flex;  color: #333;
 
-    gap: 15px;  flex-shrink: 0;
+  }
+
+    flex-direction: column;
+
+  .search-input {
+
+    font-size: 16px;  gap: 20px;  margin-bottom: 15px;  color: #5f6368;}
+
+    padding: 12px 0;
+
+  }}
+
+  
+
+  .search-btn {  padding-bottom: 10px;
+
+    width: 40px;
+
+    height: 40px;.sidebar-widget {
+
+  }
+
+    background: #fff;  border-bottom: 2px solid #f0f0f0;  font-size: 14px;
+
+  /* Abas horizontais scrolláveis */
+
+  .tabs-list {  border-radius: 8px;
+
+    padding: 0 15px;
+
+  }  padding: 15px;}
+
+  
+
+  .tab-link {  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+    padding: 14px 20px;
+
+    font-size: 13px;}  font-weight: 500;.search-input-inline {
+
+  }
+
+  
+
+  /* Grid vira coluna única */
+
+  .search-grid-layout {.widget-title {.group-title i {
+
+    grid-template-columns: 1fr;
+
+    gap: 16px;  display: flex;
+
+    margin-top: 16px;
+
+  }  align-items: center;  margin-right: 10px;  border-bottom: 3px solid transparent;    flex-grow: 1; /* Permite que o input ocupe o máximo de espaço disponível */
+
+  
+
+  .sidebar-column {  gap: 8px;
+
+    position: static;
+
+    top: auto;  font-size: 16px;  color: var(--primary-color, #8B1538);
+
+  }
+
+    font-weight: 600;
+
+  /* Sidebar vira horizontal scrollável */
+
+  .sidebar-column {  color: #333;}  white-space: nowrap;    flex-shrink: 1; /* Permite que o input encolha se necessário, mas flex-grow deve prevalecer */
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));  margin-bottom: 12px;
+
+    gap: 12px;
+
+    overflow-x: auto;  padding-bottom: 8px;
+
+    -webkit-overflow-scrolling: touch;
+
+  }  border-bottom: 2px solid #f0f0f0;
+
+  
+
+  .results-column,}.group-title .view-all {  transition: all 0.2s;    flex-basis: 0; /* IMPORTE: Garante que o item não tenha tamanho inicial, deixando flex-grow ditar */
+
+  .sidebar-widget {
+
+    border-radius: 6px;
+
+  }
+
+  .widget-title i {  font-size: 14px;
+
+  .result-item {
+
+    padding: 16px;  color: #8B1538;
+
+    gap: 12px;
+
+  }}  color: var(--primary-color, #8B1538);}    
+
+  
+
+  .result-icon {
+
+    width: 42px;
+
+    height: 42px;.widget-content {  text-decoration: none;
+
+    font-size: 18px;
+
+  }  font-size: 14px;
+
+  
+
+  .result-title {  color: #666;  font-weight: 500;    border: none;
+
+    font-size: 16px;
+
+  }}
+
+  
+
+  .result-meta {}
+
+    font-size: 12px;
+
+  }.text-muted {
+
+  
+
+  .pagination {  color: #999;.search-tabs .tab:hover {    padding: 0 var(--bs-spacing-md);
+
+    flex-wrap: wrap;
+
+    gap: 6px;  font-style: italic;
+
+  }
+
+  }.group-title .view-all:hover {
+
+  .pagination a,
+
+  .pagination span {
+
+    min-width: 36px;
+
+    height: 36px;/* Cards da Sidebar */  text-decoration: underline;  color: #202124;    font-size: var(--bs-font-size-md);
+
+    font-size: 13px;
+
+  }.sidebar-card {
+
+}
+
+  background: #f8f8f8;}
+
+/* Mobile pequeno */
+
+@media (max-width: 480px) {  border-radius: 6px;
+
+  .search-input {
+
+    font-size: 14px;  padding: 15px;}    color: var(--bs-text-primary);
+
+  }
+
+    text-align: center;
+
+  .tab-link {
+
+    padding: 12px 16px;  margin-bottom: 10px;/* Item de Resultado (Linha Horizontal) */
+
+    font-size: 12px;
+
+  }}
+
+  
+
+  .tab-icon {.result-item {    background-color: transparent;
+
+    display: none;
+
+  }.sidebar-card:last-child {
+
+  
+
+  .result-title {  margin-bottom: 0;  display: flex;
+
+    font-size: 15px;
+
+  }}
+
+  
+
+  .result-meta {  align-items: center;.search-tabs .tab.active {    transition: all var(--bs-transition-normal);
+
+    flex-direction: column;
+
+    gap: 6px;.card-placeholder {
+
+  }
+
+    width: 100%;  gap: 15px;
+
+  .sidebar-column {
+
+    grid-template-columns: 1fr;  height: 150px;
+
+  }
+
+}  background: linear-gradient(135deg, #e0e0e0, #f0f0f0);  padding: 15px;  color: #1a73e8;    padding-right: 40px; /* Espaço para o spinner/loading inline */
+
+
+
+/* ========== UTILITÁRIOS ========== */  border-radius: 4px;
+
+.text-center {
+
+  text-align: center;  display: flex;  border-bottom: 1px solid #f0f0f0;
+
+}
+
+  align-items: center;
+
+.mt-20 {
+
+  margin-top: 20px;  justify-content: center;  transition: all 0.3s;  border-bottom-color: #1a73e8;}
+
+}
+
+  margin-bottom: 10px;
+
+.mb-20 {
+
+  margin-bottom: 20px;}}
+
+}
+
+
+
+.d-none {
+
+  display: none;.card-placeholder i {}
+
+}
+
+  font-size: 48px;
+
+/* ========== ACESSIBILIDADE ========== */
+
+.sr-only {  color: #ccc;.result-item:hover {
+
+  position: absolute;
+
+  width: 1px;}
+
+  height: 1px;
+
+  padding: 0;  background: #f9f9f9;.search-input-inline::placeholder {
+
+  margin: -1px;
+
+  overflow: hidden;.card-text {
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;  font-size: 13px;}
+
+  border: 0;
+
+}  color: #999;
+
+
+
+/* Focus visível para navegação por teclado */  margin: 0;.search-tabs .tab i {    color: var(--bs-text-light);
+
+a:focus,
+
+button:focus,}
+
+input:focus {
+
+  outline: 2px solid #8B1538;.result-item:last-child {
+
+  outline-offset: 2px;
+
+}/* ========== RESPONSIVO ========== */
+
+
+
+/* ========== PRINT ========== */@media (max-width: 992px) {  border-bottom: none;  font-size: 16px;    opacity: 0.8;
+
+@media print {
+
+  .search-bar-section,  .search-grid-layout {
+
+  .category-tabs,
+
+  .sidebar-column,    grid-template-columns: 1fr;}
+
+  .pagination {
+
+    display: none;  }
+
+  }
+
+    }}
+
+  .search-grid-layout {
+
+    grid-template-columns: 1fr;  .sidebar-column {
+
+  }
+
+      display: grid;.result-icon {
+
+  .result-item {
+
+    page-break-inside: avoid;    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+  }
+
+}    gap: 15px;  flex-shrink: 0;
+
 
   }
 
