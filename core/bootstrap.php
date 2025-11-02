@@ -100,25 +100,24 @@ foreach ($denyPaths as $p) {
     }
 }
 
-// headers "mínimos humanos": permitir bots de busca passarem
-if (
-    (empty($ACCEPT) || empty($ACCEPT_LANG)) &&
-    strpos($REQ_URI, '/api/') !== 0 &&
-    !uaIsKnownSearchEngine($UA)
-) {
-    http_response_code(403);
-    exit;
-}
+// headers "mínimos humanos": DESABILITADO - causava muitos falsos positivos
+// if (
+//     (empty($ACCEPT) || empty($ACCEPT_LANG)) &&
+//     strpos($REQ_URI, '/api/') !== 0 &&
+//     !uaIsKnownSearchEngine($UA)
+// ) {
+//     http_response_code(403);
+//     exit;
+// }
 
 // UA inválido ou típico de headless/scraper (healthcheck passa)
+// RELAXADO: apenas bloqueia scrapers óbvios, não navegadores normais
 $badUa = [
-  'curl','wget','python','go-http-client','libhttp','java',
-  'node-fetch','httpclient','scrapy','spider','crawler',
-  'headlesschrome','phantomjs','puppeteer'
+  'curl','wget','python-requests','go-http-client','scrapy','spider'
 ];
-$isHealth = isset($_GET['health']) || strpos($REQ_URI, '/health') === 0;
+$isHealth = isset($_GET['health']) || strpos($REQ_URI, '/health') === 0 || strpos($REQ_URI, '/diagnostic') === 0;
 foreach ($badUa as $frag) {
-    if ($UA === '' || strpos($ua_lc, $frag) !== false) {
+    if ($UA !== '' && strpos($ua_lc, $frag) !== false) {
         if (!$isHealth) { http_response_code(403); exit; }
     }
 }
@@ -323,20 +322,21 @@ if (empty($_SESSION['visitor_cookie_id'])) {
 }
 $visitor_cookie_id = $_SESSION['visitor_cookie_id'];
 
-// detecção por UA
+// detecção por UA - RELAXADO: apenas marca, não bloqueia
 $botUserAgentPatterns = [
     '~^$|unknown~i',
-    '~bot|spider|crawl|scraper|curl|wget|python|java|go-http-client|axios|http client|node-fetch|postman~i',
-    '~headlesschrome|phantomjs|puppeteer~i',
-    '~meta-externalagent|Expanse|ALittle Client|fasthttp~i',
-    '~Googlebot|Bingbot|YandexBot|AhrefsBot|MJ12bot|SemrushBot|Slurp|DuckDuckBot~i',
-    '~Amazonbot|Applebot|FacebookExternalHit|Twitterbot~i'
+    '~googlebot|bingbot|yandexbot|ahrefsbot|mj12bot|semrushbot~i',
+    '~crawler|spider|bot~i'
 ];
 if (empty($user_agent) || $user_agent === 'unknown') {
     $isBot = 1; $detection_reason = "User-Agent vazio ou desconhecido";
 } else {
     foreach ($botUserAgentPatterns as $pattern) {
-        if (preg_match($pattern, $user_agent)) { $isBot=1; $detection_reason="Padrão de User-Agent: ".$pattern; break; }
+        if (preg_match($pattern, $user_agent)) { 
+            $isBot = 1; 
+            $detection_reason = "Padrão de User-Agent: " . $pattern; 
+            break; 
+        }
     }
 }
 
@@ -353,9 +353,10 @@ if (!$isBot) {
     }
 }
 // headers mínimos (já filtrado antes, aqui é defesa em profundidade)
-if (!$isBot && (empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) || empty($_SERVER['HTTP_ACCEPT']))) {
-    $isBot = 1; $detection_reason = "Falta de Headers (Accept-Language ou Accept)";
-}
+// DESABILITADO - causava muitos falsos positivos
+// if (!$isBot && (empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) || empty($_SERVER['HTTP_ACCEPT']))) {
+//     $isBot = 1; $detection_reason = "Falta de Headers (Accept-Language ou Accept)";
+// }
 
 $device_type = 'desktop';
 if (strpos($ua_lc, 'mobile') !== false) $device_type = 'mobile';
