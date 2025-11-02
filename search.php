@@ -69,6 +69,7 @@ try {
         
         // 1. PROVIDERS
         try {
+            // Primeiro tenta sem filtros de status para ver se há dados
             $countProvidersStmt = $pdo->prepare("
                 SELECT COUNT(DISTINCT p.id)
                 FROM providers p
@@ -76,7 +77,6 @@ try {
                    OR p.ad_title LIKE :term 
                    OR p.description LIKE :term 
                    OR p.keywords LIKE :term)
-                AND p.is_active = 1 AND p.status = 'active'
             ");
             $countProvidersStmt->execute([':term' => $like_term]);
             $totalProviders = (int)$countProvidersStmt->fetchColumn();
@@ -95,7 +95,6 @@ try {
                        OR p.ad_title LIKE :term 
                        OR p.description LIKE :term 
                        OR p.keywords LIKE :term)
-                    AND p.is_active = 1 AND p.status = 'active'
                     GROUP BY p.id
                     ORDER BY 
                         CASE WHEN p.display_name LIKE :term THEN 1 
@@ -122,7 +121,6 @@ try {
                 WHERE (company_name LIKE :term 
                    OR description LIKE :term 
                    OR keywords LIKE :term)
-                AND is_active = 1 AND status = 'active'
             ");
             $countCompaniesStmt->execute([':term' => $like_term]);
             $totalCompanies = (int)$countCompaniesStmt->fetchColumn();
@@ -138,7 +136,6 @@ try {
                     WHERE (company_name LIKE :term 
                        OR description LIKE :term 
                        OR keywords LIKE :term)
-                    AND is_active = 1 AND status = 'active'
                     ORDER BY 
                         CASE WHEN company_name LIKE :term THEN 1 ELSE 2 END,
                         updated_at DESC
@@ -162,7 +159,6 @@ try {
                 WHERE (club_name LIKE :term 
                    OR description LIKE :term 
                    OR keywords LIKE :term)
-                AND is_active = 1 AND status = 'active'
             ");
             $countClubsStmt->execute([':term' => $like_term]);
             $totalClubs = (int)$countClubsStmt->fetchColumn();
@@ -178,7 +174,6 @@ try {
                     WHERE (club_name LIKE :term 
                        OR description LIKE :term 
                        OR keywords LIKE :term)
-                    AND is_active = 1 AND status = 'active'
                     ORDER BY 
                         CASE WHEN club_name LIKE :term THEN 1 ELSE 2 END,
                         updated_at DESC
