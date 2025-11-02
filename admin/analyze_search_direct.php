@@ -124,31 +124,24 @@ try {
                 }
                 
                 if ($table === 'global_searches') {
-                    // Total por tipo
+                    // Top termos mais buscados
                     $stmt = $pdo->query("
-                        SELECT search_type, COUNT(*) as total 
+                        SELECT term, COUNT(*) as total 
                         FROM {$table} 
-                        GROUP BY search_type 
-                        ORDER BY total DESC
-                    ");
-                    echo "Total por Tipo de Busca:\n";
-                    while ($row = $stmt->fetch()) {
-                        echo "  - {$row['search_type']}: {$row['total']}\n";
-                    }
-                    
-                    // Top termos
-                    $stmt = $pdo->query("
-                        SELECT search_term, COUNT(*) as total 
-                        FROM {$table} 
-                        WHERE search_term IS NOT NULL AND search_term != ''
-                        GROUP BY search_term 
+                        WHERE term IS NOT NULL AND term != ''
+                        GROUP BY term 
                         ORDER BY total DESC 
                         LIMIT 10
                     ");
-                    echo "\nTop 10 Termos (Global):\n";
+                    echo "Top 10 Termos Mais Buscados:\n";
                     while ($row = $stmt->fetch()) {
-                        echo "  - '{$row['search_term']}': {$row['total']}\n";
+                        echo "  - '{$row['term']}': {$row['total']}\n";
                     }
+                    
+                    // Média de resultados
+                    $stmt = $pdo->query("SELECT AVG(results_count) as avg_results FROM {$table}");
+                    $avg = $stmt->fetchColumn();
+                    echo "\nMédia de Resultados por Busca: " . round($avg, 2) . "\n";
                 }
                 
                 if ($table === 'search_intents') {
