@@ -23,31 +23,11 @@ $translations = array_merge($footerTx, $translations);
 
 // Rotas do menu do footer
 $footerItems = [
-    [
-        'href' => SITE_URL . '/pages/results_providers.php',
-        'icon' => SITE_URL . '/assets/icons/icon-ads.svg',
-        'label_key' => 'footer_providers',
-    ],
-    [
-        'href' => SITE_URL . '/pages/results_clubs.php',
-        'icon' => SITE_URL . '/assets/icons/icon-clubs.svg',
-        'label_key' => 'footer_clubs',
-    ],
-    [
-        'href' => SITE_URL . '/pages/results_business.php',
-        'icon' => SITE_URL . '/assets/icons/icon-companies.svg',
-        'label_key' => 'footer_companies',
-    ],
-    [
-        'href' => SITE_URL . '/pages/results_services.php',
-        'icon' => SITE_URL . '/assets/icons/icon-services.svg',
-        'label_key' => 'footer_services',
-    ],
-    [
-        'href' => SITE_URL . '/pages/results_streets.php',
-        'icon' => SITE_URL . '/assets/icons/icon-streets.svg',
-        'label_key' => 'footer_streets',
-    ],
+    [ 'href' => SITE_URL . '/pages/results_providers.php', 'label_key' => 'footer_providers' ],
+    [ 'href' => SITE_URL . '/pages/results_clubs.php',     'label_key' => 'footer_clubs'     ],
+    [ 'href' => SITE_URL . '/pages/results_business.php',  'label_key' => 'footer_companies' ],
+    [ 'href' => SITE_URL . '/pages/results_services.php',  'label_key' => 'footer_services'  ],
+    [ 'href' => SITE_URL . '/pages/results_streets.php',   'label_key' => 'footer_streets'   ],
 ];
 ?>
 <footer>
@@ -56,7 +36,6 @@ $footerItems = [
             $label = $translations[$item['label_key']] ?? $item['label_key'];
         ?>
             <a href="<?= htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8'); ?>" class="footer-item" aria-label="<?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?>">
-                <img src="<?= htmlspecialchars($item['icon'], ENT_QUOTES, 'UTF-8'); ?>" alt="" class="footer-icon" aria-hidden="true">
                 <span class="footer-label"><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?></span>
             </a>
         <?php endforeach; ?>
