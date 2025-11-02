@@ -13,7 +13,9 @@
  */
 
 if (defined('CORE_BOOTSTRAP_LOADED')) { return; }
-define('IN_BACOSEARCH', true);
+if (!defined('IN_BACOSEARCH')) {
+    define('IN_BACOSEARCH', true);
+}
 define('CORE_BOOTSTRAP_LOADED', true);
 
 ob_start();
