@@ -242,9 +242,16 @@ try {
         $totalResults = $totalProviders + $totalCompanies + $totalClubs + $totalServices;
         
         // REGISTRA A BUSCA PARA ANALYTICS (global_searches + search_logs)
+        // Usa a função central definida em core/functions.php
+        try {
+            logGlobalSearch($pdo, (string)$term);
+        } catch (Throwable $e) {
+            // silencioso
+        }
         $visitor_id = $_SESSION['visitor_db_id'] ?? null;
-        logGlobalSearch($term, $totalResults, $pdo, $visitor_id);
-        logSearchLog($term, $totalResults, $pdo, $visitor_id);
+        if (function_exists('logSearchLog')) {
+            try { logSearchLog($term, $totalResults, $pdo, $visitor_id); } catch (Throwable $e) { /* noop */ }
+        }
     }
 } catch (Exception $e) {
     log_system_error("search.php error: " . $e->getMessage(), 'ERROR', 'search_failure');

@@ -9,6 +9,7 @@ if (!defined('IN_BACOSEARCH')) { exit; }
 /**
  * Expande um termo de busca usando sinônimos do search_intents
  */
+if (!function_exists('expandSearchTerm')) {
 function expandSearchTerm($term, $pdo) {
     $expanded = [$term];
     
@@ -46,52 +47,15 @@ function expandSearchTerm($term, $pdo) {
     
     return $expanded;
 }
-
-/**
- * Registra uma busca no global_searches
- */
-function logGlobalSearch($term, $results_count, $pdo, $visitor_id = null) {
-    try {
-        $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
-        $country_code = $_SESSION['country_code'] ?? 'unknown';
-        $language_code = $_SESSION['language'] ?? 'pt-br';
-        $lat = $_SESSION['latitude'] ?? null;
-        $lon = $_SESSION['longitude'] ?? null;
-        
-        $metadata = json_encode([
-            'user_lat' => $lat,
-            'user_lon' => $lon,
-            'country_code' => $country_code,
-            'language_code' => $language_code
-        ]);
-        
-        // Pega o próximo ID
-        $nextId = $pdo->query("SELECT IFNULL(MAX(id), 0) + 1 FROM global_searches")->fetchColumn();
-        
-        $stmt = $pdo->prepare("
-            INSERT INTO global_searches 
-            (id, term, visitor_id, ip_address, results_count, created_at, metadata)
-            VALUES (?, ?, ?, ?, ?, NOW(), ?)
-        ");
-        
-        $stmt->execute([
-            $nextId,
-            $term,
-            $visitor_id,
-            $ip,
-            $results_count,
-            $metadata
-        ]);
-        
-    } catch (Exception $e) {
-        // Silencioso - não deve quebrar a busca
-        error_log("Error logging search: " . $e->getMessage());
-    }
 }
+
+// ATENÇÃO: logGlobalSearch já existe em core/functions.php com assinatura diferente.
+// Para evitar conflitos, NÃO redefinimos aqui.
 
 /**
  * Registra uma busca no search_logs (com normalização)
  */
+if (!function_exists('logSearchLog')) {
 function logSearchLog($term, $results_count, $pdo, $visitor_id = null, $intent_category = null) {
     try {
         $normalized = strtolower(trim($term));
@@ -117,10 +81,12 @@ function logSearchLog($term, $results_count, $pdo, $visitor_id = null, $intent_c
         error_log("Error logging search_log: " . $e->getMessage());
     }
 }
+}
 
 /**
  * Constrói cláusula WHERE para busca expandida
  */
+if (!function_exists('buildExpandedSearchWhere')) {
 function buildExpandedSearchWhere($column, $terms, $param_prefix = 'term') {
     if (empty($terms)) {
         return ['1=0', []];
@@ -138,4 +104,5 @@ function buildExpandedSearchWhere($column, $terms, $param_prefix = 'term') {
     $where = '(' . implode(' OR ', $conditions) . ')';
     
     return [$where, $params];
+}
 }
