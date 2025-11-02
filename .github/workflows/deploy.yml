@@ -1,0 +1,77 @@
+name: Deploy to HostGator
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    name: Deploy to HostGator (rsync)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rsync openssh-client
+
+      - name: Create deploy test file
+        run: |
+          echo "Deploy test file - $(date '+%Y-%m-%d %H:%M:%S')" > deploy-test.txt
+          echo "Workflow run: ${{ github.run_id }}" >> deploy-test.txt
+          echo "Commit: ${{ github.sha }}" >> deploy-test.txt
+
+      - name: Prepare SSH key
+        env:
+          HOSTGATOR_SSH_KEY: ${{ secrets.HOSTGATOR_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$HOSTGATOR_SSH_KEY" > ~/.ssh/hostgator_deploy_key
+          chmod 600 ~/.ssh/hostgator_deploy_key
+          # we disable strict host key checking below so no known_hosts entry is required
+          true
+
+      - name: Rsync files to HostGator
+        env:
+          HOST: ${{ secrets.HOSTGATOR_HOST }}
+          USER: ${{ secrets.HOSTGATOR_USER }}
+          PORT: 2222
+        run: |
+          # if .deployignore exists, use it as an exclude-from file; always exclude listed dirs/files
+          RSYNC_EXCLUDE_FROM=""
+          if [ -f .deployignore ]; then
+            RSYNC_EXCLUDE_FROM="--exclude-from=.deployignore"
+          fi
+
+          rsync -az --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.vscode' \
+            --exclude='.deployignore' \
+            $RSYNC_EXCLUDE_FROM \
+            ./ "$USER@$HOST:/home4/$USER/bacosearch.com/" -e "ssh -i ~/.ssh/hostgator_deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $PORT"
+
+      - name: Fix permissions on remote
+        env:
+          HOST: ${{ secrets.HOSTGATOR_HOST }}
+          USER: ${{ secrets.HOSTGATOR_USER }}
+          PORT: 2222
+        run: |
+          ssh -i ~/.ssh/hostgator_deploy_key -p $PORT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$HOST << 'EOF'
+            cd /home4/$USER/bacosearch.com || exit 1
+            find . -type f -exec chmod 644 {} +
+            find . -type d -exec chmod 755 {} +
+            rm -f .env .env.local || true
+          EOF
+
+      - name: Verify deployment
+        env:
+          HOST: ${{ secrets.HOSTGATOR_HOST }}
+          USER: ${{ secrets.HOSTGATOR_USER }}
+          PORT: 2222
+        run: |
+          echo "Verificando arquivo de teste do deploy..."
+          ssh -i ~/.ssh/hostgator_deploy_key -p $PORT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@$HOST "cat /home4/$USER/bacosearch.com/deploy-test.txt"
