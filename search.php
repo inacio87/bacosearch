@@ -4,9 +4,23 @@
  * Busca em: Providers, Companies, Clubs, Services
  */
 
+// Debug mode temporário
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 define('IN_BACOSEARCH', true);
-require_once __DIR__ . '/core/bootstrap.php';
-require_once __DIR__ . '/core/search_expand_helpers.php';
+
+try {
+    require_once __DIR__ . '/core/bootstrap.php';
+} catch (Exception $e) {
+    die("Erro no bootstrap: " . $e->getMessage());
+}
+
+try {
+    require_once __DIR__ . '/core/search_expand_helpers.php';
+} catch (Exception $e) {
+    die("Erro ao carregar search_expand_helpers.php: " . $e->getMessage());
+}
 
 $page_name = 'search_page';
 
