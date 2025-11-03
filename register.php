@@ -30,7 +30,7 @@ $page_specific_styles = [
 $phoneCodes = [];
 try {
   $db_conn_phone = getDBConnection();
-  $stmt_phone = $db_conn_phone->query("SELECT c.name, c.calling_code, c.iso_code FROM countries c WHERE c.calling_code IS NOT NULL AND c.calling_code != '' ORDER BY c.name ASC");
+  $stmt_phone = $db_conn_phone->query("SELECT c.name, c.calling_code, c.iso_code, c.flag_url FROM countries c WHERE c.calling_code IS NOT NULL AND c.calling_code != '' ORDER BY c.name ASC");
   $raw_phone_codes = $stmt_phone->fetchAll(PDO::FETCH_ASSOC);
   foreach ($raw_phone_codes as $code_data) {
     $iso = strtolower((string)$code_data['iso_code']);
@@ -49,7 +49,7 @@ try {
 $nationalities = [];
 try {
   $db_conn_nat = getDBConnection();
-  $stmt_nat = $db_conn_nat->query("SELECT id, name AS country, iso_code FROM countries ORDER BY name ASC");
+  $stmt_nat = $db_conn_nat->query("SELECT id, name AS country, iso_code, flag_url FROM countries ORDER BY name ASC");
   $countries_for_select = $stmt_nat->fetchAll(PDO::FETCH_ASSOC);
   foreach ($countries_for_select as $country_data) {
     $iso = strtolower((string)$country_data['iso_code']);
