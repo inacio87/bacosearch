@@ -297,24 +297,14 @@ require_once TEMPLATE_PATH . 'header.php';
                     }
                   }
                   
-                  // Mapa de códigos de país para emojis de bandeira
-                  $flagEmojis = [
-                    'br' => '🇧🇷', 'pt' => '🇵🇹', 'us' => '🇺🇸', 'es' => '🇪🇸', 'fr' => '🇫🇷',
-                    'it' => '🇮🇹', 'de' => '🇩🇪', 'uk' => '🇬🇧', 'gb' => '🇬🇧', 'ar' => '🇦🇷',
-                    'mx' => '🇲🇽', 'co' => '🇨🇴', 've' => '🇻🇪', 'cl' => '🇨🇱', 'pe' => '🇵🇪',
-                    'ca' => '🇨🇦', 'au' => '🇦🇺', 'nz' => '🇳🇿', 'jp' => '🇯🇵', 'cn' => '🇨🇳',
-                    'in' => '🇮🇳', 'za' => '🇿🇦', 'ru' => '🇷🇺', 'ch' => '🇨🇭', 'at' => '🇦🇹'
-                  ];
-                  
                   foreach ($nationalities as $nationality):
                     $isSelected = ($selectedNationalityId === (int)$nationality['id']);
-                    $iso = strtolower($nationality['iso_code']);
-                    $flag = $flagEmojis[$iso] ?? '🏴';
                 ?>
                   <option value="<?= $e((string)$nationality['id']); ?>"
                           data-flag="<?= $e($nationality['flag_url']); ?>"
+                          data-iso="<?= $e($nationality['iso_code']); ?>"
                           <?= $isSelected ? 'selected' : ''; ?>>
-                    <?= $flag; ?> <?= $e((string)$nationality['country']); ?>
+                    <?= $e((string)$nationality['country']); ?>
                   </option>
                 <?php endforeach; ?>
               </select>
@@ -341,24 +331,14 @@ require_once TEMPLATE_PATH . 'header.php';
                     // Fallback para Portugal se não detectou
                     if (empty($selectedPhoneCodeValue)) { $selectedPhoneCodeValue = '+351'; }
                     
-                    // Mapa de códigos de país para emojis de bandeira
-                    $flagEmojis = [
-                      'br' => '🇧🇷', 'pt' => '🇵🇹', 'us' => '🇺🇸', 'es' => '🇪🇸', 'fr' => '🇫🇷',
-                      'it' => '🇮🇹', 'de' => '🇩🇪', 'uk' => '🇬🇧', 'gb' => '🇬🇧', 'ar' => '🇦🇷',
-                      'mx' => '🇲🇽', 'co' => '🇨🇴', 've' => '🇻🇪', 'cl' => '🇨🇱', 'pe' => '🇵🇪',
-                      'ca' => '🇨🇦', 'au' => '🇦🇺', 'nz' => '🇳🇿', 'jp' => '🇯🇵', 'cn' => '🇨🇳',
-                      'in' => '🇮🇳', 'za' => '🇿🇦', 'ru' => '🇷🇺', 'ch' => '🇨🇭', 'at' => '🇦🇹'
-                    ];
-                    
                     foreach ($phoneCodes as $code):
                       $isSelected = ($selectedPhoneCodeValue === $code['calling_code']);
-                      $iso = strtolower($code['iso_code']);
-                      $flag = $flagEmojis[$iso] ?? '🏴';
                   ?>
                     <option value="<?= $e($code['calling_code']); ?>"
                             data-flag="<?= $e($code['flag_url']); ?>"
+                            data-iso="<?= $e($code['iso_code']); ?>"
                             <?= $isSelected ? 'selected' : ''; ?>>
-                      <?= $flag; ?> <?= $e($code['calling_code']); ?>
+                      <?= $e($code['calling_code']); ?>
                     </option>
                   <?php endforeach; ?>
                 </select>
@@ -410,50 +390,140 @@ document.addEventListener('DOMContentLoaded', function() {
   const modal             = document.getElementById('registrationMessageModal');
   const modalCloseButton  = document.getElementById('modalCloseButton');
 
-  // Função para adicionar bandeira DENTRO das opções (como prefixo de texto)
-  function addFlagToOptions(selectElement) {
-    if (!selectElement) return;
+  // Função para criar select customizado com bandeiras
+  function createCustomSelect(originalSelect) {
+    if (!originalSelect) return;
     
-    const options = selectElement.querySelectorAll('option');
-    options.forEach(option => {
-      if (option.value && option.dataset.flag) {
-        const flagImg = '🏴'; // Placeholder - será substituído por background
-        const currentText = option.textContent;
-        // Adiciona classe para estilo
-        option.style.backgroundImage = 'url(' + option.dataset.flag + ')';
-        option.style.backgroundRepeat = 'no-repeat';
-        option.style.backgroundSize = '20px auto';
-        option.style.backgroundPosition = '8px center';
-        option.style.paddingLeft = '36px';
-      }
+    // Wrapper do custom select
+    const wrapper = document.createElement('div');
+    wrapper.className = 'custom-select-wrapper';
+    wrapper.style.position = 'relative';
+    wrapper.style.width = '100%';
+    
+    // Display do valor selecionado
+    const display = document.createElement('div');
+    display.className = 'custom-select-display';
+    display.style.cssText = `
+      padding: 10px 40px 10px 44px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: white;
+      cursor: pointer;
+      position: relative;
+      background-repeat: no-repeat;
+      background-position: 10px center;
+      background-size: 24px auto;
+    `;
+    
+    // Lista de opções
+    const optionsList = document.createElement('div');
+    optionsList.className = 'custom-select-options';
+    optionsList.style.cssText = `
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      max-height: 250px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    
+    // Popula as opções
+    Array.from(originalSelect.options).forEach((option, index) => {
+      if (!option.value) return; // Pula opção vazia
+      
+      const optionDiv = document.createElement('div');
+      optionDiv.className = 'custom-option';
+      optionDiv.dataset.value = option.value;
+      optionDiv.dataset.flag = option.dataset.flag || '';
+      optionDiv.dataset.iso = option.dataset.iso || '';
+      
+      const flagUrl = option.dataset.flag;
+      const text = option.textContent;
+      
+      optionDiv.style.cssText = `
+        padding: 10px 10px 10px 44px;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-position: 10px center;
+        background-size: 24px auto;
+        ${flagUrl ? `background-image: url('${flagUrl}');` : ''}
+      `;
+      optionDiv.textContent = text;
+      
+      // Hover effect
+      optionDiv.addEventListener('mouseenter', function() {
+        this.style.backgroundColor = '#f0f0f0';
+      });
+      optionDiv.addEventListener('mouseleave', function() {
+        this.style.backgroundColor = 'white';
+      });
+      
+      // Click para selecionar
+      optionDiv.addEventListener('click', function() {
+        // Atualiza o select original
+        originalSelect.selectedIndex = index;
+        originalSelect.dispatchEvent(new Event('change'));
+        
+        // Atualiza o display
+        updateDisplay();
+        
+        // Fecha a lista
+        optionsList.style.display = 'none';
+      });
+      
+      optionsList.appendChild(optionDiv);
     });
-  }
-
-  function updateFlag(selectElement) {
-    if (!selectElement) return;
-    const opt = selectElement.options[selectElement.selectedIndex];
-    const flagUrl = opt && opt.dataset ? opt.dataset.flag : '';
-    if (flagUrl) {
-      selectElement.style.backgroundImage    = 'url(' + flagUrl + ')';
-      selectElement.style.backgroundRepeat   = 'no-repeat';
-      selectElement.style.backgroundSize     = '24px auto';
-      selectElement.style.backgroundPosition = '10px center';
-      selectElement.style.paddingLeft        = '44px';
-    } else {
-      selectElement.style.backgroundImage = 'none';
-      selectElement.style.paddingLeft     = '14px';
+    
+    // Função para atualizar o display
+    function updateDisplay() {
+      const selectedOption = originalSelect.options[originalSelect.selectedIndex];
+      if (selectedOption && selectedOption.value) {
+        display.textContent = selectedOption.textContent;
+        const flagUrl = selectedOption.dataset.flag;
+        if (flagUrl) {
+          display.style.backgroundImage = `url('${flagUrl}')`;
+        } else {
+          display.style.backgroundImage = 'none';
+        }
+      }
     }
+    
+    // Toggle da lista
+    display.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isVisible = optionsList.style.display === 'block';
+      optionsList.style.display = isVisible ? 'none' : 'block';
+    });
+    
+    // Fecha ao clicar fora
+    document.addEventListener('click', function() {
+      optionsList.style.display = 'none';
+    });
+    
+    // Monta o custom select
+    wrapper.appendChild(display);
+    wrapper.appendChild(optionsList);
+    
+    // Esconde o select original e adiciona o custom
+    originalSelect.style.display = 'none';
+    originalSelect.parentNode.insertBefore(wrapper, originalSelect);
+    
+    // Inicializa o display
+    updateDisplay();
   }
 
+  // Aplica custom select
   if (phoneCodeSelect) {
-    addFlagToOptions(phoneCodeSelect);
-    updateFlag(phoneCodeSelect);
-    phoneCodeSelect.addEventListener('change', function(){ updateFlag(phoneCodeSelect); });
+    createCustomSelect(phoneCodeSelect);
   }
   if (nationalitySelect) {
-    addFlagToOptions(nationalitySelect);
-    updateFlag(nationalitySelect);
-    nationalitySelect.addEventListener('change', function(){ updateFlag(nationalitySelect); });
+    createCustomSelect(nationalitySelect);
   }
 
   if (modal && modalCloseButton) {
