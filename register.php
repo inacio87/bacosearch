@@ -296,13 +296,25 @@ require_once TEMPLATE_PATH . 'header.php';
                       log_system_error("Register Page: Erro ao buscar ID da nacionalidade da sessão: " . $e_sel->getMessage(), 'notice', 'register_session_nationality_id');
                     }
                   }
+                  
+                  // Mapa de códigos de país para emojis de bandeira
+                  $flagEmojis = [
+                    'br' => '🇧🇷', 'pt' => '🇵🇹', 'us' => '🇺🇸', 'es' => '🇪🇸', 'fr' => '🇫🇷',
+                    'it' => '🇮🇹', 'de' => '🇩🇪', 'uk' => '🇬🇧', 'gb' => '🇬🇧', 'ar' => '🇦🇷',
+                    'mx' => '🇲🇽', 'co' => '🇨🇴', 've' => '🇻🇪', 'cl' => '🇨🇱', 'pe' => '🇵🇪',
+                    'ca' => '🇨🇦', 'au' => '🇦🇺', 'nz' => '🇳🇿', 'jp' => '🇯🇵', 'cn' => '🇨🇳',
+                    'in' => '🇮🇳', 'za' => '🇿🇦', 'ru' => '🇷🇺', 'ch' => '🇨🇭', 'at' => '🇦🇹'
+                  ];
+                  
                   foreach ($nationalities as $nationality):
                     $isSelected = ($selectedNationalityId === (int)$nationality['id']);
+                    $iso = strtolower($nationality['iso_code']);
+                    $flag = $flagEmojis[$iso] ?? '🏴';
                 ?>
                   <option value="<?= $e((string)$nationality['id']); ?>"
                           data-flag="<?= $e($nationality['flag_url']); ?>"
                           <?= $isSelected ? 'selected' : ''; ?>>
-                    <?= $e((string)$nationality['country']); ?>
+                    <?= $flag; ?> <?= $e((string)$nationality['country']); ?>
                   </option>
                 <?php endforeach; ?>
               </select>
@@ -329,13 +341,24 @@ require_once TEMPLATE_PATH . 'header.php';
                     // Fallback para Portugal se não detectou
                     if (empty($selectedPhoneCodeValue)) { $selectedPhoneCodeValue = '+351'; }
                     
+                    // Mapa de códigos de país para emojis de bandeira
+                    $flagEmojis = [
+                      'br' => '🇧🇷', 'pt' => '🇵🇹', 'us' => '🇺🇸', 'es' => '🇪🇸', 'fr' => '🇫🇷',
+                      'it' => '🇮🇹', 'de' => '🇩🇪', 'uk' => '🇬🇧', 'gb' => '🇬🇧', 'ar' => '🇦🇷',
+                      'mx' => '🇲🇽', 'co' => '🇨🇴', 've' => '🇻🇪', 'cl' => '🇨🇱', 'pe' => '🇵🇪',
+                      'ca' => '🇨🇦', 'au' => '🇦🇺', 'nz' => '🇳🇿', 'jp' => '🇯🇵', 'cn' => '🇨🇳',
+                      'in' => '🇮🇳', 'za' => '🇿🇦', 'ru' => '🇷🇺', 'ch' => '🇨🇭', 'at' => '🇦🇹'
+                    ];
+                    
                     foreach ($phoneCodes as $code):
                       $isSelected = ($selectedPhoneCodeValue === $code['calling_code']);
+                      $iso = strtolower($code['iso_code']);
+                      $flag = $flagEmojis[$iso] ?? '🏴';
                   ?>
                     <option value="<?= $e($code['calling_code']); ?>"
                             data-flag="<?= $e($code['flag_url']); ?>"
                             <?= $isSelected ? 'selected' : ''; ?>>
-                      <?= $e($code['calling_code']); ?>
+                      <?= $flag; ?> <?= $e($code['calling_code']); ?>
                     </option>
                   <?php endforeach; ?>
                 </select>
