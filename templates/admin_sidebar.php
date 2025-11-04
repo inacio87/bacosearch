@@ -72,6 +72,12 @@ $ariaCurrent = static function (bool $active): string {
       <span class="nav-text"><?php echo $e(getTranslation('footer_companies', $languageCode, 'footer')); ?></span>
     </a>
 
+    <a href="<?php echo $e(SITE_URL); ?>/admin/dashboard.php?module=clubs"
+       class="<?php echo $e($activeClass($isActive('clubs'))); ?>"<?php echo $ariaCurrent($isActive('clubs')); ?>>
+      <i class="fas fa-glass-cheers" aria-hidden="true"></i>
+      <span class="nav-text"><?php echo $e(getTranslation('footer_clubs', $languageCode, 'footer')); ?></span>
+    </a>
+
     <a href="<?php echo $e(SITE_URL); ?>/admin/dashboard.php?module=ads_management"
        class="<?php echo $e($activeClass($isActive('ads_management'))); ?>"<?php echo $ariaCurrent($isActive('ads_management')); ?>>
       <i class="fas fa-ad" aria-hidden="true"></i>
@@ -82,6 +88,12 @@ $ariaCurrent = static function (bool $active): string {
        class="<?php echo $e($activeClass($isActive('services'))); ?>"<?php echo $ariaCurrent($isActive('services')); ?>>
       <i class="fas fa-concierge-bell" aria-hidden="true"></i>
       <span class="nav-text"><?php echo $e(getTranslation('footer_services', $languageCode, 'footer')); ?></span>
+    </a>
+
+    <a href="<?php echo $e(SITE_URL); ?>/admin/dashboard.php?module=streets"
+       class="<?php echo $e($activeClass($isActive('streets'))); ?>"<?php echo $ariaCurrent($isActive('streets')); ?>>
+      <i class="fas fa-road" aria-hidden="true"></i>
+      <span class="nav-text"><?php echo $e(getTranslation('footer_streets', $languageCode, 'footer')); ?></span>
     </a>
 
     <a href="<?php echo $e(SITE_URL); ?>/admin/dashboard.php?module=translations"

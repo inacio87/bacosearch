@@ -248,6 +248,11 @@ function send_email(
 // ---------------------------------------------------------------------
 function getTranslation(string $key, string $languageCode = 'en-us', string $context = 'default'): string {
     global $translationsCache;
+
+    // Normaliza entradas
+    $languageCode = strtolower(trim($languageCode));
+    $context      = strtolower(trim($context));
+
     $cacheKey = "t|$languageCode|$context|$key";
 
     // APCu (se disponível)
@@ -259,21 +264,49 @@ function getTranslation(string $key, string $languageCode = 'en-us', string $con
         return $translationsCache[$cacheKey];
     }
 
-    $value = $key; // fallback
+    $value = $key; // fallback padrão: retorna a própria chave
+
     try {
         $db = getDBConnection();
+
+        // Constrói lista de idiomas candidatos (ex.: 'pt-br' -> ['pt-br','pt',fallback])
+        $fallbackDefault = strtolower(LANGUAGE_CONFIG['default'] ?? 'en-us');
+        $languagesToTry = [];
+        $languagesToTry[] = $languageCode;
+        if (strpos($languageCode, '-') !== false) {
+            $baseLang = substr($languageCode, 0, strpos($languageCode, '-'));
+            if ($baseLang && !in_array($baseLang, $languagesToTry, true)) {
+                $languagesToTry[] = $baseLang;
+            }
+        }
+        if (!in_array($fallbackDefault, $languagesToTry, true)) {
+            $languagesToTry[] = $fallbackDefault;
+        }
+        if (strpos($fallbackDefault, '-') !== false) {
+            $baseFallback = substr($fallbackDefault, 0, strpos($fallbackDefault, '-'));
+            if ($baseFallback && !in_array($baseFallback, $languagesToTry, true)) {
+                $languagesToTry[] = $baseFallback;
+            }
+        }
+
+        // Constrói lista de contextos candidatos (permite migrações entre nomes)
+        $contextsToTry = array_values(array_unique([
+            $context,
+            'email_templates',
+            'emails',
+            'ui_messages',
+            'global',
+            'default'
+        ]));
+
         $stmt = $db->prepare("SELECT translation_value FROM translations WHERE translation_key = :k AND language_code = :l AND context = :c LIMIT 1");
-        $stmt->execute([':k' => $key, ':l' => $languageCode, ':c' => $context]);
-        $res = $stmt->fetchColumn();
-        if ($res !== false) {
-            $value = $res;
-        } else {
-            $fallback = LANGUAGE_CONFIG['default'] ?? 'en-us';
-            if ($languageCode !== $fallback) {
-                $stmt->execute([':k' => $key, ':l' => $fallback, ':c' => $context]);
-                $res2 = $stmt->fetchColumn();
-                if ($res2 !== false) {
-                    $value = $res2;
+        foreach ($languagesToTry as $lang) {
+            foreach ($contextsToTry as $ctx) {
+                $stmt->execute([':k' => $key, ':l' => $lang, ':c' => $ctx]);
+                $res = $stmt->fetchColumn();
+                if ($res !== false && $res !== null && $res !== '') {
+                    $value = $res;
+                    break 2; // encontrou
                 }
             }
         }

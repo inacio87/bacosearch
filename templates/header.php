@@ -48,13 +48,25 @@ $dashboard_url = isset($_SESSION['admin_id'])
 $use_precise_location_title = getTranslation('use_precise_location', $languageCode, 'ui_messages') ?? 'use_precise_location';
 ?>
 <header class="site-header">
-    <div class="header-left">
-        <?php if ($is_logged_in): ?>
-            <a href="<?= htmlspecialchars($dashboard_url, ENT_QUOTES, 'UTF-8'); ?>" class="header-button">
-                <?= htmlspecialchars($translations['header_dashboard'], ENT_QUOTES, 'UTF-8'); ?>
+    <div class="header-left" style="display:flex;align-items:center;gap:10px;">
+        <!-- Botão Favoritos (coração) -->
+        <a href="<?= htmlspecialchars(SITE_URL . '/pages/favorites.php', ENT_QUOTES, 'UTF-8'); ?>"
+           class="header-button"
+           title="<?= htmlspecialchars(getTranslation('header_favorites', $languageCode, 'header') ?? 'Favoritos', ENT_QUOTES, 'UTF-8'); ?>">
+            <i class="fas fa-heart" aria-hidden="true"></i>
+        </a>
+
+        <span style="opacity:.5;">|</span>
+
+        <!-- Botão Dashboard (apenas logado) ou Anunciar (visitante) -->
+        <?php if ($is_logged_in && !empty($dashboard_url)): ?>
+            <a href="<?= htmlspecialchars($dashboard_url, ENT_QUOTES, 'UTF-8'); ?>" class="header-button"
+               title="<?= htmlspecialchars($translations['header_dashboard'], ENT_QUOTES, 'UTF-8'); ?>">
+                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
             </a>
         <?php else: ?>
-            <a href="<?= htmlspecialchars(SITE_URL . '/register.php', ENT_QUOTES, 'UTF-8'); ?>" class="header-button">
+            <a href="<?= htmlspecialchars(SITE_URL . '/register.php', ENT_QUOTES, 'UTF-8'); ?>" class="header-button"
+               title="<?= htmlspecialchars($translations['header_ads'], ENT_QUOTES, 'UTF-8'); ?>">
                 <?= htmlspecialchars($translations['header_ads'], ENT_QUOTES, 'UTF-8'); ?>
             </a>
         <?php endif; ?>

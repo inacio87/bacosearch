@@ -18,10 +18,23 @@ if (basename($_SERVER['SCRIPT_FILENAME']) === 'config.php') {
 }
 
 // Carrega variáveis de ambiente do arquivo .env.
-$envFile = dirname(__DIR__, 2) . '/.env';
+// Detecta o arquivo .env em locais comuns do projeto
+$envSearchPaths = [
+    dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . '.env', // raiz do projeto (padrão)
+    dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env',    // dentro de bacosearch.com
+    __DIR__ . DIRECTORY_SEPARATOR . '.env',             // dentro de core (fallback)
+];
+$envFile = null;
+foreach ($envSearchPaths as $candidate) {
+    if (file_exists($candidate)) {
+        $envFile = $candidate;
+        break;
+    }
+}
+
 $envVars = [];
 
-if (file_exists($envFile)) {
+if ($envFile !== null) {
     $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
         if (strpos(trim($line), '#') === 0 || trim($line) === '') {
@@ -33,15 +46,40 @@ if (file_exists($envFile)) {
         }
     }
 } else {
-    // Log para um arquivo temporário se LOG_PATH ainda não estiver definido
-    error_log("CRÍTICO: Arquivo de ambiente não encontrado no caminho: $envFile.", 3, '/tmp/error.log');
+    // Log para um arquivo temporário multiplataforma se .env não for encontrado
+    $tmpLog = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'bacosearch.error.log';
+    error_log("CRÍTICO: Arquivo de ambiente .env não encontrado em nenhum dos caminhos configurados.", 3, $tmpLog);
     http_response_code(500);
     exit('Ocorreu um erro crítico na inicialização do aplicativo.');
 }
 
 // Define o LOG_PATH antecipadamente para registro de erros.
 // Depende de $envVars, então esta linha deve vir após o carregamento do .env
-define('LOG_PATH', $envVars['LOG_PATH'] ?? '/tmp/error.log');
+// Requisito: centralizar todos os erros em logs/errors_log (exatamente este nome)
+$__envLog = $envVars['LOG_PATH'] ?? '';
+$__rootLogsDir = rtrim($envVars['ROOT_PATH'] ?? (dirname(__DIR__) . DIRECTORY_SEPARATOR), '/\\') . DIRECTORY_SEPARATOR . 'logs';
+
+// Caminho padrão exigido: logs/errors_log
+$__requiredLogFile = 'errors_log';
+$__fallbackLog = $__rootLogsDir . DIRECTORY_SEPARATOR . $__requiredLogFile;
+
+// Se LOG_PATH vier do .env, respeita; senão usa o fallback obrigatório
+$__logPathCandidate = trim($__envLog) !== '' ? $__envLog : $__fallbackLog;
+$__logDir = dirname($__logPathCandidate);
+if (!is_dir($__logDir)) {
+    @mkdir($__logDir, 0777, true);
+}
+// Garante criação dos arquivos de log comuns e o exigido (compat inclui os antigos)
+@touch($__logDir . DIRECTORY_SEPARATOR . 'errors_log');
+@touch($__logDir . DIRECTORY_SEPARATOR . 'error.log');
+@touch($__logDir . DIRECTORY_SEPARATOR . 'erros.log');
+
+if (!is_dir($__logDir) || !is_writable($__logDir)) {
+    $__logPathCandidate = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'bacosearch.error.log';
+}
+if (!defined('LOG_PATH')) {
+    define('LOG_PATH', $__logPathCandidate);
+}
 
 /**
  * Obtém o valor de uma variável de ambiente.

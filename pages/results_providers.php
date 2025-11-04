@@ -1,7 +1,7 @@
 <?php
 /**
- * /pages/results_providers.php - VERSÃO FINAL E TOTALMENTE COMPATÍVEL
- */
+ * /pages/results_providers.php - VERSÃO FINAL E TOTALMENTE COMPATÍVEL
+ */
 
 // AJUSTADO: Removido declare(strict_types=1); para compatibilidade
 require_once dirname(__DIR__) . '/core/bootstrap.php';
@@ -10,44 +10,44 @@ $page_name = 'results_providers_page';
 
 /* ===================== Helpers locais ===================== */
 function bs_get_available_services($pdo) {
-    try {
-        $stmt = $pdo->query("SHOW TABLES LIKE 'providers_services_list'");
-        if (!$stmt || !$stmt->fetchColumn()) {
-            return [];
-        }
-        $colsStmt = $pdo->query("SHOW COLUMNS FROM providers_services_list");
-        $cols = $colsStmt ? $colsStmt->fetchAll(PDO::FETCH_COLUMN, 0) : [];
-        if (empty($cols)) return [];
+    try {
+        $stmt = $pdo->query("SHOW TABLES LIKE 'providers_services_list'");
+        if (!$stmt || !$stmt->fetchColumn()) {
+            return [];
+        }
+        $colsStmt = $pdo->query("SHOW COLUMNS FROM providers_services_list");
+        $cols = $colsStmt ? $colsStmt->fetchAll(PDO::FETCH_COLUMN, 0) : [];
+        if (empty($cols)) return [];
 
-        $keyCandidates  = ['service_key','key','slug','code','id'];
-        $nameCandidates = ['term','name','label','title','display_name'];
+        $keyCandidates = ['service_key','key','slug','code','id'];
+        $nameCandidates = ['term','name','label','title','display_name'];
 
-        $keyCol = null;
-        foreach ($keyCandidates as $c) { if (in_array($c, $cols, true)) { $keyCol = $c; break; } }
-        if ($keyCol === null) { $keyCol = $cols[0]; }
+        $keyCol = null;
+        foreach ($keyCandidates as $c) { if (in_array($c, $cols, true)) { $keyCol = $c; break; } }
+        if ($keyCol === null) { $keyCol = $cols[0]; }
 
-        $nameCol = null;
-        foreach ($nameCandidates as $c) { if (in_array($c, $cols, true)) { $nameCol = $c; break; } }
-        if ($nameCol === null) { $nameCol = isset($cols[1]) ? $cols[1] : $cols[0]; }
+        $nameCol = null;
+        foreach ($nameCandidates as $c) { if (in_array($c, $cols, true)) { $nameCol = $c; break; } }
+        if ($nameCol === null) { $nameCol = isset($cols[1]) ? $cols[1] : $cols[0]; }
 
-        $sql = "SELECT {$keyCol} AS sk, {$nameCol} AS nm FROM providers_services_list";
-        $list = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT {$keyCol} AS sk, {$nameCol} AS nm FROM providers_services_list";
+        $list = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         $list = $list ?: [];
 
-        $out = [];
-        foreach ($list as $row) {
-            $sk = isset($row['sk']) ? (string)$row['sk'] : '';
-            $nm = isset($row['nm']) ? (string)$row['nm'] : '';
-            if ($sk === '' && $nm === '') continue;
-            $out[] = [
-                'service_key' => $sk !== '' ? $sk : $nm,
-                'term'        => $nm !== '' ? $nm : $sk,
-            ];
-        }
-        return $out;
-    } catch (Exception $e) { // AJUSTADO: Throwable para Exception
-        return [];
-    }
+        $out = [];
+        foreach ($list as $row) {
+            $sk = isset($row['sk']) ? (string)$row['sk'] : '';
+            $nm = isset($row['nm']) ? (string)$row['nm'] : '';
+            if ($sk === '' && $nm === '') continue;
+            $out[] = [
+                'service_key' => $sk !== '' ? $sk : $nm,
+                'term'        => $nm !== '' ? $nm : $sk,
+            ];
+        }
+        return $out;
+    } catch (Exception $e) { // AJUSTADO: Throwable para Exception
+        return [];
+    }
 }
 
 /* ===================== CSS/JS específicos ===================== */

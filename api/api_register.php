@@ -96,7 +96,8 @@ if (!empty($accountTypeSubmitted)) {
     $mapFormToDbSlug = [
         'provider'  => 'providers',
         'services'  => 'services',
-        'companies' => 'businesses'
+        'companies' => 'businesses',
+        'clubs'     => 'clubs'
     ];
     $targetSlug = $mapFormToDbSlug[$accountTypeSubmitted] ?? null;
     if ($targetSlug) {

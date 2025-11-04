@@ -51,6 +51,8 @@ try {
         $provider_id = (int) ($_POST['provider_id'] ?? 0);
 
         if ($action === 'approve' && $provider_id) {
+            // ✅ ÚNICO LUGAR onde um provider pode ser ativado
+            // Política: Todos os providers (Free e Premium) precisam aprovação manual
             // Ao aprovar, define o status como 'active' e is_active como 1
             $stmt = $pdo->prepare("UPDATE providers SET status = 'active', is_active = 1, updated_at = NOW() WHERE id = ?");
             $stmt->execute([$provider_id]);

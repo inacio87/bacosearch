@@ -355,6 +355,7 @@ require_once TEMPLATE_PATH . 'header.php';
                 <option value="provider"  <?= (($form_data['account_type'] ?? '') === 'provider')  ? 'selected' : ''; ?>><?= $e($translations['account_type_provider']  ?? 'account_type_provider'); ?></option>
                 <option value="services"  <?= (($form_data['account_type'] ?? '') === 'services')  ? 'selected' : ''; ?>><?= $e($translations['account_type_services']  ?? 'account_type_services'); ?></option>
                 <option value="companies" <?= (($form_data['account_type'] ?? '') === 'companies') ? 'selected' : ''; ?>><?= $e($translations['account_type_companies'] ?? 'account_type_companies'); ?></option>
+                <option value="clubs"     <?= (($form_data['account_type'] ?? '') === 'clubs')     ? 'selected' : ''; ?>><?= $e(getTranslation('account_type_clubs', $languageCode, 'register_page')); ?></option>
               </select>
             </div>
 

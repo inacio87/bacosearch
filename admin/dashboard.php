@@ -78,7 +78,7 @@ if (isset($_SESSION['admin_id'])) {
     }
 }
 
-$allowed_modules = ['stats', 'users', 'providers', 'businesses', 'ads_management', 'translations', 'system_logs', 'top_lists', 'user_details', 'services', 'create_admin'];
+$allowed_modules = ['stats', 'users', 'providers', 'businesses', 'ads_management', 'translations', 'system_logs', 'top_lists', 'user_details', 'services', 'create_admin', 'clubs', 'streets'];
 $module_name = isset($_GET['module']) ? filter_input(INPUT_GET, 'module', FILTER_DEFAULT) : 'stats';
 if (!in_array($module_name, $allowed_modules)) {
     $module_name = 'stats';

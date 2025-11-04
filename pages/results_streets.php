@@ -1,137 +1,118 @@
 <?php
 /**
- * /pages/results_streets.php - VERSÃO FINAL COM ARQUITETURA CORRIGIDA E NAVEGAÇÃO HIERÁRQUICA
- *
- * RESPONSABILIDADES:
- * 1. Ponto de entrada para a página "Resultados para Ruas".
- * 2. Carrega o sistema de bootstrap central.
- * 3. Define o CSS e JS específicos para esta página.
- * 4. Prepara dados de localização e traduções para o JavaScript.
- * 5. Renderiza a estrutura HTML com breadcrumb hierárquico e filtros dinâmicos.
- * 6. Implementa sistema de fallback de anúncios por localização.
- * 7. Adiciona funcionalidade de navegação planetária (Terra/Marte).
- * 8. Persiste o estado dos filtros na URL.
- *
- * ÚLTIMA ATUALIZAÇÃO: 06/08/2025 - Alinhamento com results_providers.php e correção da persistência do idioma.
+ * /pages/results_streets.php - Lista de Ruas (padrão BacoSearch)
+ * ÚLTIMA ATUALIZAÇÃO: 03/11/2025
  */
 
-// PASSO 1: INICIALIZAÇÃO CENTRAL
 require_once dirname(__DIR__) . '/core/bootstrap.php';
-
-// Inclui as funções adicionais
-require_once dirname(__DIR__) . '/api/additional_functions.php';
 
 $page_name = 'results_streets_page';
 
-// Define os estilos e scripts específicos para esta página.
-$page_specific_styles = [
-    SITE_URL . '/assets/css/search-streets.css' // Use search-providers.css se não houver específico
-];
+/* ===================== CSS/JS específicos ===================== */
+$page_specific_styles = [SITE_URL . '/assets/css/search-providers.css'];
+$page_specific_scripts = [['src' => SITE_URL . '/assets/js/streets.js', 'attrs' => ['defer' => true]]];
 
-$page_specific_scripts = [
-    ['src' => SITE_URL . '/assets/js/location-navigator.js', 'attrs' => ['defer']]
-];
-
-// PASSO 2: PREPARAÇÃO DE DADOS E TRADUÇÕES
-// CORREÇÃO: Garante que o idioma da sessão é o primeiro a ser considerado.
-$languageCode = $_SESSION['language'] ?? (LANGUAGE_CONFIG['default'] ?? 'pt-pt');
-
+/* ===================== Idioma + traduções ===================== */
+$language_code = $_SESSION['language'] ?? (LANGUAGE_CONFIG['default'] ?? 'en-us');
 $translationContext = 'results_streets';
 
 $translations = [];
 $keys_to_translate = [
-    'results_streets_title', 'results_streets_meta_description', 'results_streets_last_updated',
-    'results_intro_p1', 'results_section1_title', 'results_section1_text',
-    'filter_category_red_zone', 'filter_category_street_points', 'filter_category_hot_points', 'filter_category_night_circuit', 'filter_category_adult_route',
-    'filter_advanced_title', 'filter_price', 'filter_distance', 'filter_apply', 'filter_advanced',
-    'no_profiles_found', 'label_accept_terms', 'link_terms_of_service', 'link_privacy_policy',
-    'header_ads', 'header_login', 'logo_alt', 'header_menu', 'about_us',
-    'terms_of_service', 'privacy_policy', 'cookie_policy', 'contact_us',
-    'footer_providers', 'footer_companies', 'footer_services', 'footer_clubs', 'footer_streets',
-    'detecting_location', 'header_licenses',
-    // Novas chaves para o breadcrumb e indicador de nível de anúncios
-    'ad_level_city', 'ad_level_region', 'ad_level_country', 'ad_level_global',
-    'breadcrumb_planet', 'modal_select_country', 'modal_select_region', 'modal_select_city',
-    'km_from_you', 'price_not_informed', 'years_old',
-    'modal_select_planet', 'planet_earth', 'planet_earth_desc', 'planet_mars', 'planet_mars_desc',
-    'planet_mars_message_1', 'planet_mars_message_2', 'planet_mars_message_3',
-    'advertisers_label', 'cities_label'
+    'results_streets_title','results_streets_meta_description','no_profiles_found','km_from_you','price_not_informed','years_old',
+    'modal_select_planet','planet_earth','planet_earth_desc','planet_mars','planet_mars_desc',
+    'planet_mars_message_1','planet_mars_message_2','planet_mars_message_3','mars_no_streets',
+    'modal_select_country','modal_select_region','modal_select_city',
+    'filter_advanced_title','filter_apply',
+    'filter_price','filter_distance','filter_advanced',
+    'filter_category_liberal','filter_category_sensual_bar','filter_category_striptease','filter_category_erotic_discoteca','filter_category_sensual_spa','filter_category_events',
+    'ad_level_city','ad_level_region','ad_level_country','ad_level_global',
+    'header_ads','header_login','logo_alt','header_menu','about_us',
+    'terms_of_service','privacy_policy','cookie_policy','contact_us',
+    'footer_providers','footer_companies','footer_services','footer_streets',
+    'detecting_location','header_licenses',
+    'breadcrumb.earth','breadcrumb.more',
 ];
 
 foreach ($keys_to_translate as $key) {
-    $context = $translationContext;
-    if (str_starts_with($key, 'header_') || in_array($key, ['logo_alt', 'about_us', 'terms_of_service', 'privacy_policy', 'cookie_policy', 'contact_us', 'detecting_location'])) {
-        $context = 'header';
-    } elseif (str_starts_with($key, 'footer_')) {
-        $context = 'footer';
+    $ctx = $translationContext;
+    if (strpos($key, 'header_') === 0 || in_array($key, ['logo_alt','about_us','terms_of_service','privacy_policy','cookie_policy','contact_us','detecting_location'], true)) {
+        $ctx = 'header';
+    } elseif (strpos($key, 'footer_') === 0) {
+        $ctx = 'footer';
+    } elseif (strpos($key, 'breadcrumb.') === 0) {
+        $ctx = 'breadcrumb';
     }
-    $translations[$key] = getTranslation($key, $languageCode, $context);
+    $translations[$key] = getTranslation($key, $language_code, $ctx);
 }
 
-// Dados do visitor da tabela 'visitors'
-$visitor_id = $_SESSION['visitor_db_id'] ?? null;
-$location_data = [
-    'lat' => $_SESSION['latitude'] ?? null,
-    'lon' => $_SESSION['longitude'] ?? null,
-    'city' => $_SESSION['city'] ?? null,
-    'region' => $_SESSION['region'] ?? null,
-    'country_code' => $_SESSION['country_code'] ?? null,
-    'country_name' => null
+$langNameMap = LANGUAGE_CONFIG['name_map'] ?? [];
+$currentLangName = $langNameMap[$language_code] ?? getTranslation('language_label', $language_code, 'default');
+$translations['languageOptionsForDisplay'] = $langNameMap;
+$translations['current_language_display_name'] = $currentLangName;
+
+/* ===================== META ===================== */
+$page_title = $translations['results_streets_title'] ?: 'results_streets_title';
+$meta_description = $translations['results_streets_meta_description'] ?: (SEO_CONFIG['meta_description'] ?? '');
+$meta_keywords = SEO_CONFIG['meta_keywords'] ?? '';
+$meta_author = SEO_CONFIG['meta_author'] ?? 'BacoSearch';
+
+/* ===================== Local inicial (sessão) ===================== */
+$planet = 'earth';
+$countryCode = $_SESSION['country_code'] ?? $_SESSION['country_iso'] ?? $_SESSION['location_country'] ?? '';
+$regionName  = $_SESSION['region'] ?? $_SESSION['region_name'] ?? '';
+$cityName    = $_SESSION['city'] ?? $_SESSION['city_name'] ?? '';
+
+$countryName = null;
+if (!empty($countryCode)) {
+    try {
+        $st = getDBConnection()->prepare("SELECT name FROM countries WHERE iso_code = ? LIMIT 1");
+        $st->execute([$countryCode]);
+        $countryNameFetched = $st->fetchColumn();
+        $countryName = $countryNameFetched ?: null;
+    } catch (Exception $e) { /* silencioso */ }
+}
+
+/* ===================== Filtros iniciais (GET) ===================== */
+$initial_filters = [
+    'category'  => $_GET['category'] ?? 'liberal',
+    'price_max' => $_GET['price_max'] ?? null,
+    'distance'  => $_GET['distance'] ?? null,
+    'keywords'  => $_GET['keywords'] ?? '',
 ];
 
-// Lógica para inicializar a localização a partir da URL
-if (isset($_GET['country_code'])) {
-    $location_data['country_code'] = htmlspecialchars($_GET['country_code']);
-    $location_data['region'] = isset($_GET['region']) ? htmlspecialchars($_GET['region']) : null;
-    $location_data['city'] = isset($_GET['city']) ? htmlspecialchars($_GET['city']) : null;
-}
-
-if (!empty($location_data['country_code'])) {
-    $pdo = getDBConnection();
-    $stmt = $pdo->prepare("SELECT name FROM countries WHERE iso_code = ? LIMIT 1");
-    $stmt->execute([$location_data['country_code']]);
-    $country_name = $stmt->fetchColumn();
-    if ($country_name) {
-        $location_data['country_name'] = $country_name;
-    }
-}
-
-// Lógica para inicializar os filtros a partir da URL
-$initialFilters = [
-    'category' => htmlspecialchars($_GET['category'] ?? 'red_zone'),
-    'price_max' => htmlspecialchars($_GET['price_max'] ?? 3000),
-    'distance' => htmlspecialchars($_GET['distance'] ?? 100)
+/* ===================== Dados iniciais p/ JS ===================== */
+$initial_location = [
+    'planet'       => $planet,
+    'country_code' => $countryCode,
+    'country_name' => $countryName,
+    'region'       => $regionName,
+    'city'         => $cityName,
 ];
+$initial_street_data = [ 'streets' => [], 'level' => 'global' ];
+$adData = [ 'global' => [] ];
 
-$page_title = $translations['results_streets_title'] ?? 'Buscar Ruas';
-$meta_description = $translations['results_streets_meta_description'] ?? 'Encontre as melhores ruas na sua área.';
-
-$translations['languageOptionsForDisplay'] = LANGUAGE_CONFIG['name_map'] ?? [];
-$translations['current_language_display_name'] = $translations['languageOptionsForDisplay'][$languageCode] ?? 'Language';
-
-// PASSO 3: LÓGICA DE FALLBACK DE ANÚNCIOS e RUAS
-$street_data = findStreetsWithFallback($location_data, $initialFilters);
-$ad_data = getAdvertisements($location_data);
-
-// PASSO 4: RENDERIZAÇÃO DA PÁGINA
+/* ===================== Render ===================== */
 require_once TEMPLATE_PATH . 'head.php';
 require_once TEMPLATE_PATH . 'header.php';
+
+$e = function($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); };
 ?>
 <main class="search-main global-content-wrapper">
     <div class="breadcrumb-trail" id="location-breadcrumb">
     </div>
     <div class="ad-level-indicator">
         <small>
-            <?php
-            switch($ad_data['level']) {
+            <?php 
+            $level_to_show = $adData['level'] ?? 'global';
+            switch($level_to_show) {
                 case 'city':
-                    echo str_replace('{city}', htmlspecialchars($location_data['city']), $translations['ad_level_city'] ?? 'Anúncios da cidade de {city}');
+                    echo str_replace('{city}', htmlspecialchars($initial_location['city'] ?? ''), $translations['ad_level_city'] ?? 'Anúncios da cidade de {city}');
                     break;
                 case 'region':
-                    echo str_replace('{region}', htmlspecialchars($location_data['region']), $translations['ad_level_region'] ?? 'Anúncios da região de {region}');
+                    echo str_replace('{region}', htmlspecialchars($initial_location['region'] ?? ''), $translations['ad_level_region'] ?? 'Anúncios da região de {region}');
                     break;
                 case 'country':
-                    echo str_replace('{country}', htmlspecialchars($location_data['country_name']), $translations['ad_level_country'] ?? 'Anúncios de {country}');
+                    echo str_replace('{country}', htmlspecialchars($initial_location['country_name'] ?? ''), $translations['ad_level_country'] ?? 'Anúncios de {country}');
                     break;
                 case 'global':
                     echo $translations['ad_level_global'] ?? 'Anúncios globais';
@@ -141,51 +122,52 @@ require_once TEMPLATE_PATH . 'header.php';
         </small>
     </div>
     <div class="filter-group categories">
-        <button data-filter="category" data-value="red_zone" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_red_zone'] ?? 'filter_category_red_zone'); ?></button>
-        <button data-filter="category" data-value="street_points" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_street_points'] ?? 'filter_category_street_points'); ?></button>
-        <button data-filter="category" data-value="hot_points" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_hot_points'] ?? 'filter_category_hot_points'); ?></button>
-        <button data-filter="category" data-value="night_circuit" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_night_circuit'] ?? 'filter_category_night_circuit'); ?></button>
-        <button data-filter="category" data-value="adult_route" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_adult_route'] ?? 'filter_category_adult_route'); ?></button>
+        <button data-filter="category" data-value="liberal" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_liberal'] ?? 'Ruas Liberais'); ?></button>
+        <button data-filter="category" data-value="sensual_bar" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_sensual_bar'] ?? 'Bares Sensuais'); ?></button>
+        <button data-filter="category" data-value="striptease" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_striptease'] ?? 'Striptease'); ?></button>
+        <button data-filter="category" data-value="erotic_discoteca" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_erotic_discoteca'] ?? 'Discotecas Eróticas'); ?></button>
+        <button data-filter="category" data-value="sensual_spa" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_sensual_spa'] ?? 'Spas Sensuais'); ?></button>
+        <button data-filter="category" data-value="events" class="filter-btn"><?php echo htmlspecialchars($translations['filter_category_events'] ?? 'Eventos +18'); ?></button>
     </div>
     <div class="advanced-filters">
         <div class="filter-item">
-            <label for="price-range" class="filter-label"><?php echo htmlspecialchars($translations['filter_price'] ?? 'filter_price'); ?>: <span id="price-value"></span></label>
-            <input type="range" id="price-range" class="range-slider" min="0" max="3000" step="50" data-filter="price_max" value="3000">
+            <label for="price-range" class="filter-label"><?php echo htmlspecialchars($translations['filter_price'] ?? 'Preço'); ?>: <span id="price-value"></span></label>
+            <input type="range" id="price-range" class="range-slider" min="0" max="5000" step="100" data-filter="price_max" value="5000">
         </div>
         <button id="advanced-filter-btn" class="advanced-filter-toggle">
             <i class="fas fa-sliders-h"></i>
-            <span><?php echo htmlspecialchars($translations['filter_advanced'] ?? 'filter_advanced'); ?></span>
+            <span><?php echo htmlspecialchars($translations['filter_advanced'] ?? 'Filtros'); ?></span>
         </button>
         <div class="filter-item">
-            <label for="distance-range" class="filter-label"><?php echo htmlspecialchars($translations['filter_distance'] ?? 'filter_distance'); ?>: <span id="distance-value"></span></label>
+            <label for="distance-range" class="filter-label"><?php echo htmlspecialchars($translations['filter_distance'] ?? 'Distância'); ?>: <span id="distance-value"></span></label>
             <input type="range" id="distance-range" class="range-slider" min="1" max="200" step="1" data-filter="distance" value="100">
         </div>
     </div>
     <div class="results-container">
         <div class="loading-spinner" id="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div>
         <section id="results-grid">
-            <?php if (empty($street_data['streets'])): ?>
-                <p class="no-results-message"><?php echo htmlspecialchars($translations['no_profiles_found'] ?? 'no_profiles_found'); ?></p>
+            <?php if (empty($initial_street_data['streets'])): ?>
+                <p class="no-results-message"><?php echo htmlspecialchars($translations['no_profiles_found'] ?? 'Nenhum clube encontrado'); ?></p>
             <?php endif; ?>
         </section>
     </div>
     <div id="planet-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h2><?php echo htmlspecialchars($translations['modal_select_planet'] ?? 'modal_select_planet'); ?></h2>
+                <h2><?php echo htmlspecialchars($translations['modal_select_planet'] ?? 'Selecione o Planeta'); ?></h2>
                 <button id="close-planet-modal" class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="planet-options">
                     <div class="planet-option" onclick="selectPlanet('earth')">
                         <i class="fas fa-globe"></i>
-                        <h3><?php echo htmlspecialchars($translations['planet_earth'] ?? 'planet_earth'); ?></h3>
-                        <p><?php echo htmlspecialchars($translations['planet_earth_desc'] ?? 'planet_earth_desc'); ?></p>
+                        <h3><?php echo htmlspecialchars($translations['planet_earth'] ?? 'Terra'); ?></h3>
+                        <p><?php echo htmlspecialchars($translations['planet_earth_desc'] ?? 'Explore Ruas do nosso planeta'); ?></p>
                     </div>
                     <div class="planet-option" onclick="selectPlanet('mars')">
                         <i class="fas fa-rocket"></i>
-                        <h3><?php echo htmlspecialchars($translations['planet_mars'] ?? 'planet_mars'); ?></h3>
-                        <p><?php echo htmlspecialchars($translations['planet_mars_desc'] ?? 'planet_mars_desc'); ?></p>
+                        <h3><?php echo htmlspecialchars($translations['planet_mars'] ?? 'Marte'); ?></h3>
+                        <p><?php echo htmlspecialchars($translations['planet_mars_desc'] ?? 'Em breve...'); ?></p>
                     </div>
                 </div>
             </div>
@@ -203,32 +185,32 @@ require_once TEMPLATE_PATH . 'header.php';
     <div id="advanced-filter-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h2><?php echo htmlspecialchars($translations['filter_advanced_title'] ?? 'filter_advanced_title'); ?></h2>
+                <h2><?php echo htmlspecialchars($translations['filter_advanced_title'] ?? 'Filtros Avançados'); ?></h2>
                 <button id="close-advanced-modal-btn" class="close-modal">&times;</button>
             </div>
             <div class="modal-body" id="advanced-filters-body">
                 <div class="filter-group advanced-filters">
                     <div class="filter-item">
-                        <label for="price-range" class="filter-label"><?php echo htmlspecialchars($translations['filter_price'] ?? 'filter_price'); ?>: <span id="price-value"></span></label>
-                        <input type="range" id="price-range" class="range-slider" min="0" max="3000" step="50" data-filter="price_max" value="3000">
+                        <label for="price-range" class="filter-label"><?php echo htmlspecialchars($translations['filter_price'] ?? 'Preço'); ?>: <span id="price-value"></span></label>
+                        <input type="range" id="price-range" class="range-slider" min="0" max="5000" step="100" data-filter="price_max" value="5000">
                     </div>
                     <div class="filter-item">
-                        <label for="distance-range" class="filter-label"><?php echo htmlspecialchars($translations['filter_distance'] ?? 'filter_distance'); ?>: <span id="distance-value"></span></label>
+                        <label for="distance-range" class="filter-label"><?php echo htmlspecialchars($translations['filter_distance'] ?? 'Distância'); ?>: <span id="distance-value"></span></label>
                         <input type="range" id="distance-range" class="range-slider" min="1" max="200" step="1" data-filter="distance" value="100">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="apply-advanced-filters-btn" class="btn-primary"><?php echo htmlspecialchars($translations['filter_apply'] ?? 'filter_apply'); ?></button>
+                <button id="apply-advanced-filters-btn" class="btn-primary"><?php echo htmlspecialchars($translations['filter_apply'] ?? 'Aplicar Filtros'); ?></button>
             </div>
         </div>
     </div>
 </main>
 <script>
-const initialFilters = <?php echo json_encode($initialFilters, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-const locationData = <?php echo json_encode($location_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-const adData = <?php echo json_encode($ad_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-const initialStreetData = <?php echo json_encode($street_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+const initialFilters = <?php echo json_encode($initial_filters, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+const locationData = <?php echo json_encode($initial_location, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+const adData = <?php echo json_encode($adData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+const initialStreetData = <?php echo json_encode($initial_street_data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 const translations = <?php echo json_encode($translations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 </script>
 <?php

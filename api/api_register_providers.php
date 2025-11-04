@@ -307,9 +307,12 @@ try {
   /* -------- 6) montar payloads por tabela -------- */
 
   // Providers (somente o que existir como coluna)
+  // ⚠️ IMPORTANTE: SEMPRE inicia com status='pending'
+  // Política do site: TODOS os providers (Free e Premium) precisam ser aprovados manualmente pelo admin
+  // NUNCA mudar para 'active' automaticamente, nem mesmo após pagamento confirmado
   $provider_payload = [
     'account_id'       => $account_id,
-    'status'           => 'pending',
+    'status'           => 'pending',  // ⚠️ OBRIGATÓRIO: sempre pending até admin aprovar
     'display_name'     => $display_name ?: null,
     'slug'             => $slug ?: null,
     'category_id'      => $category_id,
@@ -356,6 +359,8 @@ try {
     }
   } else {
     // INSERT providers (garante pelo menos account_id/status)
+    // ⚠️ POLÍTICA: Novo provider SEMPRE começa com status='pending' e is_active=0
+    // Somente o admin pode aprovar e mudar para 'active'
     $base = ['account_id'=>$account_id, 'status'=>'pending', 'created_at'=>date('Y-m-d H:i:s')];
     $base = filter_for_table($pdo, 'providers', $base) + $provider_payload;
     $cols = '`'.implode('`,`', array_keys($base)).'`';

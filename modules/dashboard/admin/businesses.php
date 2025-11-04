@@ -1,60 +1,101 @@
 <?php
 /**
- * /modules/dashboard/admin/translations.php - Módulo de Gerenciamento de Traduções (Simplificado)
- *
- * RESPONSABILIDADES:
- * 1. Exibir uma mensagem simples "Em Breve" em vez de dados dinâmicos.
+ * /modules/dashboard/admin/businesses.php - Admin de Empresas (companies)
+ * Lista e permite aprovar/rejeitar/suspender. Política: só aqui ativa (status='active', is_active=1).
  */
 if (!defined('IN_BACOSEARCH')) exit('Acesso negado.');
 
-// Carrega as traduções necessárias para este módulo
-$translations = [];
-$keys_to_translate = [
-    'translations_title', 'coming_soon_message' // Nova chave para a mensagem "Em Breve"
-];
-foreach ($keys_to_translate as $key) {
-    $translations[$key] = getTranslation($key, $languageCode, 'admin_dashboard');
-}
+$title = getTranslation('businesses_title', $languageCode, 'admin_dashboard');
+$approve_text  = getTranslation('action_approve', $languageCode, 'admin_users');
+$reject_text   = getTranslation('action_reject', $languageCode, 'admin_users');
+$suspend_text  = getTranslation('action_suspend', $languageCode, 'admin_users');
+$filter_all    = getTranslation('filter_all_items', $languageCode, 'admin_dashboard');
+$filter_active = getTranslation('filter_active_items', $languageCode, 'admin_dashboard');
+$filter_pending= getTranslation('filter_pending_items', $languageCode, 'admin_dashboard');
+$filter_rejected= getTranslation('filter_rejected_items', $languageCode, 'admin_dashboard');
+$filter_suspended= getTranslation('filter_suspended_items', $languageCode, 'admin_dashboard');
+
+$pdo = getDBConnection();
+$success_message = null; $error_message=null;
+
+try {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $action = $_POST['action'] ?? ''; $id = (int)($_POST['id'] ?? 0);
+        if ($id) {
+            if ($action==='approve') {
+                $pdo->prepare("UPDATE companies SET status='active', is_active=1, updated_at=NOW() WHERE id=?")->execute([$id]);
+                $success_message = getTranslation('item_approved_success', $languageCode, 'admin_dashboard');
+            } elseif ($action==='reject') {
+                $pdo->prepare("UPDATE companies SET status='rejected', is_active=0, updated_at=NOW() WHERE id=?")->execute([$id]);
+                $success_message = getTranslation('item_rejected_success', $languageCode, 'admin_dashboard');
+            } elseif ($action==='suspend') {
+                $pdo->prepare("UPDATE companies SET status='suspended', is_active=0, updated_at=NOW() WHERE id=?")->execute([$id]);
+                $success_message = getTranslation('item_suspended_success', $languageCode, 'admin_dashboard');
+            }
+        }
+        header('Location: '.SITE_URL.'/admin/dashboard.php?module=businesses&status='.(isset($_GET['status'])? $_GET['status'] : 'all')); exit;
+    }
+
+    $status_filter = $_GET['status'] ?? 'all';
+    $cond = ''; $params=[];
+    if (in_array($status_filter, ['active','pending','rejected','suspended'], true)) { $cond='WHERE c.status=:s'; $params[':s']=$status_filter; }
+    $sql = "SELECT c.id, c.company_name, c.email, c.phone_number, c.ad_city, c.ad_state, c.status, c.created_at
+                    FROM companies c $cond ORDER BY c.created_at DESC";
+    $st = $pdo->prepare($sql); $st->execute($params); $rows=$st->fetchAll(PDO::FETCH_ASSOC);
+} catch (Throwable $e) { $error_message = getTranslation('error_loading_items', $languageCode, 'admin_dashboard'); }
 ?>
 
 <div class="dashboard-module-wrapper">
-    <div class="module-header">
-        <h1><?= htmlspecialchars($translations['translations_title'] ?? 'Traduções') ?></h1>
+    <div class="module-header"><h1><?= htmlspecialchars($title ?: 'Empresas'); ?></h1></div>
+
+    <div class="time-filters">
+        <a href="?module=businesses&status=all" class="btn time-filter-btn <?= ($status_filter==='all')?'active':''; ?>"><?= htmlspecialchars($filter_all); ?></a>
+        <a href="?module=businesses&status=active" class="btn time-filter-btn <?= ($status_filter==='active')?'active':''; ?>"><?= htmlspecialchars($filter_active); ?></a>
+        <a href="?module=businesses&status=pending" class="btn time-filter-btn <?= ($status_filter==='pending')?'active':''; ?>"><?= htmlspecialchars($filter_pending); ?></a>
+        <a href="?module=businesses&status=rejected" class="btn time-filter-btn <?= ($status_filter==='rejected')?'active':''; ?>"><?= htmlspecialchars($filter_rejected); ?></a>
+        <a href="?module=businesses&status=suspended" class="btn time-filter-btn <?= ($status_filter==='suspended')?'active':''; ?>"><?= htmlspecialchars($filter_suspended); ?></a>
     </div>
 
-    <div class="translations-info-section">
-        <p class="coming-soon-text">
-            <?= htmlspecialchars($translations['coming_soon_message'] ?? 'Em Breve') ?>
-        </p>
+    <?php if ($error_message): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($error_message); ?></div>
+    <?php endif; ?>
+    <?php if ($success_message): ?>
+        <div class="alert alert-success"><?= htmlspecialchars($success_message); ?></div>
+    <?php endif; ?>
+
+    <div class="table-container">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th><?= htmlspecialchars(getTranslation('table_header_name', $languageCode, 'admin_users')); ?></th>
+                    <th><?= htmlspecialchars(getTranslation('table_header_email', $languageCode, 'admin_users')); ?></th>
+                    <th><?= htmlspecialchars(getTranslation('table_header_phone', $languageCode, 'admin_users')); ?></th>
+                    <th><?= htmlspecialchars(getTranslation('table_header_location', $languageCode, 'admin_dashboard')); ?></th>
+                    <th><?= htmlspecialchars(getTranslation('table_header_status', $languageCode, 'admin_users')); ?></th>
+                    <th><?= htmlspecialchars(getTranslation('table_header_actions', $languageCode, 'admin_users')); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($rows)): ?>
+                    <tr><td colspan="6"><?= htmlspecialchars(getTranslation('no_items_found', $languageCode, 'admin_dashboard') ?: 'Nenhum registro.'); ?></td></tr>
+                <?php else: foreach ($rows as $r): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($r['company_name']); ?></td>
+                        <td><?= htmlspecialchars($r['email']); ?></td>
+                        <td><?= htmlspecialchars($r['phone_number']); ?></td>
+                        <td><?= htmlspecialchars(($r['ad_city']??'') . ', ' . ($r['ad_state']??'')); ?></td>
+                        <td><span class="status-badge status-<?= htmlspecialchars($r['status']); ?>"><?= htmlspecialchars($r['status']); ?></span></td>
+                        <td>
+                            <form method="POST" onsubmit="return confirm('Confirmar ação?');">
+                                <input type="hidden" name="id" value="<?= (int)$r['id']; ?>">
+                                <?php if ($r['status']!=='active'): ?><button class="btn btn-sm btn-success" name="action" value="approve"><?= htmlspecialchars($approve_text); ?></button><?php endif; ?>
+                                <?php if ($r['status']!=='rejected'): ?><button class="btn btn-sm btn-danger" name="action" value="reject"><?= htmlspecialchars($reject_text); ?></button><?php endif; ?>
+                                <?php if ($r['status']==='active'): ?><button class="btn btn-sm btn-warning" name="action" value="suspend"><?= htmlspecialchars($suspend_text); ?></button><?php endif; ?>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; endif; ?>
+            </tbody>
+        </table>
     </div>
 </div>
-
-<style>
-/* CSS simples para centralizar a mensagem "Em Breve" */
-.translations-info-section {
-    background-color: var(--bs-bg-white, #fff);
-    padding: var(--spacing-lg, 1.5rem);
-    border-radius: var(--bs-border-radius-lg, 12px);
-    border: 1px solid var(--bs-border-color, #e0e0e0);
-    box-shadow: var(--bs-shadow-sm, 0 2px 4px rgba(0,0,0,0.07));
-    text-align: center;
-    min-height: 200px; /* Altura mínima para a seção */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.coming-soon-text {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--bs-text-secondary, #6c757d);
-}
-</style>
-
-<script>
-// Não há JavaScript complexo aqui, pois não há dados para buscar ou renderizar.
-// Apenas um script vazio para manter a estrutura se necessário no futuro.
-document.addEventListener('DOMContentLoaded', () => {
-    // console.log('Módulo de Traduções: Apenas exibindo mensagem "Em Breve".');
-});
-</script>

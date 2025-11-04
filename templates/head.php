@@ -190,7 +190,7 @@ $fontawesome_sri = $fontawesome_sri ?? null;
       case 'results_providers_page':
         $page_specific_scripts[] = ['src' => SITE_URL . '/assets/js/providers.js', 'attrs' => ['defer']]; break;
       case 'results_business_page':
-        $page_specific_scripts[] = ['src' => SITE_URL . '/assets/js/business.js', 'attrs' => ['defer']]; break;
+        $page_specific_scripts[] = ['src' => SITE_URL . '/assets/js/businesses.js', 'attrs' => ['defer']]; break;
       case 'results_clubs_page':
         $page_specific_scripts[] = ['src' => SITE_URL . '/assets/js/clubs.js', 'attrs' => ['defer']]; break;
       case 'results_services_page':
