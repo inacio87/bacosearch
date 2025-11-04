@@ -24,7 +24,7 @@ $keys_to_translate = [
     'modal_select_country','modal_select_region','modal_select_city',
     'filter_advanced_title','filter_apply',
     'filter_price','filter_distance','filter_advanced',
-    'filter_category_liberal','filter_category_sensual_bar','filter_category_striptease','filter_category_erotic_discoteca','filter_category_sensual_spa','filter_category_events',
+    'filter_category_liberal','filter_category_sensual_bar','filter_category_striptease','filter
     'ad_level_city','ad_level_region','ad_level_country','ad_level_global',
     'header_ads','header_login','logo_alt','header_menu','about_us',
     'terms_of_service','privacy_policy','cookie_policy','contact_us',
