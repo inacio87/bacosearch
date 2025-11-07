@@ -1,12 +1,14 @@
 <?php
 /**
- * /index.php - Ponto de Entrada Principal
- * (limpo: sem textos literais na UI)
+ * /index.php - Homepage - BacoSearch Brasil
+ * Design inspirado em: Splove (dark mode) + Escort-Ireland (profissionalismo)
+ * Versão: Pivot Brasil 2.0
+ * Data: 06/11/2025
  */
 
 $page_name = 'home';
 
-// PASSO 1: INICIALIZAÇÃO CENTRAL
+// INICIALIZAÇÃO
 require_once __DIR__ . '/core/bootstrap.php';
 
 // Headers de cache
@@ -14,304 +16,569 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-// PASSO 2: PREPARAÇÃO DE DADOS PARA A VIEW
-$language_code = $_SESSION['language'] ?? (LANGUAGE_CONFIG['default'] ?? 'en-us');
-$city          = $_SESSION['city'] ?? null;
-$canAppendCity = (!empty($city) && !empty($_SESSION['location_accepted']) && (int)$_SESSION['location_accepted'] === 1);
+// DADOS DA PÁGINA
+$language_code = $_SESSION['language'] ?? 'pt-br';
+$city = $_SESSION['city'] ?? 'sua cidade';
 
-// Mapa de traduções (somente as usadas pela HOME; header/footer já carregam as suas)
-$translations_map = [
-    // home_page
-    'home_page_title'       => 'home_page',
-    'home_page_description' => 'home_page',
-
-    // header (somente o alt da logo usado nesta página)
-    'logo_alt'              => 'header',
-
-    // busca e filtros
-    'search_button'                 => 'search',
-    'search_placeholder'            => 'search',
-    'loading_suggestions_text'      => 'search_filters',
-    'result_type_popular'           => 'search_filters',
-    'result_type_provider'          => 'search_filters',
-    'result_type_category'          => 'search_filters',
-    'result_type_location'          => 'search_filters',
-    'result_type_business'          => 'search_filters',
-    'result_type_event'             => 'search_filters',
-    'result_type_creative'          => 'search_filters',
-    'result_type_service'           => 'search_filters',
-
-    // sugestões
-    'suggestion_verified_providers' => 'search',
-    'suggestion_sensual_massage'    => 'search',
-    'suggestion_explore_motels'     => 'search',
-    'suggestion_video_call'         => 'search',
-    'suggestion_clubs_parties'      => 'search',
-    'suggestion_couples_experiences'=> 'search',
-    'suggestion_photographers'      => 'search',
-    'suggestion_trans_companions'   => 'search',
-    'suggestion_luxury_experiences' => 'search',
-    'suggestion_discreet_places'    => 'search',
-    'in_city'                       => 'search',
-
-    // api errors
-    'internal_server_error'         => 'api_errors',
+// Traduções mínimas
+$translations = [
+    'page_title' => 'Acompanhantes em Todo o Brasil | BacoSearch',
+    'meta_description' => 'Encontre acompanhantes verificadas em sua cidade. O maior site de acompanhantes do Brasil.',
+    'search_placeholder' => 'Digite sua cidade...',
+    'search_button' => 'Buscar',
+    'featured_title' => 'Em Destaque',
+    'new_profiles' => 'Perfis Recentes',
+    'verified_badge' => 'Verificado',
+    'online_now' => 'Online Agora',
+    'logo_alt' => 'BacoSearch - Acompanhantes Brasil'
 ];
 
-$translations_data = [];
-foreach ($translations_map as $key => $context) {
-    $translations_data[$key] = getTranslation($key, $language_code, $context);
+// Buscar perfis em destaque (últimos 12 ativos)
+$featured_ads = [];
+try {
+    $stmt = $pdo->prepare("
+        SELECT 
+            p.id,
+            p.name,
+            p.age,
+            c.name AS city_name,
+            s.name AS state_name,
+            ph.image_path AS photo,
+            p.phone,
+            p.whatsapp,
+            p.is_verified,
+            p.is_online
+        FROM profiles p
+        LEFT JOIN cities c ON p.city_id = c.id
+        LEFT JOIN states s ON c.state_id = s.id
+        LEFT JOIN (
+            SELECT profile_id, MIN(image_path) AS image_path
+            FROM photos
+            GROUP BY profile_id
+        ) ph ON p.id = ph.profile_id
+        WHERE p.is_active = 1
+          AND p.status = 'approved'
+        ORDER BY p.created_at DESC
+        LIMIT 12
+    ");
+    $stmt->execute();
+    $featured_ads = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    error_log("Erro ao buscar perfis: " . $e->getMessage());
 }
-$translations = $translations_data;
 
-// Sufixo “em <Cidade>” (só anexa quando temos cidade válida/aceita)
-$in_city_suffix = ($canAppendCity ? (($translations['in_city'] ?? '') . $city) : '');
+$page_title = $translations['page_title'];
+$meta_description = $translations['meta_description'];
+$page_specific_styles = [SITE_URL . '/assets/css/bacosearch-v2.css'];
 
-// Sugestões do placeholder
-$placeholder_suggestions = [
-    [
-        'text' => ($translations['suggestion_verified_providers'] ?? 'suggestion_verified_providers') . $in_city_suffix,
-        'type' => 'provider',
-        'icon' => 'fas fa-user'
-    ],
-    [
-        'text' => ($translations['suggestion_sensual_massage'] ?? 'suggestion_sensual_massage') . $in_city_suffix,
-        'type' => 'service',
-        'icon' => 'fas fa-spa'
-    ],
-    [
-        'text' => ($translations['suggestion_explore_motels'] ?? 'suggestion_explore_motels') . $in_city_suffix,
-        'type' => 'location',
-        'icon' => 'fas fa-map-marker-alt'
-    ],
-    [
-        'text' => $translations['suggestion_video_call'] ?? 'suggestion_video_call',
-        'type' => 'digital',
-        'icon' => 'fas fa-video'
-    ],
-    [
-        'text' => ($translations['suggestion_clubs_parties'] ?? 'suggestion_clubs_parties') . $in_city_suffix,
-        'type' => 'event',
-        'icon' => 'fas fa-glass-cheers'
-    ],
-    [
-        'text' => $translations['suggestion_couples_experiences'] ?? 'suggestion_couples_experiences',
-        'type' => 'service',
-        'icon' => 'fas fa-heart'
-    ],
-    [
-        'text' => ($translations['suggestion_photographers'] ?? 'suggestion_photographers') . $in_city_suffix,
-        'type' => 'service',
-        'icon' => 'fas fa-camera'
-    ],
-    [
-        'text' => $translations['suggestion_trans_companions'] ?? 'suggestion_trans_companions',
-        'type' => 'provider',
-        'icon' => 'fas fa-user'
-    ],
-    [
-        'text' => $translations['suggestion_luxury_experiences'] ?? 'suggestion_luxury_experiences',
-        'type' => 'service',
-        'icon' => 'fas fa-gem'
-    ],
-    [
-        'text' => ($translations['suggestion_discreet_places'] ?? 'suggestion_discreet_places') . $in_city_suffix,
-        'type' => 'location',
-        'icon' => 'fas fa-user-secret'
-    ],
-];
-$placeholder_suggestions = array_filter(array_unique($placeholder_suggestions, SORT_REGULAR));
-$json_suggestions = htmlspecialchars(json_encode($placeholder_suggestions), ENT_QUOTES, 'UTF-8');
-
-// Nomes de idioma para exibição
-$translations['languageOptionsForDisplay'] = LANGUAGE_CONFIG['name_map'] ?? [];
-$translations['current_language_display_name'] =
-    $translations['languageOptionsForDisplay'][$language_code] ?? strtoupper($language_code);
-
-$page_title       = $translations['home_page_title']       ?? 'home_page_title';
-$meta_description = $translations['home_page_description'] ?? (SEO_CONFIG['meta_description'] ?? 'home_page_description');
-$meta_keywords    = SEO_CONFIG['meta_keywords']            ?? '';
-$meta_author      = SEO_CONFIG['meta_author']              ?? 'meta_author';
-$page_specific_styles = [];
-
-// =======================================================
-// INÍCIO: LÓGICA DE ANÚNCIOS
-// =======================================================
-require_once __DIR__ . '/api/dashboard_ads.php';
-
-$user_country_code = $_SESSION['country_code'] ?? null;
-$user_region       = $_SESSION['region'] ?? null;
-$user_city         = $_SESSION['city'] ?? null;
-
-$ads = getAllHomePageAds($pdo, $user_country_code, $user_region, $user_city, true);
-
-$ads['global']     = $ads['global']     ?? [];
-$ads['national']   = $ads['national']   ?? [];
-$ads['regional_1'] = $ads['regional_1'] ?? [];
-$ads['regional_2'] = $ads['regional_2'] ?? [];
-// =======================================================
-// FIM: LÓGICA DE ANÚNCIOS
-// =======================================================
-
-// PASSO 4: RENDERIZAÇÃO DA PÁGINA
+// Head
 require_once TEMPLATE_PATH . 'head.php';
 ?>
 
-<?php
-require_once TEMPLATE_PATH . 'header.php';
-
-// --- FUNÇÃO DE RENDERIZAÇÃO DE BANNER ---
-function renderAdBanner(array $ad_data, string $slot_class, string $id_prefix = ''): void {
-    $desktop_img = !empty($ad_data['image_path'])        ? SITE_URL . $ad_data['image_path']        : null;
-    $mobile_img  = !empty($ad_data['image_path_mobile']) ? SITE_URL . $ad_data['image_path_mobile'] : null;
-
-    if (!$desktop_img && !$mobile_img) return;
-
-    $wrapper_classes = [$slot_class];
-    if (!$desktop_img && $mobile_img) { $wrapper_classes[] = 'mobile-only'; }
-    if ($desktop_img && !$mobile_img) { $wrapper_classes[] = 'desktop-only'; }
-
-    $main_img_src = $desktop_img ?: $mobile_img; ?>
-    <div class="<?= htmlspecialchars(implode(' ', $wrapper_classes)) ?>">
-        <a href="<?= SITE_URL ?>/redirect_ad.php?id=<?= $ad_data['id'] ?>" target="_blank" rel="noopener sponsored" title="<?= htmlspecialchars($ad_data['title']) ?>">
-            <picture>
-                <?php if ($mobile_img): ?>
-                    <source media="(max-width: 767px)" srcset="<?= htmlspecialchars($mobile_img) ?>">
-                <?php endif; ?>
-                <img src="<?= htmlspecialchars($main_img_src) ?>" alt="<?= htmlspecialchars($ad_data['title']) ?>">
-            </picture>
-        </a>
+<!-- HEADER MODERNO -->
+<header class="site-header">
+    <div class="header-content">
+        <div class="header-logo">
+            <a href="<?= SITE_URL; ?>">
+                <img src="<?= SITE_URL; ?>/assets/images/logo.png" alt="BacoSearch Brasil">
+            </a>
+        </div>
+        
+        <nav class="header-nav">
+            <a href="<?= SITE_URL; ?>"><i class="fas fa-home"></i> Início</a>
+            <a href="<?= SITE_URL; ?>/buscar.php"><i class="fas fa-search"></i> Buscar</a>
+            <?php if (isset($_SESSION['account_id'])): ?>
+                <a href="<?= SITE_URL; ?>/dashboard.php"><i class="fas fa-tachometer-alt"></i> Painel</a>
+                <a href="<?= SITE_URL; ?>/auth/logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            <?php else: ?>
+                <a href="<?= SITE_URL; ?>/auth/login.php"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+                <a href="<?= SITE_URL; ?>/register.php" class="btn-cadastrar"><i class="fas fa-plus-circle"></i> Anunciar Grátis</a>
+            <?php endif; ?>
+        </nav>
     </div>
-<?php } ?>
+</header>
 
-<main class="main-content">
-    <div class="banners-homepage">
-        <div class="group-banner-global">
-            <?php if (!empty($ads['global'])): ?>
-                <div class="banner-global">
-                    <?php renderAdBanner($ads['global'], 'ad-banner-top'); ?>
+
+<main class="home-container">
+    <!-- HERO SECTION - Busca Principal -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Encontre Acompanhantes no Brasil</h1>
+            <p class="subtitle">Milhares de anúncios verificados em todo o país</p>
+            
+            <form action="<?= SITE_URL; ?>/buscar.php" method="GET" class="search-form">
+                <div class="search-box">
+                    <i class="fas fa-map-marker-alt search-icon"></i>
+                    <input 
+                        type="text" 
+                        name="cidade" 
+                        id="city-search"
+                        placeholder="<?= htmlspecialchars($translations['search_placeholder']); ?>" 
+                        value="<?= htmlspecialchars($city); ?>"
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                        <?= htmlspecialchars($translations['search_button']); ?>
+                    </button>
                 </div>
-            <?php endif; ?>
-        </div>
+            </form>
 
-        <div class="group-logo-search">
-            <div class="logo">
-                <img src="<?= htmlspecialchars(SITE_URL . '/assets/images/logo.png', ENT_QUOTES, 'UTF-8'); ?>"
-                     alt="<?= htmlspecialchars($translations['logo_alt'] ?? 'logo_alt', ENT_QUOTES, 'UTF-8'); ?>">
+            <!-- Sugestões Rápidas -->
+            <div class="quick-links">
+                <a href="<?= SITE_URL; ?>/buscar.php?cidade=São Paulo">São Paulo</a>
+                <a href="<?= SITE_URL; ?>/buscar.php?cidade=Rio de Janeiro">Rio de Janeiro</a>
+                <a href="<?= SITE_URL; ?>/buscar.php?cidade=Belo Horizonte">Belo Horizonte</a>
+                <a href="<?= SITE_URL; ?>/buscar.php?cidade=Salvador">Salvador</a>
+                <a href="<?= SITE_URL; ?>/buscar.php?cidade=Brasília">Brasília</a>
             </div>
+        </div>
+    </section>
 
-            <div class="search-container" data-suggestions="<?= $json_suggestions; ?>">
-                <input type="text" id="searchInput"
-                       placeholder="<?= htmlspecialchars($translations['search_placeholder'] ?? 'search_placeholder', ENT_QUOTES, 'UTF-8'); ?>">
-                <button type="button" class="search-button"
-                        aria-label="<?= htmlspecialchars($translations['search_button'] ?? 'search_button', ENT_QUOTES, 'UTF-8'); ?>">
-                    <i class="fas fa-search"></i>
-                </button>
+    <!-- PERFIS EM DESTAQUE -->
+    <section class="featured-section">
+        <div class="section-header">
+            <h2><i class="fas fa-star"></i> <?= htmlspecialchars($translations['featured_title']); ?></h2>
+        </div>
+
+        <div class="profiles-grid">
+            <?php foreach ($featured_ads as $ad): ?>
+                <a href="<?= SITE_URL; ?>/perfil.php?id=<?= $ad['id']; ?>" class="profile-card">
+                    <div class="profile-image" style="background-image: url('<?= SITE_URL; ?>/<?= htmlspecialchars($ad['photo'] ?? 'assets/images/no-photo.jpg'); ?>');">
+                        <?php if ($ad['is_verified']): ?>
+                            <span class="badge badge-verified">
+                                <i class="fas fa-check-circle"></i> Verificado
+                            </span>
+                        <?php endif; ?>
+                        
+                        <?php if ($ad['is_online']): ?>
+                            <span class="badge badge-online">
+                                <i class="fas fa-circle"></i> Online
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <h3><?= htmlspecialchars($ad['name']); ?></h3>
+                        <p class="age-location">
+                            <?= htmlspecialchars($ad['age']); ?> anos • <?= htmlspecialchars($ad['city_name']); ?>, <?= htmlspecialchars($ad['state_name']); ?>
+                        </p>
+                        
+                        <div class="profile-actions">
+                            <?php if ($ad['whatsapp']): ?>
+                                <button class="btn-whatsapp" onclick="event.preventDefault(); window.open('https://wa.me/55<?= preg_replace('/\D/', '', $ad['whatsapp']); ?>', '_blank');">
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                            <?php endif; ?>
+                            
+                            <?php if ($ad['phone']): ?>
+                                <button class="btn-phone" onclick="event.preventDefault(); window.location.href='tel:<?= htmlspecialchars($ad['phone']); ?>';">
+                                    <i class="fas fa-phone"></i>
+                                </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
+        <?php if (empty($featured_ads)): ?>
+            <div class="no-results">
+                <i class="fas fa-search"></i>
+                <p>Nenhum perfil encontrado no momento.</p>
+                <a href="<?= SITE_URL; ?>/register.php" class="btn-primary">Seja o primeiro a anunciar!</a>
             </div>
-        </div>
-
-        <div class="group-banner-national">
-            <?php if (!empty($ads['national'])): ?>
-                <div class="banner-national">
-                    <?php renderAdBanner($ads['national'], 'ad-banner-national'); ?>
-                </div>
-            <?php endif; ?>
-        </div>
-
-        <div class="group-banners-regional">
-            <?php if (!empty($ads['regional_1']) || !empty($ads['regional_2'])): ?>
-                <div class="banner-regionals">
-                    <?php if (!empty($ads['regional_1'])): ?>
-                        <div class="banner-regional">
-                            <?php renderAdBanner($ads['regional_1'], 'ad-banner-regional', 'regional_1'); ?>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (!empty($ads['regional_2'])): ?>
-                        <div class="banner-regional">
-                            <?php renderAdBanner($ads['regional_2'], 'ad-banner-regional', 'regional_2'); ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
+        <?php endif; ?>
+    </section>
 </main>
 
+<!-- AGE GATE (+18) -->
+<?php if (!isset($_SESSION['age_verified'])): ?>
+<div id="age-gate" class="age-gate-overlay">
+    <div class="age-gate-content">
+        <h2><i class="fas fa-exclamation-triangle"></i> Atenção!</h2>
+        <p>
+            Este site contém conteúdo adulto.<br><br>
+            Você confirma que:<br>
+            ✓ Tem <strong>18 anos ou mais</strong><br>
+            ✓ Está acessando por vontade própria<br>
+            ✓ Aceita os Termos de Uso
+        </p>
+        <div class="age-gate-buttons">
+            <button class="btn-confirm" onclick="confirmAge()">
+                <i class="fas fa-check-circle"></i> SIM, TENHO +18
+            </button>
+            <button class="btn-exit" onclick="exitSite()">
+                <i class="fas fa-times-circle"></i> NÃO, SAIR
+            </button>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- SCROLL TO TOP -->
+<button id="scroll-btn" title="Voltar ao topo">
+    <i class="fas fa-chevron-up"></i>
+</button>
+
 <script>
-    // Traduções para JS da home
-    const FRONTEND_TRANSLATIONS = {
-        loading_suggestions_text: "<?= htmlspecialchars($translations['loading_suggestions_text'] ?? 'loading_suggestions_text', ENT_QUOTES, 'UTF-8'); ?>",
-        search_placeholder:        "<?= htmlspecialchars($translations['search_placeholder']        ?? 'search_placeholder',        ENT_QUOTES, 'UTF-8'); ?>",
-        result_type_popular:       "<?= htmlspecialchars($translations['result_type_popular']       ?? 'result_type_popular',       ENT_QUOTES, 'UTF-8'); ?>",
-        result_type_provider:      "<?= htmlspecialchars($translations['result_type_provider']      ?? 'result_type_provider',      ENT_QUOTES, 'UTF-8'); ?>",
-        result_type_category:      "<?= htmlspecialchars($translations['result_type_category']      ?? 'result_type_category',      ENT_QUOTES, 'UTF-8'); ?>",
-        result_type_location:      "<?= htmlspecialchars($translations['result_type_location']      ?? 'result_type_location',      ENT_QUOTES, 'UTF-8'); ?>",
-        result_type_business:      "<?= htmlspecialchars($translations['result_type_business']      ?? 'result_type_business',      ENT_QUOTES, 'UTF-8'); ?>",
-        result_type_event:         "<?= htmlspecialchars($translations['result_type_event']         ?? 'result_type_event',         ENT_QUOTES, 'UTF-8'); ?>",
-        result_type_creative:      "<?= htmlspecialchars($translations['result_type_creative']      ?? 'result_type_creative',      ENT_QUOTES, 'UTF-8'); ?>",
-        result_type_service:       "<?= htmlspecialchars($translations['result_type_service']       ?? 'result_type_service',       ENT_QUOTES, 'UTF-8'); ?>",
-        internal_server_error:     "<?= htmlspecialchars($translations['internal_server_error']     ?? 'internal_server_error',     ENT_QUOTES, 'UTF-8'); ?>",
-        in_city:                   "<?= htmlspecialchars($translations['in_city']                   ?? 'in_city',                   ENT_QUOTES, 'UTF-8'); ?>"
-    };
+// AGE GATE
+function confirmAge() {
+    fetch('<?= SITE_URL; ?>/api/verify_age.php', {
+        method: 'POST'
+    }).then(() => {
+        document.getElementById('age-gate').style.display = 'none';
+    });
+}
 
-    if (typeof window.escapeHtml !== 'function') {
-        window.escapeHtml = (text) => {
-            const div = document.createElement('div');
-            div.appendChild(document.createTextNode(text));
-            return div.innerHTML;
-        };
+function exitSite() {
+    window.location.href = 'https://www.google.com';
+}
+
+// SCROLL TO TOP
+const scrollBtn = document.getElementById('scroll-btn');
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        scrollBtn.classList.add('show');
+    } else {
+        scrollBtn.classList.remove('show');
     }
+});
 
-    // Efeito de máquina de escrever para o placeholder
-    (function() {
-        const searchInput   = document.getElementById('searchInput');
-        const container     = document.querySelector('.search-container');
-        const suggestions   = JSON.parse(container?.getAttribute('data-suggestions') || '[]');
+scrollBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
 
-        let currentIndex = 0, currentText = '', charIndex = 0, isDeleting = false, typewriterInterval = null;
-
-        function typeWriter() {
-            if (!searchInput || searchInput === document.activeElement) return;
-
-            const currentSuggestion = suggestions[currentIndex]?.text || '';
-            if (!currentSuggestion) { currentIndex = 0; return; }
-
-            if (isDeleting) { currentText = currentSuggestion.substring(0, charIndex - 1); charIndex--; }
-            else            { currentText = currentSuggestion.substring(0, charIndex + 1); charIndex++; }
-
-            searchInput.placeholder = currentText;
-
-            if (!isDeleting && charIndex === currentSuggestion.length) {
-                isDeleting = true; setTimeout(() => {}, 1000);
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false; currentIndex = (currentIndex + 1) % suggestions.length;
+// LAZY LOADING
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('[data-src]');
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                imageObserver.unobserve(img);
             }
-            const speed = isDeleting ? 50 : 100;
-            typewriterInterval = setTimeout(typeWriter, speed);
-        }
-
-        window.startTypewriter = function() {
-            if (!typewriterInterval && searchInput && searchInput !== document.activeElement) {
-                currentIndex = 0; charIndex = 0; isDeleting = false; typeWriter();
-            }
-        };
-
-        window.stopTypewriter = function() {
-            if (typewriterInterval) {
-                clearTimeout(typewriterInterval);
-                typewriterInterval = null;
-                searchInput.placeholder = "<?= htmlspecialchars($translations['search_placeholder'] ?? 'search_placeholder', ENT_QUOTES, 'UTF-8'); ?>";
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            window.startTypewriter();
-            searchInput?.addEventListener('focus', window.stopTypewriter);
-            searchInput?.addEventListener('blur',  () => { if (!searchInput.value) window.startTypewriter(); });
         });
-    })();
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+});
 </script>
 
-<?php
-require_once TEMPLATE_PATH . 'age_gate_modal.php';
-require_once TEMPLATE_PATH . 'footer.php';
+<?php require_once TEMPLATE_PATH . 'footer.php'; ?>
+
+.home-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* HERO SECTION */
+.hero-section {
+    background: linear-gradient(135deg, #8e2157 0%, #c42a72 100%);
+    color: white;
+    padding: 80px 40px;
+    border-radius: 16px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.hero-content .subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 40px;
+    opacity: 0.95;
+}
+
+/* BUSCA */
+.search-form {
+    max-width: 700px;
+    margin: 0 auto 30px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 50px;
+    padding: 8px 8px 8px 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.search-icon {
+    color: #8e2157;
+    font-size: 1.25rem;
+    margin-right: 12px;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1.125rem;
+    padding: 12px;
+    color: #333;
+}
+
+.search-btn {
+    background: #8e2157;
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-btn:hover {
+    background: #6d1942;
+    transform: scale(1.05);
+}
+
+/* QUICK LINKS */
+.quick-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.quick-links a {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+}
+
+.quick-links a:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+}
+
+/* SECTION HEADER */
+.section-header {
+    margin-bottom: 30px;
+}
+
+.section-header h2 {
+    font-size: 2rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-header h2 i {
+    color: #f7b731;
+}
+
+/* GRID DE PERFIS */
+.profiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+    text-decoration: none;
+    color: inherit;
+}
+
+.profile-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.profile-image {
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-verified {
+    top: 12px;
+    right: 12px;
+    background: #27ae60;
+    color: white;
+}
+
+.badge-online {
+    top: 50px;
+    right: 12px;
+    background: #3498db;
+    color: white;
+}
+
+.badge-online i {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.profile-info {
+    padding: 16px;
+}
+
+.profile-info h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.age-location {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-whatsapp,
+.btn-phone {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.125rem;
+    transition: all 0.3s;
+}
+
+.btn-whatsapp {
+    background: #25d366;
+    color: white;
+}
+
+.btn-whatsapp:hover {
+    background: #1fb855;
+}
+
+.btn-phone {
+    background: #3498db;
+    color: white;
+}
+
+.btn-phone:hover {
+    background: #2980b9;
+}
+
+/* NO RESULTS */
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.no-results i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.no-results p {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+}
+
+.btn-primary {
+    background: #8e2157;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background: #6d1942;
+    transform: scale(1.05);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-content .subtitle {
+        font-size: 1rem;
+    }
+    
+    .search-box {
+        flex-direction: column;
+        padding: 16px;
+        border-radius: 12px;
+    }
+    
+    .search-box input {
+        width: 100%;
+        margin-bottom: 12px;
+    }
+    
+    .search-btn {
+        width: 100%;
+        justify-content: center;
+        border-radius: 8px;
+    }
+    
+    .profiles-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .profile-image {
+        height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profiles-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<?php require_once TEMPLATE_PATH . 'footer.php'; ?>
