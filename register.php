@@ -313,7 +313,7 @@ require_once TEMPLATE_PATH . 'header.php';
             <div class="form-group">
               <label for="phone_number"><?= $e($translations['label_phone'] ?? 'label_phone'); ?></label>
               <div class="phone-input-group">
-                <select id="phone_code" name="phone_code" required class="form-control phone-code">
+                <select id="phone_code" name="phone_code" required class="form-control phone-code" style="max-width: 100px;">
                   <?php
                     // Auto-detecta DDI baseado no país da sessão (IP)
                     $selectedPhoneCodeValue = $form_data['phone_code'] ?? null;
@@ -399,7 +399,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const wrapper = document.createElement('div');
     wrapper.className = 'custom-select-wrapper';
     wrapper.style.position = 'relative';
-    wrapper.style.width = '100%';
+    
+    // Se for o phone_code, largura fixa de 100px, senão 100%
+    if (originalSelect.id === 'phone_code') {
+      wrapper.style.width = '100px';
+      wrapper.style.maxWidth = '100px';
+      wrapper.style.flexShrink = '0';
+    } else {
+      wrapper.style.width = '100%';
+    }
     
     // Display do valor selecionado
     const display = document.createElement('div');
@@ -414,6 +422,8 @@ document.addEventListener('DOMContentLoaded', function() {
       background-repeat: no-repeat;
       background-position: 10px center;
       background-size: 24px auto;
+      width: 100%;
+      box-sizing: border-box;
     `;
     
     // Lista de opções
@@ -522,6 +532,20 @@ document.addEventListener('DOMContentLoaded', function() {
   // Aplica custom select
   if (phoneCodeSelect) {
     createCustomSelect(phoneCodeSelect);
+    // Força o wrapper do phone_code a ter 100px
+    const phoneWrapper = phoneCodeSelect.parentNode.querySelector('.custom-select-wrapper');
+    if (phoneWrapper) {
+      phoneWrapper.style.width = '100px';
+      phoneWrapper.style.maxWidth = '100px';
+      phoneWrapper.style.minWidth = '100px';
+      phoneWrapper.style.flex = '0 0 100px';
+      const phoneDisplay = phoneWrapper.querySelector('.custom-select-display');
+      if (phoneDisplay) {
+        phoneDisplay.style.width = '100px';
+        phoneDisplay.style.maxWidth = '100px';
+        phoneDisplay.style.padding = '10px 10px 10px 44px';
+      }
+    }
   }
   if (nationalitySelect) {
     createCustomSelect(nationalitySelect);
