@@ -1,8 +1,8 @@
 <?php
 /**
- * /index.php - Homepage Simplificada - BacoSearch Brasil
- * Foco: Acompanhantes no Brasil
- * Versão: Pivot Brasil 1.0
+ * /index.php - Homepage - BacoSearch Brasil
+ * Design inspirado em: Splove (dark mode) + Escort-Ireland (profissionalismo)
+ * Versão: Pivot Brasil 2.0
  * Data: 06/11/2025
  */
 
@@ -18,7 +18,7 @@ header("Pragma: no-cache");
 
 // DADOS DA PÁGINA
 $language_code = $_SESSION['language'] ?? 'pt-br';
-$city = $_SESSION['city'] ?? 'Salvador';
+$city = $_SESSION['city'] ?? 'sua cidade';
 
 // Traduções mínimas
 $translations = [
@@ -69,11 +69,35 @@ try {
 
 $page_title = $translations['page_title'];
 $meta_description = $translations['meta_description'];
+$page_specific_styles = [SITE_URL . '/assets/css/bacosearch-v2.css'];
 
-// Head e Header
+// Head
 require_once TEMPLATE_PATH . 'head.php';
-require_once TEMPLATE_PATH . 'header.php';
 ?>
+
+<!-- HEADER MODERNO -->
+<header class="site-header">
+    <div class="header-content">
+        <div class="header-logo">
+            <a href="<?= SITE_URL; ?>">
+                <img src="<?= SITE_URL; ?>/assets/images/logo.png" alt="BacoSearch Brasil">
+            </a>
+        </div>
+        
+        <nav class="header-nav">
+            <a href="<?= SITE_URL; ?>"><i class="fas fa-home"></i> Início</a>
+            <a href="<?= SITE_URL; ?>/buscar.php"><i class="fas fa-search"></i> Buscar</a>
+            <?php if (isset($_SESSION['account_id'])): ?>
+                <a href="<?= SITE_URL; ?>/dashboard.php"><i class="fas fa-tachometer-alt"></i> Painel</a>
+                <a href="<?= SITE_URL; ?>/auth/logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            <?php else: ?>
+                <a href="<?= SITE_URL; ?>/auth/login.php"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+                <a href="<?= SITE_URL; ?>/register.php" class="btn-cadastrar"><i class="fas fa-plus-circle"></i> Anunciar Grátis</a>
+            <?php endif; ?>
+        </nav>
+    </div>
+</header>
+
 
 <main class="home-container">
     <!-- HERO SECTION - Busca Principal -->
@@ -169,8 +193,86 @@ require_once TEMPLATE_PATH . 'header.php';
     </section>
 </main>
 
-<style>
-/* ESTILOS SIMPLIFICADOS DA HOMEPAGE */
+<!-- AGE GATE (+18) -->
+<?php if (!isset($_SESSION['age_verified'])): ?>
+<div id="age-gate" class="age-gate-overlay">
+    <div class="age-gate-content">
+        <h2><i class="fas fa-exclamation-triangle"></i> Atenção!</h2>
+        <p>
+            Este site contém conteúdo adulto.<br><br>
+            Você confirma que:<br>
+            ✓ Tem <strong>18 anos ou mais</strong><br>
+            ✓ Está acessando por vontade própria<br>
+            ✓ Aceita os Termos de Uso
+        </p>
+        <div class="age-gate-buttons">
+            <button class="btn-confirm" onclick="confirmAge()">
+                <i class="fas fa-check-circle"></i> SIM, TENHO +18
+            </button>
+            <button class="btn-exit" onclick="exitSite()">
+                <i class="fas fa-times-circle"></i> NÃO, SAIR
+            </button>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- SCROLL TO TOP -->
+<button id="scroll-btn" title="Voltar ao topo">
+    <i class="fas fa-chevron-up"></i>
+</button>
+
+<script>
+// AGE GATE
+function confirmAge() {
+    fetch('<?= SITE_URL; ?>/api/verify_age.php', {
+        method: 'POST'
+    }).then(() => {
+        document.getElementById('age-gate').style.display = 'none';
+    });
+}
+
+function exitSite() {
+    window.location.href = 'https://www.google.com';
+}
+
+// SCROLL TO TOP
+const scrollBtn = document.getElementById('scroll-btn');
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        scrollBtn.classList.add('show');
+    } else {
+        scrollBtn.classList.remove('show');
+    }
+});
+
+scrollBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// LAZY LOADING
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('[data-src]');
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+});
+</script>
+
+<?php require_once TEMPLATE_PATH . 'footer.php'; ?>
+
 .home-container {
     max-width: 1400px;
     margin: 0 auto;
