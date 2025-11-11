@@ -1,0 +1,7 @@
+/* Estilos específicos da página de perfil */
+#gallery img{ object-fit:cover; width:100%; height:100%; display:block; }
+#gallery a{ position:relative; }
+#gallery a::after{ content:"Ver"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.75rem; opacity:0; background:rgba(0,0,0,.55); color:#fff; transition:.2s; }
+#gallery a:hover::after{ opacity:1; }
+
+.glightbox-clean .gslide-description{ font-size:.75rem; }
