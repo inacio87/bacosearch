@@ -3,21 +3,20 @@
 $page_name = 'home';
 $page_title = 'BacoSearch - Home';
 require_once __DIR__ . '/core/bootstrap.php';
+require_once __DIR__ . '/core/db.php';
+require_once __DIR__ . '/core/repositories/ModelRepository.php';
 
-// Exemplo: você pode trocar por uma query real (ex.: getFeaturedModels())
-$models = [
-  [
-    'name' => 'Clara Meier',
-    'slug' => 'clara-meier',
-    'thumb' => '/storage/imgthumb/ee043df9bfbd1b2a03e1ca638dfa4643.jpg',
-    'full'  => '/storage/img/ee043df9bfbd1b2a03e1ca638dfa4643.jpg',
-    'neighborhood' => 'Moema',
-    'price' => 1000,
-    'period' => '1h',
-    'whatsapp' => '5551998989919'
-  ],
-  // ...popule via DB
-];
+// Buscar dados reais (fallback para array vazio se DB indisponível)
+$models = [];
+$filters = ['cities'=>[], 'categories'=>[], 'neighborhoods'=>[]];
+try {
+  $pdo = db();
+  $repo = new ModelRepository($pdo);
+  $models = $repo->getFeaturedModels(24);
+  $filters = $repo->getFilters();
+} catch (Throwable $e) {
+  // Ambiente inicial sem DB: segue com página vazia
+}
 
 include __DIR__ . '/templates/head.php';
 ?>
@@ -36,16 +35,15 @@ include __DIR__ . '/templates/head.php';
         <input class="filterbar__input" type="search" name="q" placeholder="Buscar modelo, bairro, categoria..." />
         <select class="filterbar__select" name="city">
           <option value="">Cidade</option>
-          <option>Maceió</option>
-          <option>São Paulo</option>
-          <option>Rio de Janeiro</option>
+          <?php foreach (($filters['cities'] ?? []) as $c): ?>
+            <option value="<?= e($c['slug']) ?>"><?= e($c['name']) ?></option>
+          <?php endforeach; ?>
         </select>
         <select class="filterbar__select" name="category">
           <option value="">Categoria</option>
-          <option>Loiras</option>
-          <option>Morenas</option>
-          <option>Massagistas</option>
-          <option>Cam Girls</option>
+          <?php foreach (($filters['categories'] ?? []) as $c): ?>
+            <option value="<?= e($c['slug']) ?>"><?= e($c['name']) ?></option>
+          <?php endforeach; ?>
         </select>
         <button class="btn btn-primary" type="submit">Explorar</button>
       </form>
