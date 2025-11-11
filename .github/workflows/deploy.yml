@@ -1,0 +1,44 @@
+name: Deploy to HostGator
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HOSTGATOR_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.HOSTGATOR_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Create target (both possible docroots) and deploy
+        env:
+          HOST: ${{ secrets.HOSTGATOR_HOST }}
+          USER: ${{ secrets.HOSTGATOR_USER }}
+        run: |
+          set -e
+          TARGETS=(
+            "/home4/${USER}/bacosearch.com"
+            "/home4/${USER}/public_html/bacosearch.com"
+          )
+          for TARGET in "${TARGETS[@]}"; do
+            echo ">> Preparing $TARGET"
+            ssh ${USER}@${HOST} "mkdir -p $TARGET"
+            rsync -avz --delete --exclude '.git*' --exclude '.github*' ./ ${USER}@${HOST}:$TARGET/
+          done
+
+      - name: Fix permissions
+        env:
+          HOST: ${{ secrets.HOSTGATOR_HOST }}
+          USER: ${{ secrets.HOSTGATOR_USER }}
+        run: |
+          for TARGET in "/home4/${USER}/bacosearch.com" "/home4/${USER}/public_html/bacosearch.com"; do
+            ssh ${USER}@${HOST} "test -d $TARGET && find $TARGET -type d -exec chmod 755 {} \; && find $TARGET -type f -exec chmod 644 {} \; || true"
+          done
