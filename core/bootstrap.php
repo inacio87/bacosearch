@@ -14,6 +14,9 @@ if (BACOSEARCH_ENV === 'dev') {
     ini_set('display_errors', '1');
 }
 
+// Carregar variáveis de ambiente de .env
+require_once __DIR__ . '/env.php';
+
 // Timezone padrão
 if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set('America/Sao_Paulo');
