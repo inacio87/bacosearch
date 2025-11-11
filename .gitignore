@@ -17,6 +17,9 @@ backups/
 error_log
 *.sql
 
+# Allow SQL migrations to be versioned
+!migrations/*.sql
+
 # IDE / OS files
 /.idea/
 /.vscode/
